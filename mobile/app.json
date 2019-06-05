@@ -1,0 +1,10 @@
+{
+  "name": "myata",
+  "displayName": "Мята",
+  "slug": "myata",
+  "version": "0.0.1",
+  "sdkVersion": "32.0.0",
+  "ios": {
+    "bundleIdentifier": "com.myata24.ios"
+  }
+}
