@@ -216,7 +216,8 @@ class CodeScreen extends React.Component {
             firebase.crashlytics().recordError({ error });
 
             this.props.navigation.setParams(this.state);
-          }));
+          }))
+        .finally(() => Keyboard.dismiss());
     });
   };
 

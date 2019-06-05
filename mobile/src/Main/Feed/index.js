@@ -1,6 +1,7 @@
 import React from 'react';
 import { Dimensions, RefreshControl } from 'react-native';
 // import firebase from 'react-native-firebase';
+import AnimateNumber from 'react-native-animate-number';
 import styled, { css } from 'styled-components';
 import logoImg from '../../images/logo_103.png';
 
@@ -89,7 +90,10 @@ function Card() {
       <CardImage source={logoImg} />
 
       <CardState>
-        <CardBalance>2 400 баллов</CardBalance>
+        <CardBalance>
+          <AnimateNumber value={2438} formatter={val => parseInt(val, 10)} />{' '}
+          баллов
+        </CardBalance>
         <CardCashback>3%</CardCashback>
       </CardState>
     </CardSt>

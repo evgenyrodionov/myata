@@ -43,6 +43,8 @@ target 'myata' do
   pod 'react-native-safari-view', :path => '../node_modules/react-native-safari-view'
 
   platform :ios, '10.0'
+  pod 'CodePush', :path => '../node_modules/react-native-code-push'
+
   target 'myataTests' do
     inherit! :search_paths
   end

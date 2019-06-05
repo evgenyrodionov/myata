@@ -20,7 +20,7 @@ const ScrollView = styled.ScrollView`
   padding-top: ${RNHeader.HEIGHT + 25};
 `;
 
-const startScreenOffset = 0;
+const startScreenOffset = 1;
 const contentOffset = { x: deviceWidth * startScreenOffset };
 
 function Main(props) {
