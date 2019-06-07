@@ -3,7 +3,12 @@ import { Dimensions, RefreshControl } from 'react-native';
 // import firebase from 'react-native-firebase';
 import AnimateNumber from 'react-native-animate-number';
 import styled, { css } from 'styled-components';
+import ruLocale from 'date-fns/locale/ru';
+import distanceInWordsStrict from 'date-fns/distance_in_words_strict';
+import PassKit, { AddPassButton } from 'react-native-passkit-wallet';
 import logoImg from '../../images/logo_103.png';
+import EventCard from '../Places/EventCard';
+import { systemEvents } from '../../data';
 
 const { width: deviceWidth } = Dimensions.get('window');
 
@@ -37,12 +42,13 @@ const Alert = styled.View`
   padding-bottom: 16;
   padding-horizontal: 16;
   border-radius: 10;
+  margin-bottom: 16;
 
-  background: #eee;
+  background: rgba(17, 17, 17, 0.3);
 `;
 
 const AlertText = styled.Text`
-  color: #171717;
+  color: #ccc;
   margin-top: 8;
   font-size: 16;
   text-align: center;
@@ -80,28 +86,82 @@ const CardCashback = styled(CardText)`
   font-size: 26;
 `;
 
+const CardDescription = styled.Text`
+  text-align: center;
+  color: #c0c0c0;
+  margin-top: 8;
+`;
+
+const CardAddPassButton = styled.TouchableOpacity``;
+
+const StAddPassButton = styled(AddPassButton)`
+  margin-top: 8;
+  height: ${PassKit.AddPassButtonHeight / 1.5};
+  width: ${PassKit.AddPassButtonWidth / 1.5};
+  align-self: center;
+`;
+
 function loadList() {
   return [];
 }
 
 function Card() {
-  return (
-    <CardSt>
-      <CardImage source={logoImg} />
+  const [added, toggle] = React.useState(false);
 
-      <CardState>
-        <CardBalance>
-          <AnimateNumber value={2438} formatter={val => parseInt(val, 10)} />{' '}
-          баллов
-        </CardBalance>
-        <CardCashback>3%</CardCashback>
-      </CardState>
-    </CardSt>
+  return (
+    <>
+      <CardSt>
+        <CardImage source={logoImg} />
+
+        <CardState>
+          <CardBalance>
+            <AnimateNumber value={300} formatter={val => parseInt(val, 10)} />{' '}
+            баллов
+          </CardBalance>
+          <CardCashback>3%</CardCashback>
+        </CardState>
+      </CardSt>
+
+      {added && (
+        <CardDescription>Карта добавлена в Apple Wallet (тест)</CardDescription>
+      )}
+      {!added && (
+        <CardAddPassButton>
+          <StAddPassButton
+            style={{}}
+            addPassButtonStyle={PassKit.AddPassButtonStyle.black}
+            onPress={() => toggle(true)}
+          />
+        </CardAddPassButton>
+      )}
+    </>
   );
 }
 
-// eslint-disable-next-line react/prefer-stateless-function
+const EventsList = styled.FlatList``;
+
+const EventItem = styled.View`
+  margin-bottom: 16;
+`;
+
 export default class Feed extends React.Component {
+  renderItem = ({ item }, { navigation }) => (
+    <EventItem>
+      <EventCard
+        item={item}
+        dateFormat={eventAt =>
+          distanceInWordsStrict(new Date(), eventAt, {
+            locale: ruLocale,
+            addSuffix: true,
+          })
+        }
+        onPress={() => {
+          navigation.navigate('PlaceDetails', { id: item.placeId });
+        }}
+      />
+    </EventItem>
+  );
+
   render() {
     const { dispatch = () => ({}), isFetching = false } = this.props;
 
@@ -127,10 +187,17 @@ export default class Feed extends React.Component {
 
           <Alert>
             <AlertText>
-              Добавьте в избранное несколько заведений и мы покажем ленту их
-              событий
+              Добавьте любимые Мяты в избранное и здесь будут их события
             </AlertText>
           </Alert>
+
+          <EventsList
+            renderItem={args => this.renderItem(args, this.props)}
+            onRefresh={() => dispatch(loadList())}
+            refreshing={isFetching}
+            data={systemEvents}
+            keyExtractor={item => String(item.id)}
+          />
         </FeedSt>
       </View>
     );

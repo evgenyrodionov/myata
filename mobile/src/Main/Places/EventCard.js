@@ -21,9 +21,8 @@ const StCard = styled.View`
 
 const Title = styled.Text`
   font-size: 36;
-  line-height: 26;
+  line-height: 36;
   font-weight: 600;
-  padding-top: 8;
   color: #fff;
 `;
 
@@ -48,7 +47,14 @@ const ImageBackground = styled.ImageBackground`
 
 const TouchableOpacity = styled.TouchableOpacity``;
 
-export default function EventCard({ item, onPress = () => ({}) }) {
+const defaultDateFormat = eventAt =>
+  format(eventAt, 'DD MMMM в HH:MM', { locale: ruLocale });
+
+export default function EventCard({
+  item,
+  dateFormat = defaultDateFormat,
+  onPress = () => ({}),
+}) {
   return (
     <TouchableOpacity onPress={onPress}>
       <ImageBackground
@@ -58,13 +64,7 @@ export default function EventCard({ item, onPress = () => ({}) }) {
         <StCard>
           <Title>{item.title}</Title>
           <Footer>
-            <DateHelper color="#fff">
-              {/* {capitalize(distanceInWordsStrict(today, item.eventAt, {
-                locale: ruLocale,
-                addSuffix: true,
-              }))}{' '} */}
-              {format(item.eventAt, 'DD MMMM в HH:MM', { locale: ruLocale })}
-            </DateHelper>
+            <DateHelper color="#fff">{dateFormat(item.eventAt)}</DateHelper>
           </Footer>
         </StCard>
       </ImageBackground>

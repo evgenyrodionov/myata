@@ -1,7 +1,6 @@
 import React from 'react';
 import firebase from 'react-native-firebase';
 import { createSwitchNavigator, createAppContainer } from 'react-navigation';
-
 // import codePush from 'react-native-code-push';
 
 import Main from './Main';

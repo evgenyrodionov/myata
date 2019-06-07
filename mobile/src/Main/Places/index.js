@@ -38,45 +38,43 @@ function loadList() {
   return [{ id: 1 }];
 }
 
-export default class Places extends React.Component {
-  renderItem = ({ item }, { navigation }) => (
+export default function Places(props) {
+  const { dispatch = () => ({}), isFetching = false } = props;
+
+  const renderItem = ({ item }, { navigation }) => (
     <Item>
       <Card
+        item={item}
         onPress={() =>
           navigation.navigate('PlaceDetails', {
             id: item.id,
             item,
           })
         }
-        item={item}
       />
     </Item>
   );
 
-  render() {
-    const { dispatch = () => ({}), isFetching = false } = this.props;
+  const refreshControl = (
+    <RefreshControl
+      onRefresh={() => dispatch(loadList())}
+      enabled={!isFetching}
+      // refreshing={isFetching && orders.length !== 0}
+      refreshing={isFetching}
+    />
+  );
 
-    const refreshControl = (
-      <RefreshControl
+  return (
+    <View refreshControl={refreshControl}>
+      <Heading>Все заведения</Heading>
+
+      <List
+        renderItem={args => renderItem(args, props)}
         onRefresh={() => dispatch(loadList())}
-        enabled={!isFetching}
-        // refreshing={isFetching && orders.length !== 0}
         refreshing={isFetching}
+        data={places}
+        keyExtractor={item => String(item.id)}
       />
-    );
-
-    return (
-      <View refreshControl={refreshControl}>
-        <Heading>Все заведения</Heading>
-
-        <List
-          renderItem={args => this.renderItem(args, this.props)}
-          onRefresh={() => dispatch(loadList())}
-          refreshing={isFetching}
-          data={places}
-          keyExtractor={item => String(item.id)}
-        />
-      </View>
-    );
-  }
+    </View>
+  );
 }

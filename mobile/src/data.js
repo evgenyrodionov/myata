@@ -1,4 +1,13 @@
-// eslint-disable-next-line import/prefer-default-export
+export const systemEvents = [
+  {
+    eventAt: '2019-06-03T18:27:30.628078+03:00',
+    placeId: 4,
+    title: 'Новая Мята рядом с «Депо»',
+    coverImg:
+      'https://ucarecdn.com/c5c3af04-5e8b-438b-a5eb-57a337095861~1/nth/0/',
+  },
+];
+
 export const places = [
   {
     id: 1,

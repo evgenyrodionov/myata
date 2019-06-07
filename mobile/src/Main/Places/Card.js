@@ -22,12 +22,33 @@ const StCard = styled.View`
   elevation: 24; */
 `;
 
+const Header = styled.View`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+`;
+
 const Title = styled.Text`
-  font-size: 36;
+  font-size: 32;
   line-height: 26;
   font-weight: 600;
   padding-top: 8;
   color: #fff;
+`;
+
+const LikeButton = styled.TouchableOpacity`
+  margin-left: 8;
+  margin-right: -16;
+  margin-top: -16;
+
+  padding-horizontal: 16;
+  padding-vertical: 16;
+`;
+
+const LikeButtonText = styled.Text`
+  color: #fff;
+  font-weight: 600;
+  font-size: 28;
 `;
 
 const Footer = styled.View`
@@ -78,7 +99,7 @@ function renderSpecialOffer({ item }) {
     if (item.specialOffer) {
       return (
         <SpecialOffer>
-          <SpecialOfferText>{item.specialOffer}</SpecialOfferText>
+          <SpecialOfferText>🏷 {item.specialOffer}</SpecialOfferText>
         </SpecialOffer>
       );
     }
@@ -89,6 +110,7 @@ function renderSpecialOffer({ item }) {
       return (
         <SpecialOffer>
           <SpecialOfferText>
+            🏷{' '}
             {capitalize(
               distanceInWordsStrict(today, eventAt, {
                 locale: ruLocale,
@@ -108,7 +130,7 @@ function renderSpecialOffer({ item }) {
 }
 
 export default function Card({ item, onPress }) {
-  // const { title: stateTitle, color: stateColor } = states[item.state] || {};
+  const [isLiked, toggle] = React.useState(false);
   const today = new Date();
   const todayDayOfWeek = getDay(today);
 
@@ -126,13 +148,19 @@ export default function Card({ item, onPress }) {
         imageStyle={{ borderRadius: 10 }}
       >
         <StCard>
-          <Title>{item.title}</Title>
+          <Header>
+            <Title>{item.title}</Title>
+            <LikeButton onPress={() => toggle(!isLiked)}>
+              {isLiked && <LikeButtonText>💔</LikeButtonText>}
+              {!isLiked && <LikeButtonText>❤</LikeButtonText>}
+            </LikeButton>
+          </Header>
           <Footer>
             <Address>{item.addressTitle}</Address>
 
             {isOpeningInFuture ? (
               <DateHelper color="#bd8851">
-                Откроется{' '}
+                🕙 Откроется{' '}
                 {distanceInWordsStrict(today, openingAt, {
                   locale: ruLocale,
                   addSuffix: true,
@@ -140,10 +168,11 @@ export default function Card({ item, onPress }) {
                 в {todayWH[0]}
               </DateHelper>
             ) : (
-              <DateHelper color="#7dce56">Открыто</DateHelper>
+              <DateHelper color="#7dce56">🕙 Открыто</DateHelper>
             )}
           </Footer>
         </StCard>
+
         {renderSpecialOffer({ item })}
       </ImageBackground>
     </TouchableOpacity>

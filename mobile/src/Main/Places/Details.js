@@ -3,7 +3,13 @@ import { Dimensions } from 'react-native';
 import styled from 'styled-components';
 import getDay from 'date-fns/get_day';
 import { FlatList } from 'react-native-gesture-handler';
+import distanceInWordsStrict from 'date-fns/distance_in_words_strict';
+import ruLocale from 'date-fns/locale/ru';
+import capitalize from 'capitalize';
+
 import EventCard from './EventCard';
+
+import { places } from '../../data';
 
 const { width: deviceWidth } = Dimensions.get('window');
 
@@ -159,19 +165,54 @@ function Events({ events }) {
   );
 }
 
+function renderSpecialOffer({ item }) {
+  const today = new Date();
+  const { events = [] } = item;
+
+  if (item.specialOffer || events.length > 0) {
+    if (item.specialOffer) {
+      return (
+        <SpecialOffer>
+          <SpecialOfferText>🏷 {item.specialOffer}</SpecialOfferText>
+        </SpecialOffer>
+      );
+    }
+
+    if (events.length > 0) {
+      const { title, eventAt } = events[0];
+
+      return (
+        <SpecialOffer>
+          <SpecialOfferText>
+            🏷{' '}
+            {capitalize(
+              distanceInWordsStrict(today, eventAt, {
+                locale: ruLocale,
+                addSuffix: true,
+              }),
+            )}{' '}
+            состоится {title}
+          </SpecialOfferText>
+        </SpecialOffer>
+      );
+    }
+
+    return null;
+  }
+
+  return null;
+}
+
 export default function OrderDetails({ navigation }) {
-  const item = navigation.getParam('item', {});
+  const id = navigation.getParam('id');
+  const item = places.find(place => place.id === id) || navigation.getParam('item', {});
   const { workingHours = [], events = [] } = item;
 
   return (
     <View>
       <Title>{item.title}</Title>
 
-      {item.specialOffer && (
-        <SpecialOffer>
-          <SpecialOfferText>{item.specialOffer}</SpecialOfferText>
-        </SpecialOffer>
-      )}
+      {renderSpecialOffer({ item })}
 
       <DateLabel>{item.addressTitle}</DateLabel>
 

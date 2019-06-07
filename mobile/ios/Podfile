@@ -45,6 +45,8 @@ target 'myata' do
   platform :ios, '10.0'
   pod 'CodePush', :path => '../node_modules/react-native-code-push'
 
+  pod 'react-native-passkit-wallet', :path => '../node_modules/react-native-passkit-wallet'
+
   target 'myataTests' do
     inherit! :search_paths
   end

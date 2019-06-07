@@ -56,9 +56,9 @@ export default createStackNavigator(
     defaultNavigationOptions: {
       headerBackground: <BlurView blurType="extraDark" style={{ flex: 1 }} />,
       headerTransparent: true,
-      headerLeft: <HeaderButton>Профиль</HeaderButton>,
-      headerTitle: <HeaderButton>Лента</HeaderButton>,
-      headerRight: <HeaderButton>Заведения</HeaderButton>,
+      headerLeft: <HeaderButton>👱🏻‍♂️</HeaderButton>,
+      headerTitle: <HeaderButton>📰</HeaderButton>,
+      headerRight: <HeaderButton>🏛</HeaderButton>,
     },
   },
 );

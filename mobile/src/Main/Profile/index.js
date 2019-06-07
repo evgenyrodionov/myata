@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dimensions } from 'react-native';
+import { Dimensions, Alert } from 'react-native';
 import firebase from 'react-native-firebase';
 import styled, { css } from 'styled-components';
 import { parsePhoneNumberFromString } from 'libphonenumber-js';
@@ -49,27 +49,37 @@ const PhoneNumber = styled.Text`
 `;
 
 // eslint-disable-next-line react/prefer-stateless-function
-export default class Profile extends React.Component {
-  render() {
-    const user = firebase.auth().currentUser;
-    const phoneNumber = parsePhoneNumberFromString(
-      user.phoneNumber,
-    ).formatInternational();
+export default function Profile(props) {
+  const onLogout = () => {
+    Alert.alert('Выйти из аккаунта?', null, [
+      {
+        text: 'Нет',
+        style: 'cancel',
+      },
+      {
+        text: 'Да',
+        style: 'destructive',
+        onPress: () => {
+          firebase.auth().signOut();
+          props.navigation.navigate('Auth');
+        },
+      },
+    ]);
+  };
 
-    return (
-      <View>
-        <Heading center>{user.displayName || ''}</Heading>
-        <PhoneNumber>{phoneNumber || ''}</PhoneNumber>
+  const user = firebase.auth().currentUser;
+  const phoneNumber = parsePhoneNumberFromString(
+    user.phoneNumber,
+  ).formatInternational();
 
-        <LogoutButton
-          onPress={() => {
-            firebase.auth().signOut();
-            this.props.navigation.navigate('Auth');
-          }}
-        >
-          <LogoutButtonText>Выйти из аккаунта</LogoutButtonText>
-        </LogoutButton>
-      </View>
-    );
-  }
+  return (
+    <View>
+      <Heading center>{user.displayName || ''}</Heading>
+      <PhoneNumber>{phoneNumber || ''}</PhoneNumber>
+
+      <LogoutButton onPress={onLogout}>
+        <LogoutButtonText>Выйти из аккаунта</LogoutButtonText>
+      </LogoutButton>
+    </View>
+  );
 }
