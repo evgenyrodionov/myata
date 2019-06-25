@@ -6,28 +6,24 @@ import { createSwitchNavigator, createAppContainer } from 'react-navigation';
 import Main from './Main';
 import Auth from './Auth';
 
-class AuthLoading extends React.Component {
-  async componentDidMount() {
+function AuthChecker(props) {
+  React.useEffect(() => {
     const { currentUser } = firebase.auth();
 
-    this.props.navigation.navigate(
-      currentUser && currentUser.uid ? 'Main' : 'Auth',
-    );
-  }
+    props.navigation.navigate(currentUser && currentUser.uid ? 'Main' : 'Auth');
+  }, []);
 
-  render() {
-    return null;
-  }
+  return null;
 }
 
 const rootNavigator = createSwitchNavigator(
   {
     Main,
     Auth,
-    AuthLoading,
+    AuthChecker,
   },
   {
-    initialRouteName: 'AuthLoading',
+    initialRouteName: 'AuthChecker',
   },
 );
 

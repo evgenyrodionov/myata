@@ -1,6 +1,12 @@
 PODS:
   - Base64 (1.1.2)
   - boost-for-react-native (1.63.0)
+  - BoringSSL-GRPC (0.0.2):
+    - BoringSSL-GRPC/Implementation (= 0.0.2)
+    - BoringSSL-GRPC/Interface (= 0.0.2)
+  - BoringSSL-GRPC/Implementation (0.0.2):
+    - BoringSSL-GRPC/Interface (= 0.0.2)
+  - BoringSSL-GRPC/Interface (0.0.2)
   - CodePush (5.6.0):
     - Base64 (~> 1.1)
     - JWT (~> 3.0.0-beta.7)
@@ -28,6 +34,9 @@ PODS:
     - FirebaseAnalytics (= 5.8.1)
   - Firebase/CoreOnly (5.20.2):
     - FirebaseCore (= 5.4.1)
+  - Firebase/Firestore (5.20.2):
+    - Firebase/CoreOnly
+    - FirebaseFirestore (= 1.2.1)
   - FirebaseAnalytics (5.8.1):
     - FirebaseCore (~> 5.4)
     - FirebaseInstanceID (~> 3.8)
@@ -46,6 +55,21 @@ PODS:
   - FirebaseCore (5.4.1):
     - GoogleUtilities/Environment (~> 5.2)
     - GoogleUtilities/Logger (~> 5.2)
+  - FirebaseFirestore (1.2.1):
+    - FirebaseAuthInterop (~> 1.0)
+    - FirebaseCore (~> 5.2)
+    - FirebaseFirestore/abseil-cpp (= 1.2.1)
+    - "gRPC-C++ (= 0.0.6)"
+    - leveldb-library (~> 1.20)
+    - nanopb (~> 0.3.901)
+    - Protobuf (~> 3.1)
+  - FirebaseFirestore/abseil-cpp (1.2.1):
+    - FirebaseAuthInterop (~> 1.0)
+    - FirebaseCore (~> 5.2)
+    - "gRPC-C++ (= 0.0.6)"
+    - leveldb-library (~> 1.20)
+    - nanopb (~> 0.3.901)
+    - Protobuf (~> 3.1)
   - FirebaseInstanceID (3.8.1):
     - FirebaseCore (~> 5.2)
     - GoogleUtilities/Environment (~> 5.2)
@@ -79,14 +103,32 @@ PODS:
     - GoogleUtilities/Logger
   - GoogleUtilities/UserDefaults (5.8.0):
     - GoogleUtilities/Logger
+  - "gRPC-C++ (0.0.6)":
+    - "gRPC-C++/Implementation (= 0.0.6)"
+    - "gRPC-C++/Interface (= 0.0.6)"
+  - "gRPC-C++/Implementation (0.0.6)":
+    - "gRPC-C++/Interface (= 0.0.6)"
+    - gRPC-Core (= 1.17.0)
+    - nanopb (~> 0.3)
+  - "gRPC-C++/Interface (0.0.6)"
+  - gRPC-Core (1.17.0):
+    - gRPC-Core/Implementation (= 1.17.0)
+    - gRPC-Core/Interface (= 1.17.0)
+  - gRPC-Core/Implementation (1.17.0):
+    - BoringSSL-GRPC (= 0.0.2)
+    - gRPC-Core/Interface (= 1.17.0)
+    - nanopb (~> 0.3)
+  - gRPC-Core/Interface (1.17.0)
   - GTMSessionFetcher/Core (1.2.2)
   - JWT (3.0.0-beta.11):
     - Base64 (~> 1.1.2)
+  - leveldb-library (1.20)
   - nanopb (0.3.901):
     - nanopb/decode (= 0.3.901)
     - nanopb/encode (= 0.3.901)
   - nanopb/decode (0.3.901)
   - nanopb/encode (0.3.901)
+  - Protobuf (3.8.0)
   - React (0.59.9):
     - React/Core (= 0.59.9)
   - react-native-blur (0.8.0):
@@ -150,7 +192,7 @@ PODS:
     - React/RCTBlob
   - RNGestureHandler (1.3.0):
     - React
-  - RNReanimated (1.0.1):
+  - RNReanimated (1.1.0):
     - React
   - SSZipArchive (2.2.2)
   - UMBarCodeScannerInterface (1.0.0)
@@ -181,6 +223,7 @@ DEPENDENCIES:
   - Fabric (~> 1.9.0)
   - Firebase/Auth (~> 5.20.1)
   - Firebase/Core (~> 5.20.1)
+  - Firebase/Firestore (~> 5.20.1)
   - Folly (from `../node_modules/react-native/third-party-podspecs/Folly.podspec`)
   - glog (from `../node_modules/react-native/third-party-podspecs/glog.podspec`)
   - "react-native-blur (from `../node_modules/@react-native-community/blur`)"
@@ -220,6 +263,7 @@ SPEC REPOS:
   https://github.com/cocoapods/specs.git:
     - Base64
     - boost-for-react-native
+    - BoringSSL-GRPC
     - Crashlytics
     - Fabric
     - Firebase
@@ -227,12 +271,17 @@ SPEC REPOS:
     - FirebaseAuth
     - FirebaseAuthInterop
     - FirebaseCore
+    - FirebaseFirestore
     - FirebaseInstanceID
     - GoogleAppMeasurement
     - GoogleUtilities
+    - "gRPC-C++"
+    - gRPC-Core
     - GTMSessionFetcher
     - JWT
+    - leveldb-library
     - nanopb
+    - Protobuf
     - SSZipArchive
 
 EXTERNAL SOURCES:
@@ -310,6 +359,7 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   Base64: cecfb41a004124895a7bcee567a89bae5a89d49b
   boost-for-react-native: 39c7adb57c4e60d6c5479dd8623128eb5b3f0f2c
+  BoringSSL-GRPC: 2a230d9cd93e7ce39916044f645cebb31f37dde6
   CodePush: 300e90b3481fa82569090406165b83745de3613a
   Crashlytics: 07fb167b1694128c1c9a5a5cc319b0e9c3ca0933
   DoubleConversion: bb338842f62ab1d708ceb63ec3d999f0f3d98ecd
@@ -323,20 +373,25 @@ SPEC CHECKSUMS:
   FirebaseAuth: dd7bbf03a5aee0eafb3a1aee4d2812bd74bac890
   FirebaseAuthInterop: 0ffa57668be100582bb7643d4fcb7615496c41fc
   FirebaseCore: f1a9a8be1aee4bf71a2fc0f4096df6788bdfda61
+  FirebaseFirestore: faca891c0f0d1d6c10c793473e2f6a29d75014b5
   FirebaseInstanceID: a122b0c258720cf250551bb2bedf48c699f80d90
   Folly: de497beb10f102453a1afa9edbf8cf8a251890de
   glog: aefd1eb5dda2ab95ba0938556f34b98e2da3a60d
   GoogleAppMeasurement: ffe513e90551844a739e7bcbb1d2aca1c28a4338
   GoogleUtilities: 04fce34bcd5620c1ee76fb79172105c74a4df335
+  "gRPC-C++": e76441995900ac90e9bd98644ab4733f12521edf
+  gRPC-Core: 4028031ed2c5267cca0d846c876d8046b1ecb9b6
   GTMSessionFetcher: 61bb0f61a4cb560030f1222021178008a5727a23
   JWT: 05028b9624591bba9681bb57df2c5f95fa258bad
+  leveldb-library: 08cba283675b7ed2d99629a4bc5fd052cd2bb6a5
   nanopb: 2901f78ea1b7b4015c860c2fdd1ea2fee1a18d48
+  Protobuf: 3f617b9a6e73605565086864c9bc26b2bf2dd5a3
   React: a86b92f00edbe1873a63e4a212c29b7a7ad5224f
   react-native-blur: cad4d93b364f91e7b7931b3fa935455487e5c33c
   react-native-passkit-wallet: 51e3babdaeec4c10b5736786ebd1bfb470fcaa36
   react-native-safari-view: 955d7160d159241b8e9395d12d10ea0ef863dcdd
   RNGestureHandler: 5329a942fce3d41c68b84c2c2276ce06a696d8b0
-  RNReanimated: c8dd490ca98a4edcba229bfa49f2516c95a43afb
+  RNReanimated: 7a52c90473b5e81c13408d40d797b98387eaddde
   SSZipArchive: fa16b8cc4cdeceb698e5e5d9f67e9558532fbf23
   UMBarCodeScannerInterface: 53fd3cbf24fe5c58f3ba82ac8c27f0373fbf52fa
   UMCameraInterface: d5a2727e76d6b47e3201f863102c055ddbcc6206
@@ -352,6 +407,6 @@ SPEC CHECKSUMS:
   UMTaskManagerInterface: f88793bd35248182e15591e0aa5b045132312be0
   yoga: 03ff42a6f223fb88deeaed60249020d80c3091ee
 
-PODFILE CHECKSUM: 56dc55416b96ab37657cff81e99241bfd083baa7
+PODFILE CHECKSUM: 7a5857ad85faa3dc7ef82534a2a6dcc12ad2c414
 
 COCOAPODS: 1.7.1

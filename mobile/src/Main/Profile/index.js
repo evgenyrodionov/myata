@@ -1,10 +1,19 @@
 import React from 'react';
-import { Dimensions, Alert } from 'react-native';
+import { Dimensions, Alert, Switch } from 'react-native';
 import firebase from 'react-native-firebase';
 import styled, { css } from 'styled-components';
+import orderBy from 'lodash/orderBy';
 import { parsePhoneNumberFromString } from 'libphonenumber-js';
+import format from 'date-fns/format';
+import locale from 'date-fns/locale/ru';
+import Safari from 'react-native-safari-view';
+import { Title2 } from '../../ui';
 
 const { width: deviceWidth } = Dimensions.get('window');
+
+const Wrapper = styled.View`
+  flex: 1;
+`;
 
 const View = styled.ScrollView`
   width: ${deviceWidth};
@@ -48,38 +57,244 @@ const PhoneNumber = styled.Text`
   text-align: center;
 `;
 
-// eslint-disable-next-line react/prefer-stateless-function
-export default function Profile(props) {
-  const onLogout = () => {
-    Alert.alert('Выйти из аккаунта?', null, [
-      {
-        text: 'Нет',
-        style: 'cancel',
-      },
-      {
-        text: 'Да',
-        style: 'destructive',
-        onPress: () => {
-          firebase.auth().signOut();
-          props.navigation.navigate('Auth');
-        },
-      },
-    ]);
-  };
+const Visit = styled.TouchableOpacity`
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+`;
 
-  const user = firebase.auth().currentUser;
-  const phoneNumber = parsePhoneNumberFromString(
-    user.phoneNumber,
-  ).formatInternational();
+const VisitDescription = styled.View``;
+
+const VisitPlace = styled.Text`
+  color: #fff;
+  font-size: 18;
+`;
+
+const VisitDate = styled.Text`
+  color: rgba(255, 255, 255, 0.4);
+  margin-top: 4;
+`;
+
+const VisitBalanceChange = styled.Text`
+  font-variant: tabular-nums;
+  color: #fff;
+  font-size: 24;
+`;
+
+const renderBalanceChange = ({ added, decreased }) => {
+  if (added) return `+${added}`;
+  if (decreased) return `−${decreased}`;
+
+  return null;
+};
+
+function renderVisit({ item }) {
+  return (
+    <Visit>
+      <VisitDescription>
+        <VisitPlace>{item.place.title}</VisitPlace>
+        <VisitDate>
+          {format(item.createdAt, 'D MMMM [в] HH:mm', { locale })}
+        </VisitDate>
+      </VisitDescription>
+      <VisitBalanceChange>{renderBalanceChange(item)}</VisitBalanceChange>
+    </Visit>
+  );
+}
+
+const VisitsSt = styled.View`
+  margin-top: 18;
+`;
+
+const FlatList = styled.FlatList``;
+
+const Separator = styled.View`
+  border-bottom-width: 1;
+  border-bottom-color: rgba(255, 255, 255, 0.04);
+  border-style: solid;
+  margin-vertical: 8;
+`;
+
+function Visits({ user }) {
+  return (
+    <VisitsSt>
+      <Title2>Мои посещения</Title2>
+
+      <FlatList
+        data={orderBy(user.visits, 'createdAt', 'desc')}
+        keyExtractor={({ createdAt }) => String(createdAt)}
+        renderItem={renderVisit}
+        ItemSeparatorComponent={Separator}
+      />
+    </VisitsSt>
+  );
+}
+
+const FriendsSt = styled.View`
+  margin-top: 18;
+`;
+
+const FriendList = styled.FlatList``;
+
+const Friend = styled.TouchableOpacity`
+  display: flex;
+`;
+
+const FriendName = styled.Text`
+  color: #fff;
+  font-size: 18;
+`;
+
+const FriendPhoneNumber = styled.Text`
+  color: rgba(255, 255, 255, 0.4);
+  margin-top: 4;
+`;
+
+const HollowSeparator = styled.View`
+  margin-vertical: 8;
+`;
+
+const ReferralDesc = styled.Text`
+  color: rgba(255, 255, 255, 0.4);
+`;
+
+const ReferralInput = styled.TouchableOpacity`
+  margin-top: 24;
+  margin-bottom: 16;
+`;
+
+const ReferralInputText = styled.Text`
+  color: #fff;
+  text-align: center;
+  font-size: 18;
+  font-weight: bold;
+`;
+
+function Friends({ user }) {
+  return (
+    <FriendsSt>
+      <Title2>Мои друзья</Title2>
+
+      <FriendList
+        data={user.friends}
+        keyExtractor={({ id }) => id}
+        renderItem={({ item }) => (
+          <Friend>
+            <FriendName>{item.displayName}</FriendName>
+            <FriendPhoneNumber>
+              {parsePhoneNumberFromString(`+${item.id}`).formatInternational()}
+            </FriendPhoneNumber>
+          </Friend>
+        )}
+        ItemSeparatorComponent={HollowSeparator}
+      />
+
+      {user.referralId && (
+        <ReferralInput
+          onPress={() =>
+            Safari.show({
+              url: `https://myata.page.link/invites/${user.referralId}`,
+            })
+          }
+        >
+          <ReferralInputText>
+            myata.page.link/invites/{user.referralId}
+          </ReferralInputText>
+        </ReferralInput>
+      )}
+
+      <ReferralDesc>
+        Приведи друга и получи 100 баллов после того, как он потратит первые 1
+        000 ₽
+      </ReferralDesc>
+    </FriendsSt>
+  );
+}
+
+const NotificationsSt = styled.View`
+  margin-top: 18;
+`;
+
+const Notification = styled.View`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+const NotificationTitle = styled.Text`
+  color: #fff;
+`;
+
+const notificationsDict = {
+  new_place_in_my_town: 'Новая Мята в моём городе',
+  new_event_in_favorited_place: 'События в моих любимых Мятах',
+  invoice: 'Закрытие счёта',
+  new_place: 'Новая Мята',
+};
+
+function Notifications({ user }) {
+  const { notifications = {} } = user;
 
   return (
-    <View>
-      <Heading center>{user.displayName || ''}</Heading>
-      <PhoneNumber>{phoneNumber || ''}</PhoneNumber>
+    <NotificationsSt>
+      <Title2>Уведомления</Title2>
 
-      <LogoutButton onPress={onLogout}>
-        <LogoutButtonText>Выйти из аккаунта</LogoutButtonText>
-      </LogoutButton>
-    </View>
+      <FlatList
+        data={Object.entries(notifications)}
+        keyExtractor={([key]) => String(key)}
+        renderItem={({ item: [key, value] }) => (
+          <Notification>
+            <NotificationTitle>{notificationsDict[key]}</NotificationTitle>
+            <Switch value={value} />
+          </Notification>
+        )}
+        ItemSeparatorComponent={Separator}
+      />
+    </NotificationsSt>
+  );
+}
+
+const onLogout = (onConfirm) => {
+  Alert.alert('Выйти из аккаунта?', null, [
+    {
+      text: 'Нет',
+      style: 'cancel',
+    },
+    {
+      text: 'Да',
+      style: 'destructive',
+      onPress: onConfirm,
+    },
+  ]);
+};
+
+export default function Profile({ user, ...props }) {
+  // const { currentUser } = firebase.auth();
+  const phoneNumber = parsePhoneNumberFromString(
+    // currentUser.phoneNumber,
+    '+79998214142',
+  ).formatInternational();
+
+  const onLogoutConfirm = () => {
+    firebase.auth().signOut();
+    props.navigation.navigate('Auth');
+  };
+
+  return (
+    <Wrapper>
+      <View>
+        <Heading center>{user.displayName || ''}</Heading>
+        <PhoneNumber>{phoneNumber || ''}</PhoneNumber>
+
+        {user && <Visits user={user} />}
+        {user && <Friends user={user} />}
+        {user && <Notifications user={user} />}
+
+        <LogoutButton onPress={() => onLogout(onLogoutConfirm)}>
+          <LogoutButtonText>Выйти из аккаунта</LogoutButtonText>
+        </LogoutButton>
+      </View>
+    </Wrapper>
   );
 }

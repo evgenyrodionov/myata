@@ -1,14 +1,15 @@
 import React from 'react';
-import { Dimensions } from 'react-native';
+import { Dimensions, FlatList } from 'react-native';
 import styled from 'styled-components';
 import getDay from 'date-fns/get_day';
-import { FlatList } from 'react-native-gesture-handler';
+import isFuture from 'date-fns/is_future';
 import distanceInWordsStrict from 'date-fns/distance_in_words_strict';
 import ruLocale from 'date-fns/locale/ru';
 import capitalize from 'capitalize';
 
 import EventCard from './EventCard';
 
+import { Title2 } from '../../ui';
 import { places } from '../../data';
 
 const { width: deviceWidth } = Dimensions.get('window');
@@ -32,15 +33,6 @@ export const Title = styled.Text`
   font-size: 34;
   line-height: 36;
   font-weight: 700;
-  color: #fff;
-`;
-
-const Title2 = styled.Text`
-  font-size: 24;
-  line-height: 26;
-  font-weight: 600;
-  margin-bottom: 16;
-  margin-top: 42;
   color: #fff;
 `;
 
@@ -74,19 +66,19 @@ const EventCardItem = styled.View`
 `;
 
 const daysOfWeek = [
+  'Воскресенье',
   'Понедельник',
   'Вторник',
   'Среда',
   'Четверг',
   'Пятница',
   'Суббота',
-  'Воскресенье',
 ];
 
 function renderTimeTableItem({ item, index }) {
   const [min, max] = item;
   const todayDay = getDay(new Date());
-  const todayColor = index === todayDay - 1 && '#fff';
+  const todayColor = index === todayDay && '#fff';
 
   return (
     <TimeTableItem>
@@ -181,20 +173,24 @@ function renderSpecialOffer({ item }) {
     if (events.length > 0) {
       const { title, eventAt } = events[0];
 
-      return (
-        <SpecialOffer>
-          <SpecialOfferText>
-            🏷{' '}
-            {capitalize(
-              distanceInWordsStrict(today, eventAt, {
-                locale: ruLocale,
-                addSuffix: true,
-              }),
-            )}{' '}
-            состоится {title}
-          </SpecialOfferText>
-        </SpecialOffer>
-      );
+      if (isFuture(eventAt)) {
+        return (
+          <SpecialOffer>
+            <SpecialOfferText>
+              🏷{' '}
+              {capitalize(
+                distanceInWordsStrict(today, eventAt, {
+                  locale: ruLocale,
+                  addSuffix: true,
+                }),
+              )}{' '}
+              состоится {title}
+            </SpecialOfferText>
+          </SpecialOffer>
+        );
+      }
+
+      return null;
     }
 
     return null;

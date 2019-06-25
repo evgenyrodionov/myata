@@ -107,20 +107,24 @@ function renderSpecialOffer({ item }) {
     if (events.length > 0) {
       const { title, eventAt } = events[0];
 
-      return (
-        <SpecialOffer>
-          <SpecialOfferText>
-            🏷{' '}
-            {capitalize(
-              distanceInWordsStrict(today, eventAt, {
-                locale: ruLocale,
-                addSuffix: true,
-              }),
-            )}{' '}
-            состоится {title}
-          </SpecialOfferText>
-        </SpecialOffer>
-      );
+      if (isFuture(eventAt)) {
+        return (
+          <SpecialOffer>
+            <SpecialOfferText>
+              🏷{' '}
+              {capitalize(
+                distanceInWordsStrict(today, eventAt, {
+                  locale: ruLocale,
+                  addSuffix: true,
+                }),
+              )}{' '}
+              состоится {title}
+            </SpecialOfferText>
+          </SpecialOffer>
+        );
+      }
+
+      return null;
     }
 
     return null;
@@ -134,7 +138,7 @@ export default function Card({ item, onPress }) {
   const today = new Date();
   const todayDayOfWeek = getDay(today);
 
-  const todayWH = item.workingHours[todayDayOfWeek - 1];
+  const todayWH = item.workingHours[todayDayOfWeek];
   const openingAt = format(today, `YYYY-MM-DD ${todayWH[0]}`);
   // const closingAt = format(today, `YYYY-MM-DD ${todayWH[1]}`);
 

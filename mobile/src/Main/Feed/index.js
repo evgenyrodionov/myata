@@ -105,7 +105,7 @@ function loadList() {
   return [];
 }
 
-function Card() {
+function Card({ user }) {
   const [added, toggle] = React.useState(false);
 
   return (
@@ -115,10 +115,13 @@ function Card() {
 
         <CardState>
           <CardBalance>
-            <AnimateNumber value={300} formatter={val => parseInt(val, 10)} />{' '}
+            <AnimateNumber
+              value={user.balance}
+              formatter={val => parseInt(val, 10)}
+            />{' '}
             баллов
           </CardBalance>
-          <CardCashback>3%</CardCashback>
+          <CardCashback>{user.cashback}%</CardCashback>
         </CardState>
       </CardSt>
 
@@ -163,7 +166,7 @@ export default class Feed extends React.Component {
   );
 
   render() {
-    const { dispatch = () => ({}), isFetching = false } = this.props;
+    const { dispatch = () => ({}), isFetching = false, user } = this.props;
 
     const refreshControl = (
       <RefreshControl
@@ -179,7 +182,7 @@ export default class Feed extends React.Component {
         <CardView>
           <Heading>Моя карта</Heading>
 
-          <Card />
+          <Card user={user} />
         </CardView>
 
         <FeedSt>

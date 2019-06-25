@@ -1,60 +1,13 @@
 import React from 'react';
 import { AsYouType, isValidNumber } from 'libphonenumber-js';
-import {
-  // ImageBackground, StatusBar,
-  Keyboard,
-} from 'react-native';
+import { Keyboard } from 'react-native';
 
 import firebase from 'react-native-firebase';
 
 import { createStackNavigator, createSwitchNavigator } from 'react-navigation';
-// import createAnimatedSwitchNavigator from 'react-navigation-animated-switch';
 import styled from 'styled-components';
-// import bgImage from './bg.jpg';
 
 import { HeaderButton } from '../ui';
-
-// const View = styled.View`
-//   flex: 1;
-//   padding-horizontal: 16;
-// `;
-
-// const Heading = styled.Text`
-//   color: #fff;
-//   font-weight: 900;
-//   font-size: 40;
-//   line-height: 44;
-//   margin-top: 64;
-//   letter-spacing: -1;
-// `;
-
-// const Description = styled.Text`
-//   color: #fff;
-//   font-size: 18;
-//   line-height: 22;
-//   font-weight: 400;
-//   margin-top: 10;
-// `;
-
-// const LoginButton = styled.TouchableOpacity`
-//   padding-vertical: 16;
-//   margin-horizontal: 16;
-//   background-color: #fff;
-//   border-radius: 8;
-
-//   position: absolute;
-//   left: 0;
-//   right: 0;
-//   bottom: 60;
-// `;
-
-// const LoginButtonText = styled.Text`
-//   font-size: 20;
-//   font-weight: 600;
-//   line-height: 22;
-//   color: #0a0a0a;
-//   text-align: center;
-// `;
 
 const ScrollView = styled.ScrollView`
   flex: 1;
@@ -80,31 +33,11 @@ const Input = styled.TextInput`
   text-align: center;
   width: 100%;
   margin-top: 26;
-  /* border-bottom: 1px solid #eee; */
 `;
 
 const HeaderLoading = styled.ActivityIndicator`
   margin-right: 16;
 `;
-
-// function Onboarding({ navigation }) {
-//   return (
-//     <ImageBackground source={bgImage} style={{ width: '100%', height: '100%' }}>
-//       <StatusBar barStyle="light-content" />
-//       <View>
-//         <Heading>Добро пожаловать</Heading>
-//         <Description>
-//           Путешествуйте и не беспокойтесь о документах: Мята поможет со
-//           страховкой, визой и любыми документами
-//         </Description>
-
-//         <LoginButton onPress={() => navigation.navigate('Phone')}>
-//           <LoginButtonText>Войти</LoginButtonText>
-//         </LoginButton>
-//       </View>
-//     </ImageBackground>
-//   );
-// }
 
 /* eslint-disable react/no-multi-comp */
 class PhoneScreen extends React.Component {
@@ -213,8 +146,6 @@ class CodeScreen extends React.Component {
         })
         .catch(error =>
           this.setState({ error, isFetching: false }, () => {
-            firebase.crashlytics().recordError({ error });
-
             this.props.navigation.setParams(this.state);
           }))
         .finally(() => Keyboard.dismiss());
@@ -232,9 +163,8 @@ class CodeScreen extends React.Component {
           autoFocus
           onChangeText={this.onChangeCode}
           value={code}
-          autoCompleteType=""
+          textContentType="oneTimeCode"
           keyboardType="numeric"
-          textContentType="password"
           underlineColorAndroid="transparent"
           keyboardAppearance="light"
           onSubmitEditing={this.onSubmit}
@@ -336,12 +266,6 @@ const AuthNavigator = createStackNavigator(
 
 export default createSwitchNavigator(
   {
-    // Onboarding: {
-    //   screen: Onboarding,
-    //   navigationOptions: {
-    //     headerTransparent: true,
-    //   },
-    // },
     AuthNavigator,
   },
   {
