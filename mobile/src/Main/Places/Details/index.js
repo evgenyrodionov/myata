@@ -7,11 +7,13 @@ import distanceInWordsStrict from 'date-fns/distance_in_words_strict';
 import ruLocale from 'date-fns/locale/ru';
 import capitalize from 'capitalize';
 
+import { BlurView } from '@react-native-community/blur';
 import EventCard from '../EventCard';
 import Photos from './Photos';
 
 import {
-  Title2,
+  FooterPusher,
+  Title,
   ButtonWithIcon,
   IconPhone,
   IconGPS,
@@ -24,7 +26,7 @@ const { width: deviceWidth } = Dimensions.get('window');
 
 const View = styled.ScrollView`
   margin-top: 96;
-  padding-top: 36;
+  padding-top: 16;
   padding-horizontal: 16;
   background-color: #111;
   border-top-left-radius: 20;
@@ -41,15 +43,8 @@ const DateLabel = styled(Text)`
   margin-top: 16;
 `;
 
-export const Title = styled.Text`
-  font-size: 34;
-  line-height: 36;
-  font-weight: 700;
-  color: #fff;
-`;
-
 const TimeTableSt = styled.View`
-  /* margin-top: 20; */
+  margin-top: 42;
 `;
 
 const TimeTableItem = styled.View`
@@ -105,7 +100,7 @@ function renderTimeTableItem({ item, index }) {
 function TimeTable({ workingHours }) {
   return (
     <TimeTableSt>
-      <Title2>Часы работы</Title2>
+      <Title>Часы работы</Title>
       <FlatList
         data={workingHours}
         renderItem={renderTimeTableItem}
@@ -139,7 +134,7 @@ function renderEventItem({ item }) {
 function Events({ events }) {
   return (
     <TimeTableSt>
-      <Title2>Лента</Title2>
+      <Title>Лента</Title>
 
       <FlatList
         data={events}
@@ -243,13 +238,22 @@ function renderSpecialOffer({ item }) {
   return null;
 }
 
-const Close = styled.View`
+const Close = styled(BlurView)`
   display: flex;
   align-items: center;
   position: absolute;
-  top: -20;
+  padding-top: 12;
+  padding-bottom: 12;
+  top: 48;
   left: 0;
   right: 0;
+  border-top-left-radius: 20;
+  border-top-right-radius: 20;
+`;
+
+const IconArrowButton = styled.TouchableOpacity`
+  padding-vertical: 12;
+  padding-horizontal: 12;
 `;
 
 export default function OrderDetails({ navigation }) {
@@ -258,22 +262,28 @@ export default function OrderDetails({ navigation }) {
   const { workingHours = [], events = [], photos = [] } = item;
 
   return (
-    <View>
-      <Close>
-        <IconArrow color="#424242" />
+    <>
+      <Close blurType="extraDark">
+        <IconArrowButton onPress={() => navigation.goBack()}>
+          <IconArrow color="#424242" />
+        </IconArrowButton>
       </Close>
 
-      <Title>{item.title}</Title>
+      <View>
+        <Title>{item.title}</Title>
 
-      {renderSpecialOffer({ item })}
+        {renderSpecialOffer({ item })}
 
-      <DateLabel>{item.addressTitle}</DateLabel>
+        <DateLabel>{item.addressTitle}</DateLabel>
 
-      <Actions item={item} />
+        <Actions item={item} />
 
-      {photos.length > 0 && <Photos photos={photos} />}
-      {events.length > 0 && <Events events={events} />}
-      {workingHours.length > 0 && <TimeTable workingHours={workingHours} />}
-    </View>
+        {photos.length > 0 && <Photos photos={photos} />}
+        {events.length > 0 && <Events events={events} />}
+        {workingHours.length > 0 && <TimeTable workingHours={workingHours} />}
+
+        <FooterPusher size={96} />
+      </View>
+    </>
   );
 }

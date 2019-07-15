@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import ruLocale from 'date-fns/locale/ru';
 import format from 'date-fns/format';
+import * as Haptics from 'expo-haptics';
 
 const StCard = styled.View`
   padding-horizontal: 16;
@@ -53,8 +54,14 @@ const defaultDateFormat = eventAt =>
 export default function EventCard({
   item,
   dateFormat = defaultDateFormat,
-  onPress = () => ({}),
+  onPress: parentOnPress = () => ({}),
 }) {
+  function onPress() {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => {});
+
+    parentOnPress();
+  }
+
   return (
     <TouchableOpacity onPress={onPress}>
       <ImageBackground

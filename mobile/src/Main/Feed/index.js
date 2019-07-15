@@ -9,13 +9,14 @@ import PassKit, { AddPassButton } from 'react-native-passkit-wallet';
 import logoImg from '../../images/logo_103.png';
 import EventCard from '../Places/EventCard';
 import { systemEvents } from '../../data';
+import { FooterPusher } from '../../ui';
 
 const { width: deviceWidth } = Dimensions.get('window');
 
 const View = styled.ScrollView`
   width: ${deviceWidth};
   padding-horizontal: 16;
-  padding-top: 36;
+  padding-top: 20;
 `;
 
 const FeedSt = styled.View`
@@ -158,9 +159,9 @@ export default class Feed extends React.Component {
             addSuffix: true,
           })
         }
-        onPress={() => {
-          navigation.navigate('PlaceDetails', { id: item.placeId });
-        }}
+        onPress={() =>
+          navigation.navigate('PlaceDetails', { id: item.placeId })
+        }
       />
     </EventItem>
   );
@@ -202,6 +203,8 @@ export default class Feed extends React.Component {
             keyExtractor={item => String(item.id)}
           />
         </FeedSt>
+
+        <FooterPusher />
       </View>
     );
   }

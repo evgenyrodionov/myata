@@ -2,36 +2,40 @@ import React from 'react';
 import {
   // Share,
   Dimensions,
-  StatusBar,
+  // StatusBar,
 } from 'react-native';
-import Modal from 'react-native-modal';
+// import Modal from 'react-native-modal';
 import { Image, CacheManager } from 'react-native-expo-image-cache';
 import styled from 'styled-components';
 // import { HeaderBackButton } from 'react-navigation';
-import Swiper from 'react-native-swiper';
+// import Swiper from 'react-native-swiper';
 // import AssetUtils from 'expo-asset-utils';
 // import { Title2, theme, CategoryHeader } from './ios';
 // import shareIcon from './icons/share.png';
 // import { getPhotoUrl } from '../utils';
 
-const { width } = Dimensions.get('window');
+const { width: deviceWidth } = Dimensions.get('window');
 
 const View = styled.View`
   margin-top: 24;
   margin-bottom: 24;
 `;
 
-const PhotoContainer = styled.TouchableOpacity``;
-
-const photoStyle = { borderRadius: 10, height: 160, width: width - 32 };
-
-const PhotosList = styled.FlatList``;
-
-const GalleryContainer = styled.View`
-  flex: 1;
-  flex-direction: column;
-  /* background: #111; */
+const PhotoContainer = styled.TouchableOpacity.attrs({ activeOpacity: 0.8 })`
+  padding-horizontal: 16;
 `;
+
+const photoStyle = { borderRadius: 10, height: 320, width: deviceWidth - 32 };
+
+const PhotosList = styled.FlatList`
+  margin-horizontal: -16;
+`;
+
+// const GalleryContainer = styled.View`
+//   flex: 1;
+//   flex-direction: column;
+//   /* background: #111; */
+// `;
 
 // const ButtonRow = styled.View`
 //   justify-content: space-between;
@@ -74,22 +78,22 @@ const GalleryContainer = styled.View`
 //   tint-color: ${theme.buttonColor};
 // `;
 
-const SwiperContainer = styled.View`
-  margin-vertical: 10;
-  flex: 1;
-`;
+// const SwiperContainer = styled.View`
+//   margin-vertical: 10;
+//   flex: 1;
+// `;
 
-const Spacer = styled.View`
-  height: 120;
-`;
+// const Spacer = styled.View`
+//   height: 120;
+// `;
 
 const getPhotoUrl = id => `https://ucarecdn.com/${id}/`;
 
 export default class PhotoGallery extends React.Component {
-  state = {
-    modalVisible: false,
-    currentIdx: 0,
-  };
+  // state = {
+  //   modalVisible: false,
+  //   currentIdx: 0,
+  // };
 
   // fetchPhotoFile = async (photo) => {
   //   const { localUri } = await AssetUtils.resolveAsync(photo);
@@ -115,29 +119,29 @@ export default class PhotoGallery extends React.Component {
   //   }
   // };
 
-  onPhotoPress = (idx) => {
-    this.setState({
-      modalVisible: true,
-      currentIdx: idx,
-    });
-  };
+  // onPhotoPress = (idx) => {
+  //   this.setState({
+  //     modalVisible: true,
+  //     currentIdx: idx,
+  //   });
+  // };
 
-  hideModal = () => {
-    StatusBar.setBarStyle('light-content');
-    this.setState({ modalVisible: false });
-  };
+  // hideModal = () => {
+  //   StatusBar.setBarStyle('light-content');
+  //   this.setState({ modalVisible: false });
+  // };
 
-  onBackPress = () => {
-    this.hideModal();
-  };
+  // onBackPress = () => {
+  //   this.hideModal();
+  // };
 
-  onRequestClose = () => {
-    this.hideModal();
-  };
+  // onRequestClose = () => {
+  //   this.hideModal();
+  // };
 
-  onIndexChanged = (idx) => {
-    this.setState({ currentIdx: idx });
-  };
+  // onIndexChanged = (idx) => {
+  //   this.setState({ currentIdx: idx });
+  // };
 
   onImageLoad = async () => {
     // console.log('onImageLoad');
@@ -146,17 +150,18 @@ export default class PhotoGallery extends React.Component {
 
     if (cacheSize > 10000) {
       CacheManager.clearCache();
-      console.log('clear cache');
     }
   };
 
-  renderItem = ({ item: url, index }) => (
-    <PhotoContainer onPress={() => this.onPhotoPress(index)}>
+  renderItem = ({ item: url }) => (
+    <PhotoContainer>
       <Image
         onLoad={this.onImageLoad}
         style={photoStyle}
-        preview={{ uri: `${getPhotoUrl(url)}/-/resize/x48/` }}
-        uri={`${getPhotoUrl(url)}/-/resize/x512/`}
+        // resizeMethod="resize"
+        resizeMode="cover"
+        preview={{ uri: `${getPhotoUrl(url)}-/resize/x48/` }}
+        uri={`${getPhotoUrl(url)}-/resize/x640/`}
       />
     </PhotoContainer>
   );
@@ -167,7 +172,7 @@ export default class PhotoGallery extends React.Component {
     //   return [arr.slice(0, n)].concat(chunk(arr.slice(n), n));
     // }
     const { photos = [] } = this.props;
-    const { modalVisible, currentIdx } = this.state;
+    // const { modalVisible, currentIdx } = this.state;
     // const photosAmount = photos.length;
 
     return (
@@ -183,7 +188,7 @@ export default class PhotoGallery extends React.Component {
           renderItem={this.renderItem}
         />
 
-        <Modal
+        {/* <Modal
           isVisible={modalVisible}
           backdropOpacity={0.8}
           onSwipeComplete={this.hideModal}
@@ -214,7 +219,7 @@ export default class PhotoGallery extends React.Component {
             </SwiperContainer>
             <Spacer />
           </GalleryContainer>
-        </Modal>
+        </Modal> */}
       </View>
     );
   }

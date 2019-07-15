@@ -3,6 +3,13 @@ import styled from 'styled-components';
 export { default as HeaderButton } from './HeaderButton';
 export { default as Button, ButtonWithIcon } from './Button';
 
+export const Title = styled.Text`
+  font-size: 36;
+  font-weight: bold;
+  margin-bottom: 8;
+  color: #fff;
+`;
+
 export const Title2 = styled.Text`
   font-size: 24;
   line-height: 26;
@@ -10,6 +17,10 @@ export const Title2 = styled.Text`
   margin-bottom: 16;
   margin-top: 42;
   color: #fff;
+`;
+
+export const FooterPusher = styled.View`
+  height: ${p => p.size || 24};
 `;
 
 export { default as IconProfile } from './icons/Profile';

@@ -3,13 +3,14 @@ import { RefreshControl, Dimensions } from 'react-native';
 import styled, { css } from 'styled-components';
 import Card from './Card';
 import { places } from '../../data';
+import { FooterPusher } from '../../ui';
 
 const { width: deviceWidth } = Dimensions.get('window');
 
 const View = styled.ScrollView`
   width: ${deviceWidth};
   padding-horizontal: 16;
-  padding-top: 36;
+  padding-top: 20;
 `;
 
 const Heading = styled.Text`
@@ -45,12 +46,12 @@ export default function Places(props) {
     <Item>
       <Card
         item={item}
-        onPress={() =>
+        onPress={() => {
           navigation.navigate('PlaceDetails', {
             id: item.id,
             item,
-          })
-        }
+          });
+        }}
       />
     </Item>
   );
@@ -75,6 +76,8 @@ export default function Places(props) {
         data={places}
         keyExtractor={item => String(item.id)}
       />
+
+      <FooterPusher />
     </View>
   );
 }

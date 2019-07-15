@@ -2,11 +2,12 @@ import React from 'react';
 import { Dimensions } from 'react-native';
 import styled from 'styled-components';
 import firebase from 'react-native-firebase';
+import * as Haptics from 'expo-haptics';
 
 import parse from 'date-fns/parse';
 
-import { createStackNavigator, Header as RNHeader } from 'react-navigation';
-// import { BlurView } from '@react-native-community/blur';
+import { createStackNavigator } from 'react-navigation';
+import { isIphoneX } from 'react-native-iphone-x-helper';
 import {
   HeaderButton, IconProfile, IconFeed, IconMap,
 } from '../ui';
@@ -19,19 +20,18 @@ import Profile from './Profile';
 
 const { width: deviceWidth } = Dimensions.get('window');
 
-const View = styled.View`
+const View = styled.SafeAreaView`
   flex: 1;
   background-color: #191919;
 `;
 
 const ScrollView = styled.ScrollView`
-  padding-top: ${RNHeader.HEIGHT + 25};
+  padding-top: 48;
 `;
 
 const HeaderWrapper = styled.View`
   position: absolute;
-  top: ${RNHeader.HEIGHT};
-  height: ${RNHeader.HEIGHT};
+  top: ${isIphoneX() ? 48 + 12 : 48 - 12};
   width: ${deviceWidth};
 `;
 
@@ -51,6 +51,10 @@ const firestore = firebase.firestore();
 function Main(props) {
   const [user, setUser] = React.useState({});
   const [screenOffset, updateScreenOffset] = React.useState(2);
+
+  React.useEffect(() => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => {});
+  }, [screenOffset]);
 
   React.useEffect(() => {
     // const { currentUser } = firebase.auth();
@@ -130,9 +134,17 @@ function Main(props) {
         horizontal
         showsHorizontalScrollIndicator={false}
         contentOffset={{ x: deviceWidth * screenOffset }}
-        onMomentumScrollEnd={e =>
-          updateScreenOffset(e.nativeEvent.contentOffset.x / deviceWidth)
-        }
+        onMomentumScrollEnd={(e) => {
+          const offset = e.nativeEvent.contentOffset;
+
+          if (offset) {
+            const page = Math.round(offset.x / deviceWidth);
+
+            if (Number(screenOffset) !== Number(page)) {
+              updateScreenOffset(page);
+            }
+          }
+        }}
       >
         <Profile user={user} {...props} />
         <Feed user={user} {...props} />

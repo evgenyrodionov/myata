@@ -9,18 +9,25 @@ import { parsePhoneNumberFromString } from 'libphonenumber-js';
 import format from 'date-fns/format';
 import locale from 'date-fns/locale/ru';
 import Safari from 'react-native-safari-view';
-import { Title2, ButtonWithIcon, IconLogout } from '../../ui';
+import {
+  Title as OrigTitle,
+  ButtonWithIcon,
+  IconLogout,
+  FooterPusher,
+} from '../../ui';
 
 const { width: deviceWidth } = Dimensions.get('window');
 
-const Wrapper = styled.View`
-  flex: 1;
-`;
+const Wrapper = styled.View``;
 
 const View = styled.ScrollView`
   width: ${deviceWidth};
   padding-horizontal: 16;
-  padding-top: 28;
+  padding-top: 20;
+`;
+
+const Title = styled(OrigTitle)`
+  margin-bottom: 14;
 `;
 
 const Heading = styled.Text`
@@ -40,7 +47,7 @@ const PhoneNumber = styled.Text`
   font-size: 18;
   font-weight: 400;
   margin-top: 4;
-  color: #fff;
+  color: rgba(255, 255, 255, 0.4);
   text-align: center;
 `;
 
@@ -90,7 +97,7 @@ function renderVisit({ item }) {
 }
 
 const VisitsSt = styled.View`
-  margin-top: 18;
+  margin-top: 56;
 `;
 
 const FlatList = styled.FlatList``;
@@ -105,7 +112,7 @@ const Separator = styled.View`
 function Visits({ user }) {
   return (
     <VisitsSt>
-      <Title2>Мои посещения</Title2>
+      <Title>Мои посещения</Title>
 
       <FlatList
         data={orderBy(user.visits, 'createdAt', 'desc')}
@@ -118,7 +125,7 @@ function Visits({ user }) {
 }
 
 const FriendsSt = styled.View`
-  margin-top: 18;
+  margin-top: 56;
 `;
 
 const FriendList = styled.FlatList``;
@@ -160,7 +167,7 @@ const ReferralInputText = styled.Text`
 function Friends({ user }) {
   return (
     <FriendsSt>
-      <Title2>Мои друзья</Title2>
+      <Title>Мои друзья</Title>
 
       <FriendList
         data={user.friends}
@@ -199,7 +206,7 @@ function Friends({ user }) {
 }
 
 const NotificationsSt = styled.View`
-  margin-top: 18;
+  margin-top: 56;
 `;
 
 const Notification = styled.View`
@@ -225,7 +232,7 @@ function Notifications({ user }) {
 
   return (
     <NotificationsSt>
-      <Title2>Уведомления</Title2>
+      <Title>Уведомления</Title>
 
       <FlatList
         data={Object.entries(notifications)}
@@ -307,6 +314,8 @@ export default function Profile({ user, ...props }) {
             Выйти из аккаунта
           </ButtonWithIcon>
         </Logout>
+
+        <FooterPusher />
       </View>
     </Wrapper>
   );

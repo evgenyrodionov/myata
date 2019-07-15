@@ -6,6 +6,7 @@ import getDay from 'date-fns/get_day';
 import isFuture from 'date-fns/is_future';
 import format from 'date-fns/format';
 import capitalize from 'capitalize';
+import * as Haptics from 'expo-haptics';
 
 import { IconHeart } from '../../ui';
 
@@ -129,7 +130,7 @@ function renderSpecialOffer({ item }) {
   return null;
 }
 
-export default function Card({ item, onPress }) {
+export default function Card({ item, onPress: parentOnPress = () => {} }) {
   const [isLiked, toggle] = React.useState(false);
   const today = new Date();
   const todayDayOfWeek = getDay(today);
@@ -141,8 +142,13 @@ export default function Card({ item, onPress }) {
   const isOpeningInFuture = isFuture(openingAt);
   // const isClosingInFuture = isFuture(closingAt);
 
+  function onPress() {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => {});
+    parentOnPress();
+  }
+
   return (
-    <TouchableOpacity onPress={onPress}>
+    <TouchableOpacity onPress={onPress} activeOpacity={0.7}>
       <ImageBackground
         source={{ uri: item.coverImg }}
         imageStyle={{ borderRadius: 10 }}
