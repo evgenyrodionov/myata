@@ -34,7 +34,7 @@
 	<key>CFBundleVersion</key>
 	<string>12</string>
 	<key>CodePushDeploymentKey</key>
-	<string>deployment-key-here</string>
+	<string>iVw0kJXUUK3m_4tXPvVdIV-Nr1G8BJT6dOq-r</string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>yandexnavi</string>
@@ -47,6 +47,8 @@
 		<true/>
 		<key>NSExceptionDomains</key>
 		<dict>
+			<key>codepush.azurewebsites.net</key>
+			<dict />
 			<key>localhost</key>
 			<dict>
 				<key>NSExceptionAllowsInsecureHTTPLoads</key>

@@ -6,7 +6,6 @@
  */
 
 #import "AppDelegate.h"
-//#import <CodePush/CodePush.h>
 #import <Firebase.h>
 
 #import <React/RCTBundleURLProvider.h>
@@ -15,6 +14,8 @@
 #import <UMCore/UMModuleRegistry.h>
 #import <UMReactNativeAdapter/UMNativeModulesProxy.h>
 #import <UMReactNativeAdapter/UMModuleRegistryAdapter.h>
+
+#import <CodePush/CodePush.h>
 
 @implementation AppDelegate
 
@@ -42,13 +43,13 @@
   return extraModules;
 }
 
-- (NSURL *)sourceURLForBridge:(RCTBridge *)bridge {
-#ifdef DEBUG
-  return [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index" fallbackResource:nil];
-#else
-//  return [CodePush bundleURL];
-  return [[NSBundle mainBundle] URLForResource:@"main" withExtension:@"jsbundle"];
-#endif
+- (NSURL *)sourceURLForBridge:(RCTBridge *)bridge
+{
+  #if DEBUG
+    return [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index" fallbackResource:nil];
+  #else
+    return [CodePush bundleURL];
+  #endif
 }
 
 @end
