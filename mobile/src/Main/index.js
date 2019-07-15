@@ -6,8 +6,10 @@ import firebase from 'react-native-firebase';
 import parse from 'date-fns/parse';
 
 import { createStackNavigator, Header as RNHeader } from 'react-navigation';
-import { BlurView } from '@react-native-community/blur';
-import { HeaderButton } from '../ui';
+// import { BlurView } from '@react-native-community/blur';
+import {
+  HeaderButton, IconProfile, IconFeed, IconMap,
+} from '../ui';
 
 import Places from './Places';
 import PlaceDetails from './Places/Details';
@@ -17,19 +19,38 @@ import Profile from './Profile';
 
 const { width: deviceWidth } = Dimensions.get('window');
 
-const ScrollView = styled.ScrollView`
+const View = styled.View`
   flex: 1;
   background-color: #191919;
+`;
+
+const ScrollView = styled.ScrollView`
   padding-top: ${RNHeader.HEIGHT + 25};
 `;
 
-const startScreenOffset = 1;
-const contentOffset = { x: deviceWidth * startScreenOffset };
+const HeaderWrapper = styled.View`
+  position: absolute;
+  top: ${RNHeader.HEIGHT};
+  height: ${RNHeader.HEIGHT};
+  width: ${deviceWidth};
+`;
+
+// const Header = styled(BlurView)`
+const Header = styled.View`
+  margin-horizontal: 16;
+  flex: 1;
+  justify-content: space-between;
+  flex-direction: row;
+`;
 
 const firestore = firebase.firestore();
 
+// const Text = styled.Text``;
+// const TouchableOpacity = styled.TouchableOpacity``;
+
 function Main(props) {
   const [user, setUser] = React.useState({});
+  const [screenOffset, updateScreenOffset] = React.useState(2);
 
   React.useEffect(() => {
     // const { currentUser } = firebase.auth();
@@ -80,16 +101,44 @@ function Main(props) {
   }, []);
 
   return (
-    <ScrollView
-      pagingEnabled
-      horizontal
-      showsHorizontalScrollIndicator={false}
-      contentOffset={contentOffset}
-    >
-      <Profile user={user} {...props} />
-      <Feed user={user} {...props} />
-      <Places {...props} />
-    </ScrollView>
+    <View>
+      <HeaderWrapper>
+        <Header blurType="extraDark">
+          <HeaderButton
+            isActive={screenOffset === 0}
+            onPress={() => updateScreenOffset(0)}
+          >
+            <IconProfile />
+          </HeaderButton>
+          <HeaderButton
+            isActive={screenOffset === 1}
+            onPress={() => updateScreenOffset(1)}
+          >
+            <IconFeed />
+          </HeaderButton>
+          <HeaderButton
+            isActive={screenOffset === 2}
+            onPress={() => updateScreenOffset(2)}
+          >
+            <IconMap />
+          </HeaderButton>
+        </Header>
+      </HeaderWrapper>
+
+      <ScrollView
+        pagingEnabled
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentOffset={{ x: deviceWidth * screenOffset }}
+        onMomentumScrollEnd={e =>
+          updateScreenOffset(e.nativeEvent.contentOffset.x / deviceWidth)
+        }
+      >
+        <Profile user={user} {...props} />
+        <Feed user={user} {...props} />
+        <Places {...props} />
+      </ScrollView>
+    </View>
   );
 }
 
@@ -98,22 +147,11 @@ export default createStackNavigator(
     Main,
     PlaceDetails: {
       screen: PlaceDetails,
-      navigationOptions: {
-        headerLeft: null,
-        headerTitle: <HeaderButton>↓</HeaderButton>,
-        headerRight: null,
-      },
     },
   },
   {
     mode: 'modal',
-    headerMode: 'screen',
-    defaultNavigationOptions: {
-      headerBackground: <BlurView blurType="extraDark" style={{ flex: 1 }} />,
-      headerTransparent: true,
-      headerLeft: <HeaderButton>👱🏻‍♂️</HeaderButton>,
-      headerTitle: <HeaderButton>📰</HeaderButton>,
-      headerRight: <HeaderButton>🏛</HeaderButton>,
-    },
+    headerMode: 'none',
+    transparentCard: true,
   },
 );

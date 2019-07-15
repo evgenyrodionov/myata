@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dimensions, FlatList } from 'react-native';
+import { Dimensions, FlatList, Linking } from 'react-native';
 import styled from 'styled-components';
 import getDay from 'date-fns/get_day';
 import isFuture from 'date-fns/is_future';
@@ -7,17 +7,29 @@ import distanceInWordsStrict from 'date-fns/distance_in_words_strict';
 import ruLocale from 'date-fns/locale/ru';
 import capitalize from 'capitalize';
 
-import EventCard from './EventCard';
+import EventCard from '../EventCard';
+import Photos from './Photos';
 
-import { Title2 } from '../../ui';
-import { places } from '../../data';
+import {
+  Title2,
+  ButtonWithIcon,
+  IconPhone,
+  IconGPS,
+  IconWhatsApp,
+  IconArrow,
+} from '../../../ui';
+import { places } from '../../../data';
 
 const { width: deviceWidth } = Dimensions.get('window');
 
 const View = styled.ScrollView`
-  padding-top: 100;
+  margin-top: 96;
+  padding-top: 36;
   padding-horizontal: 16;
-  background-color: #171717;
+  background-color: #111;
+  border-top-left-radius: 20;
+  border-top-right-radius: 20;
+  position: relative;
 `;
 
 const Text = styled.Text`
@@ -26,7 +38,7 @@ const Text = styled.Text`
 
 const DateLabel = styled(Text)`
   color: #fff;
-  margin-top: 22;
+  margin-top: 16;
 `;
 
 export const Title = styled.Text`
@@ -37,7 +49,7 @@ export const Title = styled.Text`
 `;
 
 const TimeTableSt = styled.View`
-  margin-top: 20;
+  /* margin-top: 20; */
 `;
 
 const TimeTableItem = styled.View`
@@ -103,23 +115,6 @@ function TimeTable({ workingHours }) {
   );
 }
 
-// const DetailsSt = styled.View``;
-
-// const Dl = styled.View`
-//   margin-bottom: 16;
-// `;
-
-// const Dt = styled.Text`
-//   font-size: 15;
-//   color: #9c9c9c;
-//   margin-bottom: 2;
-// `;
-
-// const Dd = styled.Text`
-//   font-size: 16;
-//   color: #3a3a3a;
-// `;
-
 export const SpecialOffer = styled.View`
   padding-vertical: 16;
   padding-horizontal: 16;
@@ -154,6 +149,55 @@ function Events({ events }) {
         showsHorizontalScrollIndicator={false}
       />
     </TimeTableSt>
+  );
+}
+
+const ActionsSt = styled.View`
+  margin-top: 24;
+`;
+
+function Actions({ item }) {
+  const [canUseNavi, setCanUseNavi] = React.useState(false);
+
+  const yandexNaviURL = `yandexnavi://map_search?text=${item.addressTitle}`;
+
+  React.useEffect(() => {
+    Linking.canOpenURL(yandexNaviURL)
+      .then(res => setCanUseNavi(res))
+      .catch(() => setCanUseNavi(false));
+  }, []);
+
+  return (
+    <ActionsSt>
+      {canUseNavi && (
+        <ButtonWithIcon
+          icon={<IconGPS color="#eee" size={20} />}
+          bgColor="#339274"
+          textColor="#eee"
+          onPress={() =>
+            Linking.openURL(`yandexnavi://map_search?text=${item.addressTitle}`)
+          }
+        >
+          Проложить маршрут
+        </ButtonWithIcon>
+      )}
+      <ButtonWithIcon
+        icon={<IconWhatsApp color="#eee" size={20} />}
+        bgColor="#191919"
+        textColor="#eee"
+        onPress={() => Linking.openURL(`https://wa.me/+${item.phoneNumber}`)}
+      >
+        Написать в WhatsApp
+      </ButtonWithIcon>
+      <ButtonWithIcon
+        icon={<IconPhone color="#eee" size={20} />}
+        bgColor="#191919"
+        textColor="#eee"
+        onPress={() => Linking.openURL(`tel:+${item.phoneNumber}`)}
+      >
+        Позвонить
+      </ButtonWithIcon>
+    </ActionsSt>
   );
 }
 
@@ -199,22 +243,37 @@ function renderSpecialOffer({ item }) {
   return null;
 }
 
+const Close = styled.View`
+  display: flex;
+  align-items: center;
+  position: absolute;
+  top: -20;
+  left: 0;
+  right: 0;
+`;
+
 export default function OrderDetails({ navigation }) {
   const id = navigation.getParam('id');
   const item = places.find(place => place.id === id) || navigation.getParam('item', {});
-  const { workingHours = [], events = [] } = item;
+  const { workingHours = [], events = [], photos = [] } = item;
 
   return (
     <View>
+      <Close>
+        <IconArrow color="#424242" />
+      </Close>
+
       <Title>{item.title}</Title>
 
       {renderSpecialOffer({ item })}
 
       <DateLabel>{item.addressTitle}</DateLabel>
 
-      <TimeTable workingHours={workingHours} />
+      <Actions item={item} />
 
+      {photos.length > 0 && <Photos photos={photos} />}
       {events.length > 0 && <Events events={events} />}
+      {workingHours.length > 0 && <TimeTable workingHours={workingHours} />}
     </View>
   );
 }

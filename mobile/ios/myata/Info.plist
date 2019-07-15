@@ -32,9 +32,13 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>8</string>
+	<string>12</string>
 	<key>CodePushDeploymentKey</key>
 	<string>deployment-key-here</string>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>yandexnavi</string>
+	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>

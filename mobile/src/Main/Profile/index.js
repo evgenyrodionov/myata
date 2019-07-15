@@ -1,5 +1,7 @@
 import React from 'react';
-import { Dimensions, Alert, Switch } from 'react-native';
+import {
+  RefreshControl, Dimensions, Alert, Switch,
+} from 'react-native';
 import firebase from 'react-native-firebase';
 import styled, { css } from 'styled-components';
 import orderBy from 'lodash/orderBy';
@@ -7,7 +9,7 @@ import { parsePhoneNumberFromString } from 'libphonenumber-js';
 import format from 'date-fns/format';
 import locale from 'date-fns/locale/ru';
 import Safari from 'react-native-safari-view';
-import { Title2 } from '../../ui';
+import { Title2, ButtonWithIcon, IconLogout } from '../../ui';
 
 const { width: deviceWidth } = Dimensions.get('window');
 
@@ -32,21 +34,6 @@ const Heading = styled.Text`
     && css`
       text-align: center;
     `}
-`;
-
-const LogoutButton = styled.TouchableOpacity`
-  padding-vertical: 12;
-  margin-top: 24;
-  background-color: #111;
-  border-radius: 8;
-`;
-
-const LogoutButtonText = styled.Text`
-  font-size: 14;
-  font-weight: 600;
-  line-height: 22;
-  color: #fff;
-  text-align: center;
 `;
 
 const PhoneNumber = styled.Text`
@@ -269,7 +256,17 @@ const onLogout = (onConfirm) => {
   ]);
 };
 
+function loadList() {
+  return {};
+}
+
+const Logout = styled.View`
+  margin-top: 24;
+`;
+
 export default function Profile({ user, ...props }) {
+  const { dispatch = () => ({}), isFetching = false } = props;
+
   // const { currentUser } = firebase.auth();
   const phoneNumber = parsePhoneNumberFromString(
     // currentUser.phoneNumber,
@@ -281,8 +278,17 @@ export default function Profile({ user, ...props }) {
     props.navigation.navigate('Auth');
   };
 
+  const refreshControl = (
+    <RefreshControl
+      onRefresh={() => dispatch(loadList())}
+      enabled={!isFetching}
+      // refreshing={isFetching && orders.length !== 0}
+      refreshing={isFetching}
+    />
+  );
+
   return (
-    <Wrapper>
+    <Wrapper refreshControl={refreshControl}>
       <View>
         <Heading center>{user.displayName || ''}</Heading>
         <PhoneNumber>{phoneNumber || ''}</PhoneNumber>
@@ -291,9 +297,16 @@ export default function Profile({ user, ...props }) {
         {user && <Friends user={user} />}
         {user && <Notifications user={user} />}
 
-        <LogoutButton onPress={() => onLogout(onLogoutConfirm)}>
-          <LogoutButtonText>Выйти из аккаунта</LogoutButtonText>
-        </LogoutButton>
+        <Logout>
+          <ButtonWithIcon
+            icon={<IconLogout color="#eee" size={20} />}
+            bgColor="#111"
+            textColor="#fff"
+            onPress={() => onLogout(onLogoutConfirm)}
+          >
+            Выйти из аккаунта
+          </ButtonWithIcon>
+        </Logout>
       </View>
     </Wrapper>
   );

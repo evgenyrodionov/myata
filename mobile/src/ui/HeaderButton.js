@@ -1,20 +1,21 @@
 import React from 'react';
+import { TouchableOpacity } from 'react-native';
 import styled from 'styled-components';
+import IconHeaderPoint from './icons/HeaderPoint';
 
-const HeaderButtonSt = styled.TouchableOpacity`
-  margin-horizontal: 16;
-`;
-const HeaderButtonText = styled.Text`
-  font-size: 17;
-  line-height: 17;
-  font-weight: 600;
-  color: #fff;
+const IconHeaderPointWrapper = styled.TouchableOpacity`
+  padding-horizontal: 8;
+  padding-top: 4;
 `;
 
-export default function HeaderButton({ children, ...props }) {
+export default function HeaderButton({ children, isActive, ...props }) {
+  if (isActive) {
+    return <TouchableOpacity {...props}>{children}</TouchableOpacity>;
+  }
+
   return (
-    <HeaderButtonSt {...props}>
-      <HeaderButtonText>{children}</HeaderButtonText>
-    </HeaderButtonSt>
+    <IconHeaderPointWrapper {...props}>
+      <IconHeaderPoint />
+    </IconHeaderPointWrapper>
   );
 }

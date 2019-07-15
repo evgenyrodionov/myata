@@ -7,6 +7,8 @@ import isFuture from 'date-fns/is_future';
 import format from 'date-fns/format';
 import capitalize from 'capitalize';
 
+import { IconHeart } from '../../ui';
+
 const StCard = styled.View`
   padding-horizontal: 16;
   padding-top: 20;
@@ -32,7 +34,7 @@ const Title = styled.Text`
   font-size: 32;
   line-height: 26;
   font-weight: 600;
-  padding-top: 8;
+  padding-top: 4;
   color: #fff;
 `;
 
@@ -43,12 +45,6 @@ const LikeButton = styled.TouchableOpacity`
 
   padding-horizontal: 16;
   padding-vertical: 16;
-`;
-
-const LikeButtonText = styled.Text`
-  color: #fff;
-  font-weight: 600;
-  font-size: 28;
 `;
 
 const Footer = styled.View`
@@ -155,8 +151,7 @@ export default function Card({ item, onPress }) {
           <Header>
             <Title>{item.title}</Title>
             <LikeButton onPress={() => toggle(!isLiked)}>
-              {isLiked && <LikeButtonText>💔</LikeButtonText>}
-              {!isLiked && <LikeButtonText>❤</LikeButtonText>}
+              <IconHeart color={isLiked ? '#E74C3C' : '#fff'} />
             </LikeButton>
           </Header>
           <Footer>
