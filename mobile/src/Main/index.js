@@ -50,7 +50,7 @@ const firestore = firebase.firestore();
 
 function Main(props) {
   const [user, setUser] = React.useState({});
-  const [screenOffset, updateScreenOffset] = React.useState(2);
+  const [screenOffset, updateScreenOffset] = React.useState(1);
 
   React.useEffect(() => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => {});

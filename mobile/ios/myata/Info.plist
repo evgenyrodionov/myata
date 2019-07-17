@@ -32,7 +32,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>12</string>
+	<string>13</string>
 	<key>CodePushDeploymentKey</key>
 	<string>iVw0kJXUUK3m_4tXPvVdIV-Nr1G8BJT6dOq-r</string>
 	<key>LSApplicationQueriesSchemes</key>
@@ -48,7 +48,7 @@
 		<key>NSExceptionDomains</key>
 		<dict>
 			<key>codepush.azurewebsites.net</key>
-			<dict />
+			<dict/>
 			<key>localhost</key>
 			<dict>
 				<key>NSExceptionAllowsInsecureHTTPLoads</key>
