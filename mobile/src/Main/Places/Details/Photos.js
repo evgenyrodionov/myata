@@ -7,6 +7,7 @@ import {
 // import Modal from 'react-native-modal';
 import { Image, CacheManager } from 'react-native-expo-image-cache';
 import styled from 'styled-components';
+import { getPhotoUrl } from '../../../utils/photos';
 // import { HeaderBackButton } from 'react-navigation';
 // import Swiper from 'react-native-swiper';
 // import AssetUtils from 'expo-asset-utils';
@@ -36,7 +37,6 @@ const PhotosList = styled.FlatList`
 //   flex-direction: column;
 //   /* background: #111; */
 // `;
-
 // const ButtonRow = styled.View`
 //   justify-content: space-between;
 //   width: ${width};
@@ -45,49 +45,39 @@ const PhotosList = styled.FlatList`
 //   margin-bottom: 15;
 //   align-items: center;
 // `;
-
 // const ShareButton = styled.TouchableOpacity`
 //   padding-left: 40;
 //   padding-right: 20;
 // `;
-
 // const Info = styled.View`
 //   padding-horizontal: 16;
 //   flex-direction: row;
 //   justify-content: space-between;
 //   align-items: center;
 // `;
-
 // const Header = styled.View``;
-
 // const Title = styled(Title2)`
 //   color: ${theme.text};
 //   margin-bottom: 10;
 //   font-weight: ${theme.fonts.title1};
 // `;
-
 // const Pagination = styled.Text`
 //   color: ${theme.paginationColor};
 //   font-size: 15;
 //   line-height: 14;
 // `;
-
 // const Icon = styled.Image`
 //   width: 17;
 //   height: 24;
 //   tint-color: ${theme.buttonColor};
 // `;
-
 // const SwiperContainer = styled.View`
 //   margin-vertical: 10;
 //   flex: 1;
 // `;
-
 // const Spacer = styled.View`
 //   height: 120;
 // `;
-
-const getPhotoUrl = id => `https://ucarecdn.com/${id}/`;
 
 export default class PhotoGallery extends React.Component {
   // state = {

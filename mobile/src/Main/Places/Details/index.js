@@ -7,32 +7,20 @@ import distanceInWordsStrict from 'date-fns/distance_in_words_strict';
 import ruLocale from 'date-fns/locale/ru';
 import capitalize from 'capitalize';
 
-import { BlurView } from '@react-native-community/blur';
 import EventCard from '../EventCard';
 import Photos from './Photos';
 
 import {
-  FooterPusher,
   Title,
   ButtonWithIcon,
   IconPhone,
   IconGPS,
   IconWhatsApp,
-  IconArrow,
+  Card,
 } from '../../../ui';
 import { places } from '../../../data';
 
 const { width: deviceWidth } = Dimensions.get('window');
-
-const View = styled.ScrollView`
-  margin-top: 96;
-  padding-top: 16;
-  padding-horizontal: 16;
-  background-color: #111;
-  border-top-left-radius: 20;
-  border-top-right-radius: 20;
-  position: relative;
-`;
 
 const Text = styled.Text`
   font-size: 15;
@@ -238,52 +226,25 @@ function renderSpecialOffer({ item }) {
   return null;
 }
 
-const Close = styled(BlurView)`
-  display: flex;
-  align-items: center;
-  position: absolute;
-  padding-top: 12;
-  padding-bottom: 12;
-  top: 48;
-  left: 0;
-  right: 0;
-  border-top-left-radius: 20;
-  border-top-right-radius: 20;
-`;
-
-const IconArrowButton = styled.TouchableOpacity`
-  padding-vertical: 12;
-  padding-horizontal: 12;
-`;
-
 export default function OrderDetails({ navigation }) {
   const id = navigation.getParam('id');
-  const item = places.find(place => place.id === id) || navigation.getParam('item', {});
+  const item =
+    places.find(place => place.id === id) || navigation.getParam('item', {});
   const { workingHours = [], events = [], photos = [] } = item;
 
   return (
-    <>
-      <Close blurType="extraDark">
-        <IconArrowButton onPress={() => navigation.goBack()}>
-          <IconArrow color="#424242" />
-        </IconArrowButton>
-      </Close>
+    <Card onGoBack={() => navigation.goBack()}>
+      <Title>{item.title}</Title>
 
-      <View>
-        <Title>{item.title}</Title>
+      {renderSpecialOffer({ item })}
 
-        {renderSpecialOffer({ item })}
+      <DateLabel>{item.addressTitle}</DateLabel>
 
-        <DateLabel>{item.addressTitle}</DateLabel>
+      <Actions item={item} />
 
-        <Actions item={item} />
-
-        {photos.length > 0 && <Photos photos={photos} />}
-        {events.length > 0 && <Events events={events} />}
-        {workingHours.length > 0 && <TimeTable workingHours={workingHours} />}
-
-        <FooterPusher size={96} />
-      </View>
-    </>
+      {photos.length > 0 && <Photos photos={photos} />}
+      {events.length > 0 && <Events events={events} />}
+      {workingHours.length > 0 && <TimeTable workingHours={workingHours} />}
+    </Card>
   );
 }

@@ -1,4 +1,5 @@
 import React from 'react';
+import { StyleSheet, Animated, TouchableOpacity } from 'react-native';
 import styled from 'styled-components';
 import distanceInWordsStrict from 'date-fns/distance_in_words_strict';
 import ruLocale from 'date-fns/locale/ru';
@@ -7,8 +8,23 @@ import isFuture from 'date-fns/is_future';
 import format from 'date-fns/format';
 import capitalize from 'capitalize';
 import * as Haptics from 'expo-haptics';
+import { elevationShadowStyle } from '../../utils/shadow';
+import * as animateScale from '../../utils/animateScale';
 
-import { IconHeart } from '../../ui';
+import { IconHeart, IconFutureClock as OrigIconFutureClock } from '../../ui';
+
+const styles = StyleSheet.create({
+  card: {
+    ...elevationShadowStyle({
+      elevation: 11,
+      shadowColor: '#171717',
+      shadowOpacity: 0.3,
+      shadowRadius: 5,
+      shadowOffsetWidthMultiplier: 0.5,
+      shadowOffsetHeightMultiplier: 0.5,
+    }),
+  },
+});
 
 const StCard = styled.View`
   padding-horizontal: 16;
@@ -17,12 +33,7 @@ const StCard = styled.View`
   height: 172;
 
   border-radius: 10;
-  background: rgba(17, 17, 17, 0.6);
-  /* shadow-color: #000;
-  shadow-offset: 0px 20px;
-  shadow-opacity: 0.58;
-  shadow-radius: 16;
-  elevation: 24; */
+  /* background: rgba(17, 17, 17, 0.6); */
 `;
 
 const Header = styled.View`
@@ -69,11 +80,13 @@ const DateHelper = styled.Text`
   margin-top: 6;
 `;
 
+const IconFutureClock = styled(OrigIconFutureClock)`
+  margin-right: 6;
+`;
+
 const ImageBackground = styled.ImageBackground`
   border-radius: 10;
 `;
-
-const TouchableOpacity = styled.TouchableOpacity``;
 
 const SpecialOffer = styled.View`
   padding-vertical: 16;
@@ -142,13 +155,24 @@ export default function Card({ item, onPress: parentOnPress = () => {} }) {
   const isOpeningInFuture = isFuture(openingAt);
   // const isClosingInFuture = isFuture(closingAt);
 
+  const scaleInAnimated = new Animated.Value(0);
+
   function onPress() {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => {});
     parentOnPress();
   }
 
   return (
-    <TouchableOpacity onPress={onPress} activeOpacity={0.7}>
+    <TouchableOpacity
+      onPress={onPress}
+      activeOpacity={1}
+      onPressIn={() => animateScale.pressInAnimation(scaleInAnimated)}
+      onPressOut={() => animateScale.pressOutAnimation(scaleInAnimated)}
+      style={[
+        styles.card,
+        animateScale.getScaleTransformationStyle(scaleInAnimated),
+      ]}
+    >
       <ImageBackground
         source={{ uri: item.coverImg }}
         imageStyle={{ borderRadius: 10 }}
@@ -164,16 +188,19 @@ export default function Card({ item, onPress: parentOnPress = () => {} }) {
             <Address>{item.addressTitle}</Address>
 
             {isOpeningInFuture ? (
-              <DateHelper color="#bd8851">
-                🕙 Откроется{' '}
-                {distanceInWordsStrict(today, openingAt, {
-                  locale: ruLocale,
-                  addSuffix: true,
-                })}{' '}
-                в {todayWH[0]}
-              </DateHelper>
+              <>
+                <DateHelper color="#bd8851">
+                  <IconFutureClock color="#bd8851" size={12} strokeWidth={4} />
+                  Откроется{' '}
+                  {distanceInWordsStrict(today, openingAt, {
+                    locale: ruLocale,
+                    addSuffix: true,
+                  })}{' '}
+                  в {todayWH[0]}
+                </DateHelper>
+              </>
             ) : (
-              <DateHelper color="#7dce56">🕙 Открыто</DateHelper>
+              <DateHelper color="#7dce56">Открыто до {todayWH[1]}</DateHelper>
             )}
           </Footer>
         </StCard>

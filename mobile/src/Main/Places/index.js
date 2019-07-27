@@ -20,8 +20,8 @@ const Heading = styled.Text`
   color: #fff;
 
   ${p =>
-    p.center
-    && css`
+    p.center &&
+    css`
       text-align: center;
     `}
 `;
@@ -67,7 +67,7 @@ export default function Places(props) {
 
   return (
     <View refreshControl={refreshControl}>
-      <Heading>Все заведения</Heading>
+      <Heading>Заведения</Heading>
 
       <List
         renderItem={args => renderItem(args, props)}

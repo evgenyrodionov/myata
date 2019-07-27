@@ -1,7 +1,8 @@
 import styled from 'styled-components';
 
-export { default as HeaderButton } from './HeaderButton';
+export { default as HeaderButton, HeaderTextButton } from './HeaderButton';
 export { default as Button, ButtonWithIcon } from './Button';
+export { default as Card } from './Card';
 
 export const Title = styled.Text`
   font-size: 36;
@@ -33,3 +34,4 @@ export { default as IconPhone } from './icons/Phone';
 export { default as IconGPS } from './icons/GPS';
 export { default as IconWhatsApp } from './icons/WhatsApp';
 export { default as IconLogout } from './icons/Logout';
+export { default as IconFutureClock } from './icons/FutureClock';

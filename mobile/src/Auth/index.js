@@ -7,7 +7,7 @@ import firebase from 'react-native-firebase';
 import { createStackNavigator, createSwitchNavigator } from 'react-navigation';
 import styled from 'styled-components';
 
-import { HeaderButton } from '../ui';
+import { HeaderTextButton } from '../ui';
 
 const ScrollView = styled.ScrollView`
   flex: 1;
@@ -49,7 +49,7 @@ class PhoneScreen extends React.Component {
     this.props.navigation.setParams({ onSubmit: this.onSubmit });
   }
 
-  onEnterPhoneNumber = (text) => {
+  onEnterPhoneNumber = text => {
     const isValidPhoneNumber = isValidNumber(text);
 
     this.setState({ phoneNumber: text, isValidPhoneNumber }, () => {
@@ -72,7 +72,7 @@ class PhoneScreen extends React.Component {
         firebase
           .auth()
           .signInWithPhoneNumber(phoneNumber)
-          .then((confirmResult) => {
+          .then(confirmResult => {
             this.props.navigation.navigate('Code', {
               phoneNumber,
               confirmResult,
@@ -124,7 +124,7 @@ class CodeScreen extends React.Component {
     // this.startTimer(TIMER_TIME);
   }
 
-  onChangeCode = (code) => {
+  onChangeCode = code => {
     const isValidCode = code.length === 6;
 
     this.setState({ code, isValidCode }, () => {
@@ -147,7 +147,8 @@ class CodeScreen extends React.Component {
         .catch(error =>
           this.setState({ error, isFetching: false }, () => {
             this.props.navigation.setParams(this.state);
-          }))
+          }),
+        )
         .finally(() => Keyboard.dismiss());
     });
   };
@@ -213,9 +214,9 @@ const AuthNavigator = createStackNavigator(
             if (isFetching) return <HeaderLoading />;
 
             return (
-              <HeaderButton onPress={navigation.getParam('onSubmit')}>
+              <HeaderTextButton onPress={navigation.getParam('onSubmit')}>
                 Далее
-              </HeaderButton>
+              </HeaderTextButton>
             );
           }
 
@@ -234,9 +235,9 @@ const AuthNavigator = createStackNavigator(
             if (isFetching) return <HeaderLoading />;
 
             return (
-              <HeaderButton onPress={navigation.getParam('onSubmit')}>
+              <HeaderTextButton onPress={navigation.getParam('onSubmit')}>
                 Войти
-              </HeaderButton>
+              </HeaderTextButton>
             );
           }
 

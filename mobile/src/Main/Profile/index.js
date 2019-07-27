@@ -1,13 +1,8 @@
 import React from 'react';
-import {
-  RefreshControl, Dimensions, Alert, Switch,
-} from 'react-native';
+import { RefreshControl, Dimensions, Alert, Switch } from 'react-native';
 import firebase from 'react-native-firebase';
 import styled, { css } from 'styled-components';
-import orderBy from 'lodash/orderBy';
 import { parsePhoneNumberFromString } from 'libphonenumber-js';
-import format from 'date-fns/format';
-import locale from 'date-fns/locale/ru';
 import Safari from 'react-native-safari-view';
 import {
   Title as OrigTitle,
@@ -37,8 +32,8 @@ const Heading = styled.Text`
   color: #fff;
 
   ${p =>
-    p.center
-    && css`
+    p.center &&
+    css`
       text-align: center;
     `}
 `;
@@ -51,55 +46,6 @@ const PhoneNumber = styled.Text`
   text-align: center;
 `;
 
-const Visit = styled.TouchableOpacity`
-  display: flex;
-  justify-content: space-between;
-  flex-direction: row;
-`;
-
-const VisitDescription = styled.View``;
-
-const VisitPlace = styled.Text`
-  color: #fff;
-  font-size: 18;
-`;
-
-const VisitDate = styled.Text`
-  color: rgba(255, 255, 255, 0.4);
-  margin-top: 4;
-`;
-
-const VisitBalanceChange = styled.Text`
-  font-variant: tabular-nums;
-  color: #fff;
-  font-size: 24;
-`;
-
-const renderBalanceChange = ({ added, decreased }) => {
-  if (added) return `+${added}`;
-  if (decreased) return `−${decreased}`;
-
-  return null;
-};
-
-function renderVisit({ item }) {
-  return (
-    <Visit>
-      <VisitDescription>
-        <VisitPlace>{item.place.title}</VisitPlace>
-        <VisitDate>
-          {format(item.createdAt, 'D MMMM [в] HH:mm', { locale })}
-        </VisitDate>
-      </VisitDescription>
-      <VisitBalanceChange>{renderBalanceChange(item)}</VisitBalanceChange>
-    </Visit>
-  );
-}
-
-const VisitsSt = styled.View`
-  margin-top: 56;
-`;
-
 const FlatList = styled.FlatList``;
 
 const Separator = styled.View`
@@ -108,21 +54,6 @@ const Separator = styled.View`
   border-style: solid;
   margin-vertical: 8;
 `;
-
-function Visits({ user }) {
-  return (
-    <VisitsSt>
-      <Title>Мои посещения</Title>
-
-      <FlatList
-        data={orderBy(user.visits, 'createdAt', 'desc')}
-        keyExtractor={({ createdAt }) => String(createdAt)}
-        renderItem={renderVisit}
-        ItemSeparatorComponent={Separator}
-      />
-    </VisitsSt>
-  );
-}
 
 const FriendsSt = styled.View`
   margin-top: 56;
@@ -240,7 +171,7 @@ function Notifications({ user }) {
         renderItem={({ item: [key, value] }) => (
           <Notification>
             <NotificationTitle>{notificationsDict[key]}</NotificationTitle>
-            <Switch value={value} />
+            <Switch value={value} onValueChange={() => {}} />
           </Notification>
         )}
         ItemSeparatorComponent={Separator}
@@ -249,7 +180,7 @@ function Notifications({ user }) {
   );
 }
 
-const onLogout = (onConfirm) => {
+const onLogout = onConfirm => {
   Alert.alert('Выйти из аккаунта?', null, [
     {
       text: 'Нет',
@@ -274,12 +205,6 @@ const Logout = styled.View`
 export default function Profile({ user, ...props }) {
   const { dispatch = () => ({}), isFetching = false } = props;
 
-  // const { currentUser } = firebase.auth();
-  const phoneNumber = parsePhoneNumberFromString(
-    // currentUser.phoneNumber,
-    '+79998214142',
-  ).formatInternational();
-
   const onLogoutConfirm = () => {
     firebase.auth().signOut();
     props.navigation.navigate('Auth');
@@ -298,9 +223,8 @@ export default function Profile({ user, ...props }) {
     <Wrapper refreshControl={refreshControl}>
       <View>
         <Heading center>{user.displayName || ''}</Heading>
-        <PhoneNumber>{phoneNumber || ''}</PhoneNumber>
+        <PhoneNumber>{user.formattedPhoneNumber || ''}</PhoneNumber>
 
-        {user && <Visits user={user} />}
         {user && <Friends user={user} />}
         {user && <Notifications user={user} />}
 
