@@ -85,9 +85,9 @@ export const places = [
     title: 'Edition',
     city: 'moscow',
     addressTitle: 'ул. Рочдельская, 15 стр 13',
+    coverImg: 'https://ucarecdn.com/3e4d8e1c-e9bc-48f0-b292-d7acf8802f24/',
     phoneNumber: '79653886688',
     waPhoneNumber: '79653886688',
-    coverImg: 'https://ucarecdn.com/3e4d8e1c-e9bc-48f0-b292-d7acf8802f24/',
     photos: [
       '862ea0b3-3692-4394-9d0e-587b9a424560',
       'c635dae1-fb2b-4d02-a3bf-680f35bd73b1',
@@ -107,6 +107,14 @@ export const places = [
       ['12:00', '03:00'],
       ['12:00', '03:00'],
     ],
+  },
+  {
+    id: 15,
+    disabled: true,
+    title: 'Вайнера',
+    city: 'yekaterinburg',
+    addressTitle: 'ул. Вайнера, 12',
+    coverImg: 'https://ucarecdn.com/991044fc-2a1f-44c2-8720-b22f7945c27b/',
   },
   // {
   //   id: 4,
@@ -200,7 +208,7 @@ export const places = [
   {
     id: 8,
     disabled: true,
-    title: 'Рязанский',
+    title: 'Рязанка 18',
     city: 'moscow',
     addressTitle: 'Рязанский проспект, 18',
     phoneNumber: '79993959609',

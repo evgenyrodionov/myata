@@ -1,6 +1,7 @@
 import React from 'react';
 import { RefreshControl, Dimensions } from 'react-native';
 import styled, { css } from 'styled-components';
+import * as Haptics from 'expo-haptics';
 import Card from './Card';
 import { places } from '../data';
 import { FooterPusher, Alert } from '../ui';
@@ -64,7 +65,7 @@ const cities = [
   {
     value: 'yekaterinburg',
     title: 'Екатеринбург',
-    count: 0,
+    count: 1,
   },
 ];
 
@@ -95,6 +96,10 @@ function ListEmptyComponent() {
 export default function Places(props) {
   const { dispatch = () => ({}), isFetching = false } = props;
   const [selectedCities, updateCities] = React.useState([]);
+
+  React.useEffect(() => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => {});
+  }, [selectedCities]);
 
   const refreshControl = (
     <RefreshControl
