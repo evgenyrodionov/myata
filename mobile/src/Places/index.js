@@ -2,8 +2,8 @@ import React from 'react';
 import { RefreshControl, Dimensions } from 'react-native';
 import styled, { css } from 'styled-components';
 import Card from './Card';
-import { places } from '../../data';
-import { FooterPusher } from '../../ui';
+import { places } from '../data';
+import { FooterPusher, Alert } from '../ui';
 
 const { width: deviceWidth } = Dimensions.get('window');
 
@@ -20,15 +20,14 @@ const Heading = styled.Text`
   color: #fff;
 
   ${p =>
-    p.center &&
-    css`
+    p.center
+    && css`
       text-align: center;
     `}
 `;
 
 const List = styled.FlatList`
   margin-top: 10;
-  margin-bottom: 34;
 `;
 
 const Item = styled.View`
@@ -36,7 +35,7 @@ const Item = styled.View`
 `;
 
 function loadList() {
-  return [{ id: 1 }];
+  return [];
 }
 
 export default function Places(props) {
@@ -76,6 +75,8 @@ export default function Places(props) {
         data={places}
         keyExtractor={item => String(item.id)}
       />
+
+      <Alert>…И ещё свыше 250 заведений до&nbsp;конца&nbsp;года</Alert>
 
       <FooterPusher />
     </View>

@@ -8,10 +8,10 @@ import isFuture from 'date-fns/is_future';
 import format from 'date-fns/format';
 import capitalize from 'capitalize';
 import * as Haptics from 'expo-haptics';
-import { elevationShadowStyle } from '../../utils/shadow';
-import * as animateScale from '../../utils/animateScale';
+import { elevationShadowStyle } from '../utils/shadow';
+import * as animateScale from '../utils/animateScale';
 
-import { IconHeart, IconFutureClock as OrigIconFutureClock } from '../../ui';
+import { IconHeart, IconFutureClock as OrigIconFutureClock } from '../ui';
 
 const styles = StyleSheet.create({
   card: {
@@ -33,7 +33,12 @@ const StCard = styled.View`
   height: 172;
 
   border-radius: 10;
-  /* background: rgba(17, 17, 17, 0.6); */
+  background: rgba(
+    17,
+    17,
+    17,
+    ${({ isDisabled }) => (isDisabled ? 0.75 : 0.3)}
+  );
 `;
 
 const Header = styled.View`
@@ -86,6 +91,7 @@ const IconFutureClock = styled(OrigIconFutureClock)`
 
 const ImageBackground = styled.ImageBackground`
   border-radius: 10;
+  background: rgba(17, 17, 17, 0.6);
 `;
 
 const SpecialOffer = styled.View`
@@ -143,23 +149,48 @@ function renderSpecialOffer({ item }) {
   return null;
 }
 
+function renderTimes({ item }) {
+  if (!item.disabled) {
+    const today = new Date();
+    const todayDayOfWeek = getDay(today);
+    const todayWH = item.workingHours[todayDayOfWeek];
+
+    const openingAt = format(today, `YYYY-MM-DD ${todayWH[0]}`);
+    const isOpeningInFuture = isFuture(openingAt);
+
+    // const closingAt = format(today, `YYYY-MM-DD ${todayWH[1]}`);
+    // const isClosingInFuture = isFuture(closingAt);
+
+    if (isOpeningInFuture) {
+      return (
+        <DateHelper color="#bd8851">
+          <IconFutureClock color="#bd8851" size={12} strokeWidth={4} />
+          Откроется{' '}
+          {distanceInWordsStrict(today, openingAt, {
+            locale: ruLocale,
+            addSuffix: true,
+          })}{' '}
+          в {todayWH[0]}
+        </DateHelper>
+      );
+    }
+
+    return <DateHelper color="#7dce56">Открыто до {todayWH[1]}</DateHelper>;
+  }
+
+  return null;
+}
+
 export default function Card({ item, onPress: parentOnPress = () => {} }) {
   const [isLiked, toggle] = React.useState(false);
-  const today = new Date();
-  const todayDayOfWeek = getDay(today);
 
-  const todayWH = item.workingHours[todayDayOfWeek];
-  const openingAt = format(today, `YYYY-MM-DD ${todayWH[0]}`);
-  // const closingAt = format(today, `YYYY-MM-DD ${todayWH[1]}`);
-
-  const isOpeningInFuture = isFuture(openingAt);
-  // const isClosingInFuture = isFuture(closingAt);
-
+  const title = item.disabled ? `${item.title} — скоро` : item.title;
   const scaleInAnimated = new Animated.Value(0);
 
   function onPress() {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => {});
-    parentOnPress();
+
+    if (!item.disabled) parentOnPress();
   }
 
   return (
@@ -177,31 +208,20 @@ export default function Card({ item, onPress: parentOnPress = () => {} }) {
         source={{ uri: item.coverImg }}
         imageStyle={{ borderRadius: 10 }}
       >
-        <StCard>
+        <StCard isDisabled={item.disabled}>
           <Header>
-            <Title>{item.title}</Title>
-            <LikeButton onPress={() => toggle(!isLiked)}>
-              <IconHeart color={isLiked ? '#E74C3C' : '#fff'} />
-            </LikeButton>
+            <Title>{title}</Title>
+
+            {!item.disabled && (
+              <LikeButton onPress={() => toggle(!isLiked)}>
+                <IconHeart color={isLiked ? '#E74C3C' : '#fff'} />
+              </LikeButton>
+            )}
           </Header>
           <Footer>
             <Address>{item.addressTitle}</Address>
 
-            {isOpeningInFuture ? (
-              <>
-                <DateHelper color="#bd8851">
-                  <IconFutureClock color="#bd8851" size={12} strokeWidth={4} />
-                  Откроется{' '}
-                  {distanceInWordsStrict(today, openingAt, {
-                    locale: ruLocale,
-                    addSuffix: true,
-                  })}{' '}
-                  в {todayWH[0]}
-                </DateHelper>
-              </>
-            ) : (
-              <DateHelper color="#7dce56">Открыто до {todayWH[1]}</DateHelper>
-            )}
+            {renderTimes({ item })}
           </Footer>
         </StCard>
 

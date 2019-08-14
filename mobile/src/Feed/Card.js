@@ -7,8 +7,8 @@ import * as Haptics from 'expo-haptics';
 import Markdown from 'react-native-easy-markdown';
 
 import Typograf from 'typograf';
-import { elevationShadowStyle } from '../../utils/shadow';
-import * as animateScale from '../../utils/animateScale';
+import { elevationShadowStyle } from '../utils/shadow';
+import * as animateScale from '../utils/animateScale';
 
 const tp = new Typograf({ locale: ['ru', 'en-US'] });
 

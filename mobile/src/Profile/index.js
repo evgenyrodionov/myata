@@ -1,5 +1,7 @@
 import React from 'react';
-import { RefreshControl, Dimensions, Alert, Switch } from 'react-native';
+import {
+  RefreshControl, Dimensions, Alert, Switch,
+} from 'react-native';
 import firebase from 'react-native-firebase';
 import styled, { css } from 'styled-components';
 import { parsePhoneNumberFromString } from 'libphonenumber-js';
@@ -9,9 +11,11 @@ import {
   ButtonWithIcon,
   IconLogout,
   FooterPusher,
-} from '../../ui';
+} from '../ui';
 
 const { width: deviceWidth } = Dimensions.get('window');
+
+const firestore = firebase.firestore();
 
 const Wrapper = styled.View``;
 
@@ -32,8 +36,8 @@ const Heading = styled.Text`
   color: #fff;
 
   ${p =>
-    p.center &&
-    css`
+    p.center
+    && css`
       text-align: center;
     `}
 `;
@@ -161,6 +165,15 @@ const notificationsDict = {
 function Notifications({ user }) {
   const { notifications = {} } = user;
 
+  function onChange(key, value) {
+    const path = `notifications.${key}`;
+
+    return firestore
+      .collection('users')
+      .doc(user.id)
+      .update({ [path]: !value });
+  }
+
   return (
     <NotificationsSt>
       <Title>Уведомления</Title>
@@ -171,7 +184,7 @@ function Notifications({ user }) {
         renderItem={({ item: [key, value] }) => (
           <Notification>
             <NotificationTitle>{notificationsDict[key]}</NotificationTitle>
-            <Switch value={value} onValueChange={() => {}} />
+            <Switch value={value} onValueChange={() => onChange(key, value)} />
           </Notification>
         )}
         ItemSeparatorComponent={Separator}
@@ -180,7 +193,7 @@ function Notifications({ user }) {
   );
 }
 
-const onLogout = onConfirm => {
+const onLogout = (onConfirm) => {
   Alert.alert('Выйти из аккаунта?', null, [
     {
       text: 'Нет',
@@ -225,7 +238,7 @@ export default function Profile({ user, ...props }) {
         <Heading center>{user.displayName || ''}</Heading>
         <PhoneNumber>{user.formattedPhoneNumber || ''}</PhoneNumber>
 
-        {user && <Friends user={user} />}
+        {/* {user && <Friends user={user} />} */}
         {user && <Notifications user={user} />}
 
         <Logout>

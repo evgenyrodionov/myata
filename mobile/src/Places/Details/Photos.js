@@ -5,9 +5,9 @@ import {
   // StatusBar,
 } from 'react-native';
 // import Modal from 'react-native-modal';
-import { Image, CacheManager } from 'react-native-expo-image-cache';
+import { Image } from 'react-native-expo-image-cache';
 import styled from 'styled-components';
-import { getPhotoUrl } from '../../../utils/photos';
+import { getPhotoUrl, onImageLoad } from '../../utils/photos';
 // import { HeaderBackButton } from 'react-navigation';
 // import Swiper from 'react-native-swiper';
 // import AssetUtils from 'expo-asset-utils';
@@ -133,20 +133,10 @@ export default class PhotoGallery extends React.Component {
   //   this.setState({ currentIdx: idx });
   // };
 
-  onImageLoad = async () => {
-    // console.log('onImageLoad');
-    const cacheSize = await CacheManager.getCacheSize();
-    // console.log('cache size', cacheSize);
-
-    if (cacheSize > 10000) {
-      CacheManager.clearCache();
-    }
-  };
-
   renderItem = ({ item: url }) => (
     <PhotoContainer>
       <Image
-        onLoad={this.onImageLoad}
+        onLoad={onImageLoad}
         style={photoStyle}
         // resizeMethod="resize"
         resizeMode="cover"

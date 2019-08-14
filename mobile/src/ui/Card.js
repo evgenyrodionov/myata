@@ -1,8 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
 import { BlurView } from '@react-native-community/blur';
-
-import { FooterPusher, IconArrow } from './index';
+import IconArrow from './icons/Arrow';
+import FooterPusher from './FooterPusher';
 
 const View = styled.ScrollView`
   margin-top: 96;

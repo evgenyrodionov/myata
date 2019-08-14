@@ -6,29 +6,27 @@ import isFuture from 'date-fns/is_future';
 import distanceInWordsStrict from 'date-fns/distance_in_words_strict';
 import ruLocale from 'date-fns/locale/ru';
 import capitalize from 'capitalize';
+import { Image } from 'react-native-expo-image-cache';
 
 import EventCard from '../EventCard';
 import Photos from './Photos';
 
 import {
   Title,
+  Card,
   ButtonWithIcon,
   IconPhone,
   IconGPS,
   IconWhatsApp,
-  Card,
-} from '../../../ui';
-import { places } from '../../../data';
+} from '../../ui';
+import { places } from '../../data';
+import Address from './Address';
+import { getPhotoUrl, onImageLoad } from '../../utils/photos';
 
 const { width: deviceWidth } = Dimensions.get('window');
 
 const Text = styled.Text`
   font-size: 15;
-`;
-
-const DateLabel = styled(Text)`
-  color: #fff;
-  margin-top: 16;
 `;
 
 const TimeTableSt = styled.View`
@@ -142,7 +140,9 @@ const ActionsSt = styled.View`
 function Actions({ item }) {
   const [canUseNavi, setCanUseNavi] = React.useState(false);
 
-  const yandexNaviURL = `yandexnavi://map_search?text=${item.addressTitle}`;
+  const yandexNaviURL = `yandexnavi://map_search?text=Мята ${
+    item.addressTitle
+  }`;
 
   React.useEffect(() => {
     Linking.canOpenURL(yandexNaviURL)
@@ -180,6 +180,34 @@ function Actions({ item }) {
       >
         Позвонить
       </ButtonWithIcon>
+    </ActionsSt>
+  );
+}
+
+function SocialNetworks({ item: { socialNetworks = {} } }) {
+  return (
+    <ActionsSt>
+      {socialNetworks.instagram && (
+        <ButtonWithIcon
+          bgColor="#191919"
+          textColor="#eee"
+          onPress={() =>
+            Linking.openURL(`https://instagram.com/${socialNetworks.instagram}`)
+          }
+        >
+          Подписаться в Инстаграм
+        </ButtonWithIcon>
+      )}
+
+      {socialNetworks.vk && (
+        <ButtonWithIcon
+          bgColor="#191919"
+          textColor="#eee"
+          onPress={() => Linking.openURL(`https://vk.com/${socialNetworks.vk}`)}
+        >
+          Подписаться в ВК
+        </ButtonWithIcon>
+      )}
     </ActionsSt>
   );
 }
@@ -226,10 +254,63 @@ function renderSpecialOffer({ item }) {
   return null;
 }
 
+const HighlightsSt = styled.FlatList`
+  margin-left: -16;
+  margin-right: -16;
+  padding-horizontal: 16;
+  margin-top: 24;
+`;
+
+const Highlight = styled.TouchableOpacity.attrs({ activeOpacity: 0.9 })`
+  margin-right: 12;
+  max-width: 168;
+`;
+
+const HighlightTitle = styled.Text`
+  color: #fff;
+  font-weight: bold;
+  font-size: 14;
+  margin-top: 8;
+`;
+
+const hightlightStyle = {
+  borderRadius: 10,
+  height: 160,
+  width: 160,
+};
+
+function Highlights({ item }) {
+  function renderItem({ item: { title, photoId } }) {
+    return (
+      <Highlight>
+        <Image
+          onLoad={onImageLoad}
+          style={hightlightStyle}
+          // resizeMethod="resize"
+          resizeMode="cover"
+          preview={{ uri: `${getPhotoUrl(photoId)}-/resize/x48/` }}
+          uri={`${getPhotoUrl(photoId)}-/resize/x320/`}
+        />
+
+        <HighlightTitle>{title}</HighlightTitle>
+      </Highlight>
+    );
+  }
+
+  return (
+    <HighlightsSt
+      horizontal
+      showsHorizontalScrollIndicator={false}
+      data={item.highlights}
+      keyExtractor={(_, index) => String(index)}
+      renderItem={renderItem}
+    />
+  );
+}
+
 export default function OrderDetails({ navigation }) {
   const id = navigation.getParam('id');
-  const item =
-    places.find(place => place.id === id) || navigation.getParam('item', {});
+  const item = places.find(place => place.id === id) || navigation.getParam('item', {});
   const { workingHours = [], events = [], photos = [] } = item;
 
   return (
@@ -238,13 +319,17 @@ export default function OrderDetails({ navigation }) {
 
       {renderSpecialOffer({ item })}
 
-      <DateLabel>{item.addressTitle}</DateLabel>
+      <Address item={item} />
+
+      <Highlights item={item} />
 
       <Actions item={item} />
 
       {photos.length > 0 && <Photos photos={photos} />}
       {events.length > 0 && <Events events={events} />}
       {workingHours.length > 0 && <TimeTable workingHours={workingHours} />}
+
+      <SocialNetworks item={item} />
     </Card>
   );
 }

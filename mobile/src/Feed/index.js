@@ -6,9 +6,8 @@ import ruLocale from 'date-fns/locale/ru';
 import distanceInWordsStrict from 'date-fns/distance_in_words_strict';
 import EventCard from '../Places/EventCard';
 import NewsCard from './Card';
-import Card from '../../Card/Card';
-// import { systemEvents } from '../../data';
-import { FooterPusher } from '../../ui';
+import Card from '../Card/Card';
+import { Alert, FooterPusher } from '../ui';
 
 const { width: deviceWidth } = Dimensions.get('window');
 
@@ -29,30 +28,13 @@ const Heading = styled.Text`
   color: #fff;
 
   ${p =>
-    p.center &&
-    css`
+    p.center
+    && css`
       text-align: center;
     `}
 `;
 
 const CardView = styled.View``;
-
-const Alert = styled.View`
-  padding-vertical: 8;
-  padding-bottom: 16;
-  padding-horizontal: 16;
-  border-radius: 10;
-  margin-bottom: 16;
-
-  background: rgba(17, 17, 17, 0.3);
-`;
-
-const AlertText = styled.Text`
-  color: #ccc;
-  margin-top: 8;
-  font-size: 16;
-  text-align: center;
-`;
 
 const EventsList = styled.FlatList``;
 
@@ -125,10 +107,8 @@ export default class Feed extends React.Component {
           <Heading>Лента</Heading>
 
           <Alert>
-            <AlertText>
-              Добавьте любимые Мяты в избранное, следите за их новостями в ленте
-              и получайте пуш-уведомления
-            </AlertText>
+            Добавьте любимые Мяты в избранное, следите за их новостями в ленте и
+            получайте пуш-уведомления
           </Alert>
 
           <EventsList
