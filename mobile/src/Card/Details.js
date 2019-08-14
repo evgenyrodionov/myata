@@ -105,8 +105,8 @@ function renderFAQDescription({ superBalance }) {
   const first = superBalance[0];
   const exampleSum = 1000;
   const exampleCashback = first.cashback / 100;
-  const superHalf = parseInt(exampleSum * exampleCashback * 0.8, 10);
-  const commonHalf = parseInt(exampleSum * exampleCashback * 0.2, 10);
+  const superHalf = parseInt(exampleSum * exampleCashback * 0.7, 10);
+  const commonHalf = parseInt(exampleSum * exampleCashback * 0.3, 10);
 
   return (
     <>
@@ -166,8 +166,8 @@ function Balance({ user: { superBalance = [], balance, cashback } }) {
             <FAQTitle>Как начисляются супер-баллы 🌟, а как — общие?</FAQTitle>
             <FAQDescription>
               Когда вы&nbsp;закрываете счёт в&nbsp;любимой Мяте,
-              то&nbsp;из&nbsp;кэшбэка в&nbsp;этой Мяте 80% уходят на&nbsp;её
-              баланс, а&nbsp;20%&nbsp;— на&nbsp;общий.
+              то&nbsp;из&nbsp;кэшбэка в&nbsp;этой Мяте 70% уходят на&nbsp;её
+              баланс, а&nbsp;30%&nbsp;— на&nbsp;общий.
             </FAQDescription>
             <FAQDescription>
               {renderFAQDescription({ superBalance })}

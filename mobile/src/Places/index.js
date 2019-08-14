@@ -38,10 +38,38 @@ function loadList() {
   return [];
 }
 
-export default function Places(props) {
-  const { dispatch = () => ({}), isFetching = false } = props;
+const Cities = styled.ScrollView`
+  margin-top: 6;
+  margin-bottom: 12;
+`;
 
-  const renderItem = ({ item }, { navigation }) => (
+const City = styled.TouchableOpacity.attrs({ activeOpacity: 0.7 })`
+  border-radius: 20;
+  background-color: ${p => (p.isActive ? '#fff' : 'rgba(0,0,0,0.2)')};
+  padding-horizontal: 12;
+  padding-vertical: 8;
+  margin-right: 8;
+`;
+
+const CityText = styled.Text`
+  color: ${p => (p.isActive ? 'rgba(0,0,0,0.8)' : 'rgba(255,255,255,0.7)')};
+`;
+
+const cities = [
+  {
+    value: 'moscow',
+    title: 'Москва',
+    count: 4,
+  },
+  {
+    value: 'yekaterinburg',
+    title: 'Екатеринбург',
+    count: 0,
+  },
+];
+
+function renderItem({ item }, { navigation }) {
+  return (
     <Item>
       <Card
         item={item}
@@ -54,6 +82,19 @@ export default function Places(props) {
       />
     </Item>
   );
+}
+
+function ListEmptyComponent() {
+  return (
+    <Alert white center>
+      Увы, мы&nbsp;ещё не&nbsp;добавили Мяты из&nbsp;этого города 😔
+    </Alert>
+  );
+}
+
+export default function Places(props) {
+  const { dispatch = () => ({}), isFetching = false } = props;
+  const [selectedCities, updateCities] = React.useState([]);
 
   const refreshControl = (
     <RefreshControl
@@ -64,19 +105,48 @@ export default function Places(props) {
     />
   );
 
+  function toggleCity(value) {
+    if (selectedCities.includes(value)) {
+      const filtered = selectedCities.filter(city => city !== value);
+
+      return updateCities([...filtered]);
+    }
+
+    return updateCities([...selectedCities, value]);
+  }
+
+  const data = selectedCities.length > 0
+    ? places.filter(({ city }) => selectedCities.includes(city))
+    : places;
+
   return (
     <View refreshControl={refreshControl}>
       <Heading>Заведения</Heading>
+
+      <Cities horizontal>
+        {cities.map(({ value, title, count }) => (
+          <City
+            key={value}
+            onPress={() => toggleCity(value)}
+            isActive={selectedCities.includes(value)}
+          >
+            <CityText isActive={selectedCities.includes(value)}>
+              {title} — {count}
+            </CityText>
+          </City>
+        ))}
+      </Cities>
 
       <List
         renderItem={args => renderItem(args, props)}
         onRefresh={() => dispatch(loadList())}
         refreshing={isFetching}
-        data={places}
+        data={data}
         keyExtractor={item => String(item.id)}
+        ListEmptyComponent={ListEmptyComponent}
       />
 
-      <Alert>…И ещё свыше 250 заведений до&nbsp;конца&nbsp;года</Alert>
+      <Alert center>…И ещё свыше 250 заведений до&nbsp;конца&nbsp;года</Alert>
 
       <FooterPusher />
     </View>

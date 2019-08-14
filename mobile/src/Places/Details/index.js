@@ -6,7 +6,6 @@ import isFuture from 'date-fns/is_future';
 import distanceInWordsStrict from 'date-fns/distance_in_words_strict';
 import ruLocale from 'date-fns/locale/ru';
 import capitalize from 'capitalize';
-import { Image } from 'react-native-expo-image-cache';
 
 import EventCard from '../EventCard';
 import Photos from './Photos';
@@ -21,7 +20,7 @@ import {
 } from '../../ui';
 import { places } from '../../data';
 import Address from './Address';
-import { getPhotoUrl, onImageLoad } from '../../utils/photos';
+import Highlights from './Highlights';
 
 const { width: deviceWidth } = Dimensions.get('window');
 
@@ -252,60 +251,6 @@ function renderSpecialOffer({ item }) {
   }
 
   return null;
-}
-
-const HighlightsSt = styled.FlatList`
-  margin-left: -16;
-  margin-right: -16;
-  padding-horizontal: 16;
-  margin-top: 24;
-`;
-
-const Highlight = styled.TouchableOpacity.attrs({ activeOpacity: 0.9 })`
-  margin-right: 12;
-  max-width: 168;
-`;
-
-const HighlightTitle = styled.Text`
-  color: #fff;
-  font-weight: bold;
-  font-size: 14;
-  margin-top: 8;
-`;
-
-const hightlightStyle = {
-  borderRadius: 10,
-  height: 160,
-  width: 160,
-};
-
-function Highlights({ item }) {
-  function renderItem({ item: { title, photoId } }) {
-    return (
-      <Highlight>
-        <Image
-          onLoad={onImageLoad}
-          style={hightlightStyle}
-          // resizeMethod="resize"
-          resizeMode="cover"
-          preview={{ uri: `${getPhotoUrl(photoId)}-/resize/x48/` }}
-          uri={`${getPhotoUrl(photoId)}-/resize/x320/`}
-        />
-
-        <HighlightTitle>{title}</HighlightTitle>
-      </Highlight>
-    );
-  }
-
-  return (
-    <HighlightsSt
-      horizontal
-      showsHorizontalScrollIndicator={false}
-      data={item.highlights}
-      keyExtractor={(_, index) => String(index)}
-      renderItem={renderItem}
-    />
-  );
 }
 
 export default function OrderDetails({ navigation }) {

@@ -106,7 +106,7 @@ export default class Feed extends React.Component {
         <FeedSt>
           <Heading>Лента</Heading>
 
-          <Alert>
+          <Alert white center>
             Добавьте любимые Мяты в избранное, следите за их новостями в ленте и
             получайте пуш-уведомления
           </Alert>
