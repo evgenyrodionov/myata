@@ -23,6 +23,7 @@ export const Title2 = styled.Text`
 `;
 
 export { default as IconProfile } from './icons/Profile';
+export { default as IconUser } from './icons/User';
 export { default as IconFeed } from './icons/Feed';
 export { default as IconMap } from './icons/Map';
 export { default as IconHeart } from './icons/Heart';
@@ -34,5 +35,6 @@ export { default as IconWhatsApp } from './icons/WhatsApp';
 export { default as IconLogout } from './icons/Logout';
 export { default as IconFutureClock } from './icons/FutureClock';
 export { default as IconWalking } from './icons/Walking';
+export { default as IconEdit } from './icons/Edit';
 export { default as IconInstagram } from './icons/Instagram';
 export { default as IconVk } from './icons/Vk';

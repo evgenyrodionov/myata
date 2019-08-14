@@ -10,6 +10,7 @@ const ButtonSt = styled.TouchableOpacity`
   width: 100%;
   display: flex;
   flex-direction: row;
+  align-items: center;
 `;
 
 const Text = styled.Text`
@@ -18,6 +19,7 @@ const Text = styled.Text`
   line-height: 22;
   color: ${p => p.color};
   text-align: ${p => (p.center ? 'center' : 'left')};
+  width: 100%;
 `;
 
 const Icon = styled.View`

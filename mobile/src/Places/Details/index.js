@@ -256,7 +256,7 @@ function renderSpecialOffer({ item }) {
 export default function OrderDetails({ navigation }) {
   const id = navigation.getParam('id');
   const item = places.find(place => place.id === id) || navigation.getParam('item', {});
-  const { workingHours = [], events = [], photos = [] } = item;
+  const { workingHours = [], events = [], photoIds = [] } = item;
 
   return (
     <Card onGoBack={() => navigation.goBack()}>
@@ -270,7 +270,7 @@ export default function OrderDetails({ navigation }) {
 
       <Actions item={item} />
 
-      {photos.length > 0 && <Photos photos={photos} />}
+      {photoIds.length > 0 && <Photos photoIds={photoIds} />}
       {events.length > 0 && <Events events={events} />}
       {workingHours.length > 0 && <TimeTable workingHours={workingHours} />}
 

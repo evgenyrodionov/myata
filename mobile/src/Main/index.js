@@ -12,6 +12,7 @@ import {
 
 import Feed from '../Feed';
 import Profile from '../Profile';
+import ProfileEdit from '../Profile/Edit';
 import Places from '../Places';
 import PlaceDetails from '../Places/Details';
 import CardDetails from '../Card/Details';
@@ -149,6 +150,9 @@ export default createStackNavigator(
     },
     CardDetails: {
       screen: CardDetails,
+    },
+    ProfileEdit: {
+      screen: ProfileEdit,
     },
   },
   {

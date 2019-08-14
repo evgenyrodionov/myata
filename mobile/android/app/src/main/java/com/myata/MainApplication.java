@@ -3,6 +3,7 @@ package com.myata;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.imagepicker.ImagePickerPackage;
 import com.horcrux.svg.SvgPackage;
 import com.mybdesign.RNPassKit.RNPassKitPackage;
 import com.microsoft.codepush.react.CodePush;
@@ -53,6 +54,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new ImagePickerPackage(),
             new SvgPackage(),
             new RNPassKitPackage(),
             new CodePush(getResources().getString(R.string.reactNativeCodePush_androidDeploymentKey), getApplicationContext(), BuildConfig.DEBUG),

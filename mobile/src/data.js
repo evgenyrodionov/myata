@@ -1,13 +1,3 @@
-export const systemEvents = [
-  // {
-  //   eventAt: '2019-06-03T18:27:30.628078+03:00',
-  //   placeId: 1,
-  //   title: 'Новая Мята на Менделеевской',
-  //   coverImg:
-  //     'https://ucarecdn.com/0b68c23f-59b4-4518-ae16-d37ba247d2e2~1/nth/0/',
-  // },
-];
-
 export const featuresTitles = {
   parking: 'Парковка',
   vip_rooms: 'VIP-комнаты',
@@ -34,7 +24,7 @@ export const places = [
     title: 'Сретенка',
     phoneNumber: '79680099991',
     waPhoneNumber: '79680099991',
-    coverImg: 'https://ucarecdn.com/c2878465-a59b-4aff-ae60-589738add9db/',
+    coverId: 'c2878465-a59b-4aff-ae60-589738add9db',
     city: 'moscow',
     addressTitle: 'ул. Сретенка, 26/1',
     addressSubways: [
@@ -66,7 +56,7 @@ export const places = [
       'business_lunches',
       'light_snacks_or_desserts',
     ],
-    photos: [
+    photoIds: [
       'c2878465-a59b-4aff-ae60-589738add9db',
       'c41586db-0c0a-42c4-82c2-d61fad5acf27',
       '568651d5-0492-46e4-9b86-44cfe4d97b7c',
@@ -85,10 +75,10 @@ export const places = [
     title: 'Edition',
     city: 'moscow',
     addressTitle: 'ул. Рочдельская, 15 стр 13',
-    coverImg: 'https://ucarecdn.com/3e4d8e1c-e9bc-48f0-b292-d7acf8802f24/',
+    coverId: '3e4d8e1c-e9bc-48f0-b292-d7acf8802f24',
     phoneNumber: '79653886688',
     waPhoneNumber: '79653886688',
-    photos: [
+    photoIds: [
       '862ea0b3-3692-4394-9d0e-587b9a424560',
       'c635dae1-fb2b-4d02-a3bf-680f35bd73b1',
       'e8a5fd63-f432-4e8f-9004-2d2f4bbc2ecf',
@@ -114,7 +104,7 @@ export const places = [
     title: 'Вайнера',
     city: 'yekaterinburg',
     addressTitle: 'ул. Вайнера, 12',
-    coverImg: 'https://ucarecdn.com/991044fc-2a1f-44c2-8720-b22f7945c27b/',
+    coverId: '991044fc-2a1f-44c2-8720-b22f7945c27b',
   },
   // {
   //   id: 4,
@@ -123,7 +113,7 @@ export const places = [
   //   city: 'moscow', addressTitle: 'Ленинский проспект, 39/1',
   //   phoneNumber: '79688002002',
   //   waPhoneNumber: '79688002002',
-  //   coverImg: 'https://ucarecdn.com/fa0a5252-47c0-4899-952b-df5efb654cce/',
+  //   coverId: 'fa0a5252-47c0-4899-952b-df5efb654cce',
   //   workingHours: [
   //     ['14:00', '02:00'],
   //     ['14:00', '02:00'],
@@ -141,8 +131,8 @@ export const places = [
   //   city: 'moscow', addressTitle: 'Серпуховской вал, 21к1',
   //   phoneNumber: '79690400044',
   //   waPhoneNumber: '79690400044',
-  //   coverImg: 'https://ucarecdn.com/2a5bd2e6-feb0-44e8-af87-09beff6f1a6f/',
-  //   photos: [
+  //   coverId: '2a5bd2e6-feb0-44e8-af87-09beff6f1a6f',
+  //   photoIds: [
   //     'a9a62acb-3733-4999-b709-d0d815e3b40d',
   //     '8d467d57-6c12-4ee5-9f76-7b833af08bf2',
   //     'd9c5b5b1-d87e-4df5-bcc3-eec8a7c48b9f',
@@ -168,8 +158,8 @@ export const places = [
   //   city: 'moscow', addressTitle: 'ул. Митинская, 16',
   //   phoneNumber: '79269098088',
   //   waPhoneNumber: '79269098088',
-  //   coverImg: 'https://ucarecdn.com/fef27429-75b3-4cf4-8eb2-c83bf87df3bc/',
-  //   photos: [
+  //   coverId: 'fef27429-75b3-4cf4-8eb2-c83bf87df3bc',
+  //   photoIds: [
   //     '6aa9e53b-62d5-4fb6-8703-30379c32cb08',
   //     '4da3967b-90e7-4e63-aa63-6fa535ff64dc',
   //     '138b999b-8804-455b-aa0b-55c6e3e2e940',
@@ -194,7 +184,7 @@ export const places = [
   //   city: 'moscow', addressTitle: 'ул. Арбат, 11',
   //   phoneNumber: '79152331837',
   //   waPhoneNumber: '79152331837',
-  //   coverImg: 'https://ucarecdn.com/74cf2499-c7ac-4859-86ad-5e3372d14c4c/',
+  //   coverId: '74cf2499-c7ac-4859-86ad-5e3372d14c4c',
   //   workingHours: [
   //     ['11:00', '03:00'],
   //     ['11:00', '03:00'],
@@ -213,8 +203,8 @@ export const places = [
     addressTitle: 'Рязанский проспект, 18',
     phoneNumber: '79993959609',
     waPhoneNumber: '79993959609',
-    coverImg: 'https://ucarecdn.com/be0164e3-1f83-4bae-a2bc-a1cf029d5c7e/',
-    photos: [
+    coverId: 'be0164e3-1f83-4bae-a2bc-a1cf029d5c7e',
+    photoIds: [
       '70d4124b-3ca9-4b1c-8be1-ef26d01f541e',
       '46e35449-0249-406f-8a69-21b902287e0b',
       '2da09988-2990-43dd-9805-e0e66f7f1796',
@@ -241,8 +231,8 @@ export const places = [
   //   city: 'moscow', addressTitle: 'ул. Ялтинская, 2',
   //   phoneNumber: '74952030777',
   //   waPhoneNumber: '74952030777',
-  //   coverImg: 'https://ucarecdn.com/4721aaba-bfaf-4e10-b3c5-87dd4f2858c5/',
-  //   photos: [
+  //   coverId: '4721aaba-bfaf-4e10-b3c5-87dd4f2858c5',
+  //   photoIds: [
   //     'f71edb09-6866-4937-a3da-079cb291e604',
   //     'c2c264d5-df8a-4dfe-80e5-df6ef877399c',
   //     '9cc7b1c6-e0ca-4fdf-89f5-8611bebda2e4',
@@ -269,8 +259,8 @@ export const places = [
     addressTitle: 'Ленинградское шоссе, 68',
     phoneNumber: '79957700534',
     waPhoneNumber: '79957700534',
-    coverImg: 'https://ucarecdn.com/edae2873-3d84-4891-b420-bfb172f56b09/',
-    photos: [
+    coverId: 'edae2873-3d84-4891-b420-bfb172f56b09',
+    photoIds: [
       'c8844347-e2c9-4b2d-8e60-b1bc33d83c50',
       'cfc8c7a7-32af-4824-a5a6-8392b720b75d',
       'a7d06230-5363-45f9-ae7a-ed12aa8fbe91',
@@ -296,8 +286,8 @@ export const places = [
   //   city: 'moscow', addressTitle: 'ул. Енисейская, 5к2',
   //   phoneNumber: '79855825631',
   //   waPhoneNumber: '79855825631',
-  //   coverImg: 'https://ucarecdn.com/72a8ed29-e538-47bd-a380-361da1b82978/',
-  //   photos: [
+  //   coverId: '72a8ed29-e538-47bd-a380-361da1b82978',
+  //   photoIds: [
   //     '19c3ef7c-3a25-48c6-b0c9-12228dc0adf1',
   //     '5c883c2e-331b-4251-a717-48fd82e13a13',
   //     'c44e8581-6886-4148-adfd-01bc90ca3155',

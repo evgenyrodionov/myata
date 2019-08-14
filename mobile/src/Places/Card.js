@@ -10,6 +10,7 @@ import capitalize from 'capitalize';
 import * as Haptics from 'expo-haptics';
 import { elevationShadowStyle } from '../utils/shadow';
 import * as animateScale from '../utils/animateScale';
+import { getPhotoUrl } from '../utils/photos';
 
 import { IconHeart, IconFutureClock as OrigIconFutureClock } from '../ui';
 
@@ -210,7 +211,7 @@ export default function Card({ item, onPress: parentOnPress = () => {} }) {
       ]}
     >
       <ImageBackground
-        source={{ uri: item.coverImg }}
+        source={{ uri: `${getPhotoUrl(item.coverId)}-/resize/x512/` }}
         imageStyle={{ borderRadius: 10 }}
       >
         <StCard isDisabled={item.disabled}>

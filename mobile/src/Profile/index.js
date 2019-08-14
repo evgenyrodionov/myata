@@ -10,8 +10,11 @@ import {
   Title as OrigTitle,
   ButtonWithIcon,
   IconLogout,
+  IconEdit,
   FooterPusher,
 } from '../ui';
+import { getPhotoUrl } from '../utils/photos';
+import placeholder from './placeholder.png';
 
 const { width: deviceWidth } = Dimensions.get('window');
 
@@ -23,6 +26,15 @@ const View = styled.ScrollView`
   width: ${deviceWidth};
   padding-horizontal: 16;
   padding-top: 20;
+`;
+
+const Photo = styled.Image`
+  width: 128;
+  height: 128;
+  align-self: center;
+  border-radius: 64;
+  margin-top: 12;
+  margin-bottom: 24;
 `;
 
 const Title = styled(OrigTitle)`
@@ -48,6 +60,10 @@ const PhoneNumber = styled.Text`
   margin-top: 4;
   color: rgba(255, 255, 255, 0.4);
   text-align: center;
+`;
+
+const Button = styled(ButtonWithIcon)`
+  margin-bottom: 12;
 `;
 
 const FlatList = styled.FlatList``;
@@ -215,7 +231,7 @@ const Logout = styled.View`
   margin-top: 24;
 `;
 
-export default function Profile({ user, ...props }) {
+export default function Profile({ user, navigation, ...props }) {
   const { dispatch = () => ({}), isFetching = false } = props;
 
   const onLogoutConfirm = () => {
@@ -232,9 +248,15 @@ export default function Profile({ user, ...props }) {
     />
   );
 
+  const photoSrc = user.photoId
+    ? { uri: `${getPhotoUrl(user.photoId)}-/resize/x256/` }
+    : placeholder;
+
   return (
     <Wrapper refreshControl={refreshControl}>
       <View>
+        <Photo source={photoSrc} />
+
         <Heading center>{user.displayName || ''}</Heading>
         <PhoneNumber>{user.formattedPhoneNumber || ''}</PhoneNumber>
 
@@ -242,14 +264,22 @@ export default function Profile({ user, ...props }) {
         {user && <Notifications user={user} />}
 
         <Logout>
-          <ButtonWithIcon
-            icon={<IconLogout color="#eee" size={20} />}
+          <Button
+            icon={<IconEdit color="#eee" size={16} />}
+            bgColor="#fff"
+            textColor="#111"
+            onPress={() => navigation.navigate('ProfileEdit', { user })}
+          >
+            Редактировать профиль
+          </Button>
+          <Button
+            icon={<IconLogout color="#eee" size={18} />}
             bgColor="#111"
             textColor="#fff"
             onPress={() => onLogout(onLogoutConfirm)}
           >
             Выйти из аккаунта
-          </ButtonWithIcon>
+          </Button>
         </Logout>
 
         <FooterPusher />

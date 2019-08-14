@@ -151,7 +151,7 @@ export default class PhotoGallery extends React.Component {
     //   if (!arr.length) return [];
     //   return [arr.slice(0, n)].concat(chunk(arr.slice(n), n));
     // }
-    const { photos = [] } = this.props;
+    const { photoIds = [] } = this.props;
     // const { modalVisible, currentIdx } = this.state;
     // const photosAmount = photos.length;
 
@@ -162,7 +162,7 @@ export default class PhotoGallery extends React.Component {
           // ItemSeparatorComponent={Separator}
           // showsHorizontalScrollIndicator={false}
           indicatorStyle="white"
-          data={photos}
+          data={photoIds}
           pagingEnabled
           keyExtractor={(item, index) => String(index)}
           renderItem={this.renderItem}

@@ -21,3 +21,7 @@ export function updateByKey(userId, key, value) {
     [key]: value,
   });
 }
+
+export function updateWithMerge(userId, data) {
+  return getRef(userId).set(data, { merge: true });
+}

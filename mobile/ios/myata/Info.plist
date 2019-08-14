@@ -27,12 +27,12 @@
 			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>com.googleusercontent.apps.698872410189-lpf9oe5usiglav4j7ktm0rpenhgnprfe</string>
+				<string>com.googleusercontent.apps.698872410189-u417bn6ttj0qkdoh49dril8kib9b91k0</string>
 			</array>
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>1</string>
+	<string>3</string>
 	<key>CodePushDeploymentKey</key>
 	<string>iVw0kJXUUK3m_4tXPvVdIV-Nr1G8BJT6dOq-r</string>
 	<key>LSApplicationQueriesSchemes</key>
