@@ -59,7 +59,7 @@ function Main(props) {
   const [user, setUser] = React.useState({});
   const [news, setNews] = React.useState([]);
   const [isLoading, updateLoading] = React.useState(true);
-  const [screenOffset, updateStateOffset] = React.useState(2);
+  const [screenOffset, updateStateOffset] = React.useState(1);
   const currentUser = getCurrentUser();
 
   const userId = mapPhoneNumberToId(currentUser.phoneNumber);
