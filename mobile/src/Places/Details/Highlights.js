@@ -26,7 +26,8 @@ const featuresToIcons = {
 function renderIcon({ value, ...props }) {
   if (featuresToIcons[value]) {
     return React.createElement(featuresToIcons[value], {
-      size: 48,
+      size: 36,
+      color: '#20B4AB',
       ...props,
     });
   }
@@ -37,34 +38,39 @@ function renderIcon({ value, ...props }) {
 const HighlightsSt = styled.FlatList`
   margin-left: -16;
   margin-right: -16;
-  padding-horizontal: 16;
   margin-top: 24;
 `;
 
-const Highlight = styled.TouchableOpacity.attrs({ activeOpacity: 0.9 })`
+const Highlight = styled.TouchableOpacity.attrs({ activeOpacity: 0.8 })`
   margin-right: 12;
-  width: 144;
-  background-color: #fff;
-  height: 144;
-  border-radius: 10;
-  padding-horizontal: 16;
-  padding-vertical: 16;
+  width: 132;
   display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  align-items: center;
 `;
 
-const HighlightTitle = styled.Text`
-  color: #111;
-  font-weight: bold;
-  font-size: 14;
+const IconWrapper = styled.View`
+  border-color: #20b4ab;
+  border-width: 1;
+  border-radius: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 64;
+  height: 64;
+`;
+
+const Title = styled.Text`
+  color: #fff;
+  font-size: 16;
+  text-align: center;
+  margin-top: 8;
 `;
 
 function renderItem({ item: feature }) {
   return (
     <Highlight>
-      <HighlightTitle>{featuresTitles[feature]}</HighlightTitle>
-      {renderIcon({ value: feature })}
+      <IconWrapper>{renderIcon({ value: feature })}</IconWrapper>
+      <Title>{featuresTitles[feature]}</Title>
     </Highlight>
   );
 }

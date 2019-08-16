@@ -1,7 +1,7 @@
 import React from 'react';
 import Svg, { G, Path } from 'react-native-svg';
 
-const SvgComponent = ({ size, ...props }) => (
+const SvgComponent = ({ size, color, ...props }) => (
   <Svg width={size} height={size} viewBox="0 0 50 50" fill="#000000" {...props}>
     <G id="surface172674">
       <Path

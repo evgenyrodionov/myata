@@ -1,6 +1,6 @@
 import React from 'react';
 import { Dimensions, FlatList, Linking } from 'react-native';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import Accordion from 'react-native-collapsible/Accordion';
 
 import getDay from 'date-fns/get_day';
@@ -341,7 +341,7 @@ export default function OrderDetails({ navigation }) {
     events = [],
     photoIds = [],
     sales = [],
-    generalSales,
+    // generalSales,
   } = item;
 
   return (
@@ -354,11 +354,11 @@ export default function OrderDetails({ navigation }) {
 
       <Actions item={item} />
 
+      <Highlights item={item} />
+
       {workingHours.length > 0 && (
         <TimeTable sales={sales} workingHours={workingHours} />
       )}
-
-      {/* <Highlights item={item} /> */}
 
       {photoIds.length > 0 && <Photos photoIds={photoIds} />}
       {events.length > 0 && <Events events={events} />}
