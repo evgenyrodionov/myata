@@ -1,10 +1,14 @@
 import React from 'react';
 import { Dimensions, FlatList, Linking } from 'react-native';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
+import Accordion from 'react-native-collapsible/Accordion';
+
 import getDay from 'date-fns/get_day';
+import getHours from 'date-fns/get_hours';
 import isFuture from 'date-fns/is_future';
 import distanceInWordsStrict from 'date-fns/distance_in_words_strict';
 import ruLocale from 'date-fns/locale/ru';
+
 import capitalize from 'capitalize';
 
 import EventCard from '../EventCard';
@@ -28,6 +32,16 @@ const Text = styled.Text`
   font-size: 15;
 `;
 
+const daysOfWeek = [
+  'Воскресенье',
+  'Понедельник',
+  'Вторник',
+  'Среда',
+  'Четверг',
+  'Пятница',
+  'Суббота',
+];
+
 const TimeTableSt = styled.View`
   margin-top: 42;
 `;
@@ -35,8 +49,10 @@ const TimeTableSt = styled.View`
 const TimeTableItem = styled.View`
   flex-direction: row;
   justify-content: space-between;
-  margin-vertical: 4;
+  padding-vertical: 6;
   flex-basis: 100%;
+  margin-horizontal: -8;
+  padding-horizontal: 8;
 `;
 
 const TimeTableTitle = styled(Text)`
@@ -57,39 +73,103 @@ const EventCardItem = styled.View`
   margin-right: 6;
 `;
 
-const daysOfWeek = [
-  'Воскресенье',
-  'Понедельник',
-  'Вторник',
-  'Среда',
-  'Четверг',
-  'Пятница',
-  'Суббота',
-];
+const SalesSt = styled.FlatList``;
 
-function renderTimeTableItem({ item, index }) {
-  const [min, max] = item;
+const SaleRowSeparator = styled.View`
+  height: 1;
+  background-color: rgba(200, 200, 200, 0.1);
+`;
+
+const SaleRow = styled.TouchableOpacity.attrs({ activeOpacity: 0.8 })`
+  padding-vertical: 10;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex-wrap: wrap;
+`;
+
+const SaleRowText = styled.Text`
+  font-size: 14;
+  font-weight: bold;
+  color: #7dce56;
+`;
+
+const SaleRowTime = styled.Text`
+  font-size: 14;
+  color: #ccc;
+  margin-top: 4;
+`;
+
+function renderTimeTableItem({ workingHours }, index, isActive) {
+  const [minHour, maxHour] = workingHours;
   const todayDay = getDay(new Date());
-  const todayColor = index === todayDay && '#fff';
+  const todayColor = (isActive || index === todayDay) && '#fff';
+  const min = minHour < 10 ? `0${minHour}` : minHour;
+  const max = maxHour < 10 ? `0${maxHour}` : maxHour;
 
   return (
     <TimeTableItem>
       <TimeTableTitle color={todayColor}>{daysOfWeek[index]}</TimeTableTitle>
       <TimeTableDate color={todayColor}>
-        {min}—{max}
+        {min}:00—{max}:00
       </TimeTableDate>
     </TimeTableItem>
   );
 }
 
-function TimeTable({ workingHours }) {
+function renderSale({ item }) {
+  const today = new Date();
+  const currentHour = getHours(today);
+  const isActive = item.general
+    || item.allDay
+    || (currentHour >= item.hourFrom && currentHour <= item.hourTo);
+  const hasTimeLimit = item.hourFrom;
+
+  return (
+    <SaleRow isActive={isActive}>
+      <SaleRowText isActive={isActive}>{item.title}</SaleRowText>
+      {hasTimeLimit && (
+        <SaleRowTime>
+          С {item.hourFrom}:00 до {item.hourTo}:00
+        </SaleRowTime>
+      )}
+    </SaleRow>
+  );
+}
+
+function Sales({ sales }) {
+  return (
+    <SalesSt
+      data={sales}
+      renderItem={renderSale}
+      ItemSeparatorComponent={SaleRowSeparator}
+      keyExtractor={({ title }) => title}
+    />
+  );
+}
+
+function TimeTable({ workingHours, sales }) {
+  const today = new Date();
+  const todayDay = getDay(today);
+  const [activeSections, updateActiveSections] = React.useState([todayDay]);
+  const combinedSalesAndWH = workingHours.map((item, index) => ({
+    workingHours: item,
+    sales: sales[index],
+  }));
+
   return (
     <TimeTableSt>
       <Title>Часы работы</Title>
-      <FlatList
-        data={workingHours}
-        renderItem={renderTimeTableItem}
-        keyExtractor={(_, index) => String(index)}
+
+      <Accordion
+        underlayColor="transparent"
+        activeSections={activeSections}
+        sections={combinedSalesAndWH}
+        renderHeader={renderTimeTableItem}
+        renderContent={({ sales: contentSales }) => (
+          <Sales sales={contentSales} />
+        )}
+        onChange={updateActiveSections}
       />
     </TimeTableSt>
   );
@@ -256,7 +336,13 @@ function renderSpecialOffer({ item }) {
 export default function OrderDetails({ navigation }) {
   const id = navigation.getParam('id');
   const item = places.find(place => place.id === id) || navigation.getParam('item', {});
-  const { workingHours = [], events = [], photoIds = [] } = item;
+  const {
+    workingHours = [],
+    events = [],
+    photoIds = [],
+    sales = [],
+    generalSales,
+  } = item;
 
   return (
     <Card onGoBack={() => navigation.goBack()}>
@@ -266,13 +352,16 @@ export default function OrderDetails({ navigation }) {
 
       <Address item={item} />
 
-      <Highlights item={item} />
-
       <Actions item={item} />
+
+      {workingHours.length > 0 && (
+        <TimeTable sales={sales} workingHours={workingHours} />
+      )}
+
+      {/* <Highlights item={item} /> */}
 
       {photoIds.length > 0 && <Photos photoIds={photoIds} />}
       {events.length > 0 && <Events events={events} />}
-      {workingHours.length > 0 && <TimeTable workingHours={workingHours} />}
 
       <SocialNetworks item={item} />
     </Card>

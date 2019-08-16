@@ -154,9 +154,11 @@ function renderTimes({ item }) {
   if (!item.disabled) {
     const today = new Date();
     const todayDayOfWeek = getDay(today);
-    const todayWH = item.workingHours[todayDayOfWeek];
+    const [minHour, maxHour] = item.workingHours[todayDayOfWeek];
+    const min = minHour < 10 ? `0${minHour}` : minHour;
+    const max = maxHour < 10 ? `0${maxHour}` : maxHour;
 
-    const openingAt = format(today, `YYYY-MM-DD ${todayWH[0]}`);
+    const openingAt = format(today, `YYYY-MM-DD ${min}`);
     const isOpeningInFuture = isFuture(openingAt);
 
     // const closingAt = format(today, `YYYY-MM-DD ${todayWH[1]}`);
@@ -171,12 +173,12 @@ function renderTimes({ item }) {
             locale: ruLocale,
             addSuffix: true,
           })}{' '}
-          в {todayWH[0]}
+          в {min}
         </DateHelper>
       );
     }
 
-    return <DateHelper color="#7dce56">Открыто до {todayWH[1]}</DateHelper>;
+    return <DateHelper color="#7dce56">Открыто до {max}:00</DateHelper>;
   }
 
   return null;
