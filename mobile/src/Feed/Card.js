@@ -27,32 +27,53 @@ const styles = StyleSheet.create({
 
 const View = styled.View`
   border-radius: 10;
-  background-color: #77455d;
+  background-color: #262626;
 `;
 
 const StCard = styled.View`
   padding-horizontal: 16;
   padding-top: 20;
   padding-bottom: 16;
-  height: 320;
   width: 100%;
 
   border-radius: 10;
-  /* background: rgba(17, 17, 17, 0.6); */
   display: flex;
   flex-direction: column;
+`;
+
+const Header = styled.View`
+  display: flex;
+  flex-wrap: nowrap;
+  flex-direction: row;
   justify-content: space-between;
 `;
 
 const Title = styled.Text`
-  font-size: 36;
+  font-size: 32;
   line-height: 36;
-  font-weight: 700;
-  color: #f1f379;
+  font-weight: 600;
+  color: #fff;
+  flex-basis: 70%;
+`;
+
+const Icon = styled.View`
+  background-color: rgba(251, 196, 33, 0.2);
+  border-radius: 56;
+  padding-horizontal: 12;
+  padding-vertical: 12;
+  max-width: 52;
+  max-height: 52;
+
+  margin-left: 12;
+`;
+
+const IconText = styled.Text`
+  font-size: 24;
+  line-height: 26;
 `;
 
 const Description = styled(Markdown)`
-  width: 70%;
+  margin-top: 32;
 `;
 
 const Footer = styled.View`
@@ -74,6 +95,17 @@ const TouchableOpacity = styled.TouchableOpacity``;
 
 const defaultDateFormat = eventAt =>
   format(eventAt, 'DD MMMM в HH:MM', { locale: ruLocale });
+
+const tempDescriptions = {
+  q6LH1HJbzblw8peq2Aqm:
+    'То, чего вы так ждали (и мы!) — наш первый тестовый запуск.\n\nКаждый день мы будем улучшать приложение, но уже — добро пожаловать в Мятную семью 🤗',
+  rqQSbkbZwMrXvt2tgEA6:
+    'Совсем скоро мы запустим крутой мятный сайт. Еще на шаг ближе к нашим гостям!\n\n * Вы сможете найти Мяту практически в любом уголке России\n * Удобная система бронирования для каждой Мяты\n * Вечеринки и мероприятия\n * Анонсы событий\n * Фишки каждого нашего заведения',
+  fORadsDM2XBF8vxxUWRD:
+    '* Мята Lounge насчитывает более 200 заведений по всей России и странам СНГ\n* Каждый месяц нас посещают более 200 000 гостей\n* Мы открыты более, чем в 120 городаx',
+  TQki3q1eesZK1fna4YOK:
+    'Да, мы это сделали!\n\nТеперь вы можете следить за всеми новостями сети в нашем официальном аккаунте [@myata.official](https://instagram.com/myata.official)',
+};
 
 export default function EventCard({
   item,
@@ -100,19 +132,23 @@ export default function EventCard({
       <Animated.View>
         <View style={[styles.view]}>
           <StCard>
-            <Title>{item.title}</Title>
+            <Header>
+              <Title>{item.title}</Title>
+              <Icon>
+                <IconText>⭐</IconText>
+              </Icon>
+            </Header>
             <Description
-              debug
               markdownStyles={{
                 text: {
                   fontSize: 18,
-                  lineHeight: 20,
+                  lineHeight: 24,
                   fontWeight: '400',
-                  color: '#f1f379',
+                  color: 'rgba(255, 255, 255, 0.7)',
                 },
               }}
             >
-              {tp.execute(item.description)}
+              {tempDescriptions[item.id]}
             </Description>
             <Footer>
               {item.eventAt && (
