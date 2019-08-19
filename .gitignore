@@ -3,3 +3,5 @@ firebase-debug.log
 
 # credentials for firebase-admin
 .firebase-adminsdk.json
+
+.firebase

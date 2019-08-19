@@ -114,7 +114,9 @@ export default function ({ places = [], news = [] }) {
 
       <div className="row">
         <div className="col-xs-7">
-          <News news={news} title="Новости УК" />
+          <Card title="Новости УК">
+            <i>Нужно получить контент</i>
+          </Card>
           <News news={news} title="Федеральные новости" />
         </div>
         <div className="col-xs-5">
