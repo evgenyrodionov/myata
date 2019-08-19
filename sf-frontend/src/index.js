@@ -1,6 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import 'normalize.css';
+import 'flexboxgrid2/flexboxgrid2.css';
 import './index.css';
+import './legacy.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 
