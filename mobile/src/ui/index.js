@@ -39,3 +39,4 @@ export { default as IconEdit } from './icons/Edit';
 export { default as IconInstagram } from './icons/Instagram';
 export { default as IconVk } from './icons/Vk';
 export { default as IconReservation } from './icons/Reservation';
+export { default as IconSale } from './icons/Sale';

@@ -4,7 +4,6 @@ import styled from 'styled-components';
 import Accordion from 'react-native-collapsible/Accordion';
 
 import getDay from 'date-fns/get_day';
-import getHours from 'date-fns/get_hours';
 import isFuture from 'date-fns/is_future';
 import distanceInWordsStrict from 'date-fns/distance_in_words_strict';
 import ruLocale from 'date-fns/locale/ru';
@@ -22,6 +21,7 @@ import {
   IconGPS,
   IconWhatsApp,
   IconReservation,
+  IconSale,
 } from '../../ui';
 import { places } from '../../data';
 import Address from './Address';
@@ -83,15 +83,18 @@ const SaleRowSeparator = styled.View`
 
 const SaleRow = styled.TouchableOpacity.attrs({ activeOpacity: 0.8 })`
   padding-vertical: 10;
+  max-width: ${deviceWidth - 16 * 2};
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   justify-content: space-between;
-  flex-wrap: wrap;
 `;
+
+const SaleRowDescription = styled.View``;
 
 const SaleRowText = styled.Text`
   font-size: 14;
   font-weight: bold;
+  flex-wrap: wrap;
   color: #7dce56;
 `;
 
@@ -119,21 +122,23 @@ function renderTimeTableItem({ workingHours }, index, isActive) {
 }
 
 function renderSale({ item }) {
-  const today = new Date();
-  const currentHour = getHours(today);
-  const isActive = item.general
-    || item.allDay
-    || (currentHour >= item.hourFrom && currentHour <= item.hourTo);
   const hasTimeLimit = item.hourFrom;
+  const isAllDay = item.allDay;
 
   return (
-    <SaleRow isActive={isActive}>
-      <SaleRowText isActive={isActive}>{item.title}</SaleRowText>
-      {hasTimeLimit && (
-        <SaleRowTime>
-          С {item.hourFrom}:00 до {item.hourTo}:00
-        </SaleRowTime>
-      )}
+    <SaleRow>
+      <SaleRowDescription>
+        <SaleRowText>{item.title}</SaleRowText>
+
+        {isAllDay && <SaleRowTime>Акция дня</SaleRowTime>}
+        {hasTimeLimit && (
+          <SaleRowTime>
+            С {item.hourFrom}:00 до {item.hourTo}:00
+          </SaleRowTime>
+        )}
+      </SaleRowDescription>
+
+      <IconSale color="#7dce56" size={24} />
     </SaleRow>
   );
 }
