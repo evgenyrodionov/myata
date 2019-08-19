@@ -15,6 +15,7 @@ import Profile from '../Profile';
 import ProfileEdit from '../Profile/Edit';
 import Places from '../Places';
 import PlaceDetails from '../Places/Details';
+import PlaceReservation from '../Places/Details/Reservation';
 import CardDetails from '../Card/Details';
 
 import {
@@ -59,7 +60,7 @@ function Main(props) {
   const [user, setUser] = React.useState({});
   const [news, setNews] = React.useState([]);
   const [isLoading, updateLoading] = React.useState(true);
-  const [screenOffset, updateStateOffset] = React.useState(1);
+  const [screenOffset, updateStateOffset] = React.useState(2);
   const currentUser = getCurrentUser();
 
   const userId = mapPhoneNumberToId(currentUser.phoneNumber);
@@ -147,6 +148,9 @@ export default createStackNavigator(
     Main,
     PlaceDetails: {
       screen: PlaceDetails,
+    },
+    PlaceReservation: {
+      screen: PlaceReservation,
     },
     CardDetails: {
       screen: CardDetails,

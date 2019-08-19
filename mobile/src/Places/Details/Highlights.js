@@ -36,14 +36,13 @@ function renderIcon({ value, ...props }) {
 }
 
 const HighlightsSt = styled.FlatList`
-  margin-left: -16;
   margin-right: -16;
   margin-top: 24;
 `;
 
 const Highlight = styled.TouchableOpacity.attrs({ activeOpacity: 0.8 })`
   margin-right: 12;
-  width: 132;
+  width: 120;
   display: flex;
   align-items: center;
 `;

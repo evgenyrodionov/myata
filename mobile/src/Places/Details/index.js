@@ -21,6 +21,7 @@ import {
   IconPhone,
   IconGPS,
   IconWhatsApp,
+  IconReservation,
 } from '../../ui';
 import { places } from '../../data';
 import Address from './Address';
@@ -216,11 +217,11 @@ const ActionsSt = styled.View`
   margin-top: 24;
 `;
 
-function Actions({ item }) {
+function Actions({ navigation, item: place }) {
   const [canUseNavi, setCanUseNavi] = React.useState(false);
 
   const yandexNaviURL = `yandexnavi://map_search?text=Мята ${
-    item.addressTitle
+    place.addressTitle
   }`;
 
   React.useEffect(() => {
@@ -237,7 +238,9 @@ function Actions({ item }) {
           bgColor="#339274"
           textColor="#eee"
           onPress={() =>
-            Linking.openURL(`yandexnavi://map_search?text=${item.addressTitle}`)
+            Linking.openURL(
+              `yandexnavi://map_search?text=${place.addressTitle}`,
+            )
           }
         >
           Проложить маршрут
@@ -247,7 +250,7 @@ function Actions({ item }) {
         icon={<IconWhatsApp color="#eee" size={20} />}
         bgColor="#191919"
         textColor="#eee"
-        onPress={() => Linking.openURL(`https://wa.me/+${item.phoneNumber}`)}
+        onPress={() => Linking.openURL(`https://wa.me/+${place.phoneNumber}`)}
       >
         Написать в WhatsApp
       </ButtonWithIcon>
@@ -255,9 +258,17 @@ function Actions({ item }) {
         icon={<IconPhone color="#eee" size={20} />}
         bgColor="#191919"
         textColor="#eee"
-        onPress={() => Linking.openURL(`tel:+${item.phoneNumber}`)}
+        onPress={() => Linking.openURL(`tel:+${place.phoneNumber}`)}
       >
         Позвонить
+      </ButtonWithIcon>
+      <ButtonWithIcon
+        icon={<IconReservation color="#eee" size={20} />}
+        bgColor="#191919"
+        textColor="#eee"
+        onPress={() => navigation.navigate('PlaceReservation', place)}
+      >
+        Забронировать стол
       </ButtonWithIcon>
     </ActionsSt>
   );
@@ -348,17 +359,12 @@ export default function OrderDetails({ navigation }) {
     <Card onGoBack={() => navigation.goBack()}>
       <Title>{item.title}</Title>
 
-      {renderSpecialOffer({ item })}
+      {/* {renderSpecialOffer({ item })} */}
 
       <Address item={item} />
-
-      <Actions item={item} />
-
+      <Actions item={item} navigation={navigation} />
       <Highlights item={item} />
-
-      {workingHours.length > 0 && (
-        <TimeTable sales={sales} workingHours={workingHours} />
-      )}
+      <TimeTable sales={sales} workingHours={workingHours} />
 
       {photoIds.length > 0 && <Photos photoIds={photoIds} />}
       {events.length > 0 && <Events events={events} />}

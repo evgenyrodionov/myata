@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "@react-native-community/blur": "^3.3.1",
+    "@react-native-community/datetimepicker": "^2.0.0",
     "capitalize": "^2.0.0",
     "date-fns": "^1.30.1",
     "expo-asset-utils": "^1.1.1",
@@ -15,6 +16,7 @@
     "expo-haptics": "^5.0.1",
     "libphonenumber-js": "^1.7.18",
     "lodash": "^4.17.11",
+    "pluralize-ru": "^1.0.1",
     "react": "16.8.3",
     "react-native": "0.59.9",
     "react-native-animate-number": "^0.1.2",
@@ -31,6 +33,7 @@
     "react-native-passkit-wallet": "^0.1.4",
     "react-native-reanimated": "^1.0.1",
     "react-native-safari-view": "^2.1.0",
+    "react-native-simple-stepper": "testshallpass/react-native-simple-stepper#cc686f2",
     "react-native-svg": "9.5.1",
     "react-native-swiper": "^1.5.14",
     "react-native-unimodules": "0.3.1",
