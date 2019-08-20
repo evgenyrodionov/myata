@@ -54,7 +54,7 @@ function App() {
   }, []);
 
   return (
-    <Router>
+    <Router basename="build">
       <>
         {/* <Redirect from="/" to="/login" /> */}
 

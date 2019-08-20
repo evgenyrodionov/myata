@@ -4,7 +4,9 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { BlurView } from '@react-native-community/blur';
 import pluralize from 'pluralize-ru';
 import { SimpleStepper } from 'react-native-simple-stepper';
-import { Card as OrigCard, Title as OrigTitle, Button } from '../../ui';
+import {
+  Card as OrigCard, Title as OrigTitle, Button, Alert,
+} from '../../ui';
 
 import increaseIcon from './increase.png';
 import decreaseIcon from './decrease.png';
@@ -42,7 +44,7 @@ const PeopleFormText = styled.Text`
 
 const ActivityIndicator = styled.ActivityIndicator``;
 
-async function save(userId, data) {
+function save(userId, data) {
   // const { name: displayName, photo } = data;
   // const url = 'https://upload.uploadcare.com/base/';
   // const body = new FormData();
@@ -68,14 +70,19 @@ async function save(userId, data) {
 export default function ({ navigation }) {
   const place = navigation.getParam('place') || {};
   const [isLoading, updateLoading] = React.useState(false);
+  const [success, setSuccess] = React.useState(null);
   const [people, updatePeople] = React.useState(1);
+  const [date, updateDate] = React.useState(new Date());
 
-  async function onSave() {
+  function onSave() {
     updateLoading(true);
 
-    await save(place.id, {});
+    // save(place.id, {});
 
-    // navigation.goBack();
+    setTimeout(() => {
+      setSuccess(true);
+      updateLoading(false);
+    }, 1000);
   }
 
   return (
@@ -84,7 +91,11 @@ export default function ({ navigation }) {
         <Title>На какое время?</Title>
 
         <DateTimePickerWrapper blurType="xlight">
-          <DateTimePicker mode="datetime" value={new Date()} />
+          <DateTimePicker
+            mode="datetime"
+            value={date}
+            onChange={(event, newDate) => updateDate(newDate)}
+          />
         </DateTimePickerWrapper>
       </Time>
 
@@ -144,9 +155,13 @@ export default function ({ navigation }) {
         </PeopleForm>
       </People>
 
-      {isLoading ? (
-        <ActivityIndicator />
-      ) : (
+      {isLoading && <ActivityIndicator />}
+      {!isLoading && success && (
+        <Alert white center>
+          Заявка принята, скоро вам перезвонит администратор для подтверждения
+        </Alert>
+      )}
+      {!isLoading && !success && (
         <Button bgColor="#fff" textColor="#111" center onPress={onSave}>
           Запросить бронирование
         </Button>

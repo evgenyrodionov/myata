@@ -252,6 +252,14 @@ function Actions({ navigation, item: place }) {
         </ButtonWithIcon>
       )}
       <ButtonWithIcon
+        icon={<IconReservation color="#eee" size={20} />}
+        bgColor="#191919"
+        textColor="#eee"
+        onPress={() => navigation.navigate('PlaceReservation', place)}
+      >
+        Забронировать стол
+      </ButtonWithIcon>
+      <ButtonWithIcon
         icon={<IconWhatsApp color="#eee" size={20} />}
         bgColor="#191919"
         textColor="#eee"
@@ -266,14 +274,6 @@ function Actions({ navigation, item: place }) {
         onPress={() => Linking.openURL(`tel:+${place.phoneNumber}`)}
       >
         Позвонить
-      </ButtonWithIcon>
-      <ButtonWithIcon
-        icon={<IconReservation color="#eee" size={20} />}
-        bgColor="#191919"
-        textColor="#eee"
-        onPress={() => navigation.navigate('PlaceReservation', place)}
-      >
-        Забронировать стол
       </ButtonWithIcon>
     </ActionsSt>
   );
