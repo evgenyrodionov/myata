@@ -61,6 +61,20 @@ const ButtonText = styled.Text`
   font-size: 16;
 `;
 
+const ListBullet = styled.View`
+  width: 5;
+  height: 5;
+  background: #fff;
+  border-radius: 50;
+  margin-right: 6;
+  margin-top: 9;
+  align-self: flex-start;
+`;
+
+function renderListBullet() {
+  return <ListBullet />;
+}
+
 const defaultDateFormat = eventAt =>
   format(eventAt, 'DD MMMM в HH:MM', { locale: ruLocale });
 
@@ -78,8 +92,8 @@ const tempDescriptions = {
 const photoStyle = {
   height: 320,
   marginVertical: 12,
-  marginLeft: -16,
-  width: deviceWidth + 16 * 2,
+  width: '100%',
+  borderRadius: 10,
 };
 
 const markdownStyles = {
@@ -119,7 +133,10 @@ export default function EventCard({
             <NewsDate>{dateFormat(item.eventAt)}</NewsDate>
             <Title>{item.title}</Title>
           </Header>
-          <Description markdownStyles={markdownStyles}>
+          <Description
+            markdownStyles={markdownStyles}
+            renderListBullet={renderListBullet}
+          >
             {tempDescriptions[item.id].trim()}
           </Description>
 
