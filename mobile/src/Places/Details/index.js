@@ -260,20 +260,20 @@ function Actions({ navigation, item: place }) {
         Забронировать стол
       </ButtonWithIcon>
       <ButtonWithIcon
-        icon={<IconWhatsApp color="#eee" size={20} />}
-        bgColor="#191919"
-        textColor="#eee"
-        onPress={() => Linking.openURL(`https://wa.me/+${place.phoneNumber}`)}
-      >
-        Написать в WhatsApp
-      </ButtonWithIcon>
-      <ButtonWithIcon
         icon={<IconPhone color="#eee" size={20} />}
         bgColor="#191919"
         textColor="#eee"
         onPress={() => Linking.openURL(`tel:+${place.phoneNumber}`)}
       >
         Позвонить
+      </ButtonWithIcon>
+      <ButtonWithIcon
+        icon={<IconWhatsApp color="#eee" size={20} />}
+        bgColor="#191919"
+        textColor="#eee"
+        onPress={() => Linking.openURL(`https://wa.me/+${place.phoneNumber}`)}
+      >
+        Написать администратору
       </ButtonWithIcon>
     </ActionsSt>
   );
