@@ -1,15 +1,18 @@
 import React from 'react';
-import { Animated, Linking } from 'react-native';
+import { Animated, Linking, Dimensions } from 'react-native';
 import styled from 'styled-components';
 import ruLocale from 'date-fns/locale/ru';
 import format from 'date-fns/format';
 import * as Haptics from 'expo-haptics';
 import Markdown from 'react-native-easy-markdown';
+import { Image } from 'react-native-expo-image-cache';
 
-import Typograf from 'typograf';
+// import Typograf from 'typograf';
 import * as animateScale from '../utils/animateScale';
+import { getPhotoUrl, onImageLoad } from '../utils/photos';
 
-const tp = new Typograf({ locale: ['ru', 'en-US'] });
+const { width: deviceWidth } = Dimensions.get('window');
+// const tp = new Typograf({ locale: ['ru', 'en-US'] });
 
 const StCard = styled.View`
   display: flex;
@@ -72,6 +75,22 @@ const tempDescriptions = {
     'Да, мы это сделали!\n\nТеперь вы можете следить за всеми новостями сети в нашем официальном аккаунте [@myata.official](https://instagram.com/myata.official)',
 };
 
+const photoStyle = {
+  height: 320,
+  marginVertical: 12,
+  marginLeft: -16,
+  width: deviceWidth + 16 * 2,
+};
+
+const markdownStyles = {
+  text: {
+    fontSize: 16,
+    lineHeight: 22,
+    fontWeight: '400',
+    color: '#fff',
+  },
+};
+
 export default function EventCard({
   item,
   dateFormat = defaultDateFormat,
@@ -100,18 +119,20 @@ export default function EventCard({
             <NewsDate>{dateFormat(item.eventAt)}</NewsDate>
             <Title>{item.title}</Title>
           </Header>
-          <Description
-            markdownStyles={{
-              text: {
-                fontSize: 16,
-                lineHeight: 22,
-                fontWeight: '400',
-                color: '#fff',
-              },
-            }}
-          >
-            {tempDescriptions[item.id]}
+          <Description markdownStyles={markdownStyles}>
+            {tempDescriptions[item.id].trim()}
           </Description>
+
+          {item.coverId && (
+            <Image
+              onLoad={onImageLoad}
+              style={photoStyle}
+              // resizeMethod="resize"
+              resizeMode="cover"
+              preview={{ uri: `${getPhotoUrl(item.coverId)}-/resize/x48/` }}
+              uri={`${getPhotoUrl(item.coverId)}-/resize/x512/`}
+            />
+          )}
 
           {item.cta && (
             <Button onPress={() => Linking.openURL(item.cta.link)}>
