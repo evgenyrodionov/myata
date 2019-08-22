@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Animated } from 'react-native';
+import { Animated, Linking } from 'react-native';
 import styled from 'styled-components';
 import ruLocale from 'date-fns/locale/ru';
 import format from 'date-fns/format';
@@ -7,91 +7,56 @@ import * as Haptics from 'expo-haptics';
 import Markdown from 'react-native-easy-markdown';
 
 import Typograf from 'typograf';
-import { elevationShadowStyle } from '../utils/shadow';
 import * as animateScale from '../utils/animateScale';
 
 const tp = new Typograf({ locale: ['ru', 'en-US'] });
 
-const styles = StyleSheet.create({
-  view: {
-    ...elevationShadowStyle({
-      elevation: 11,
-      shadowColor: '#111',
-      shadowOpacity: 0.3,
-      shadowRadius: 5,
-      shadowOffsetWidthMultiplier: 0.5,
-      shadowOffsetHeightMultiplier: 0.5,
-    }),
-  },
-});
-
-const View = styled.View`
-  border-radius: 10;
-  background-color: #262626;
-`;
-
 const StCard = styled.View`
-  padding-horizontal: 16;
-  padding-top: 20;
-  padding-bottom: 16;
-  width: 100%;
-
-  border-radius: 10;
   display: flex;
   flex-direction: column;
 `;
 
 const Header = styled.View`
   display: flex;
-  flex-wrap: nowrap;
-  flex-direction: row;
-  justify-content: space-between;
+  flex-direction: column;
+  /* flex-wrap: wrap; */
+  /* align-items: flex-start; */
 `;
 
 const Title = styled.Text`
-  font-size: 32;
-  line-height: 36;
+  font-size: 24;
+  line-height: 30;
   font-weight: 600;
   color: #fff;
-  flex-basis: 70%;
-`;
-
-const Icon = styled.View`
-  background-color: rgba(251, 196, 33, 0.2);
-  border-radius: 56;
-  padding-horizontal: 12;
-  padding-vertical: 12;
-  max-width: 52;
-  max-height: 52;
-
-  margin-left: 12;
-`;
-
-const IconText = styled.Text`
-  font-size: 24;
-  line-height: 26;
 `;
 
 const Description = styled(Markdown)`
-  margin-top: 32;
+  margin-top: 14;
 `;
 
-const Footer = styled.View`
-  flex: 1;
-  /* justify-content: space-between;
-  flex-direction: row; */
-  position: absolute;
-  bottom: 8;
-  left: 16;
-`;
-
-const DateHelper = styled.Text`
+const NewsDate = styled.Text`
   font-size: 14;
-  color: ${p => p.color};
-  margin-top: 6;
+  color: #808080;
+  margin-bottom: 4;
 `;
 
 const TouchableOpacity = styled.TouchableOpacity``;
+
+const Button = styled.TouchableOpacity`
+  width: 100%;
+  border-width: 1;
+  border-color: rgba(255, 255, 255, 0.2);
+  border-radius: 20;
+  padding-vertical: 14;
+  padding-horizontal: 22;
+  margin-top: 8;
+`;
+
+const ButtonText = styled.Text`
+  color: #fff;
+  text-align: center;
+  font-size: 16;
+`;
 
 const defaultDateFormat = eventAt =>
   format(eventAt, 'DD MMMM в HH:MM', { locale: ruLocale });
@@ -130,33 +95,30 @@ export default function EventCard({
       style={animateScale.getScaleTransformationStyle(scaleInAnimated)}
     >
       <Animated.View>
-        <View style={[styles.view]}>
-          <StCard>
-            <Header>
-              <Title>{item.title}</Title>
-              <Icon>
-                <IconText>⭐</IconText>
-              </Icon>
-            </Header>
-            <Description
-              markdownStyles={{
-                text: {
-                  fontSize: 18,
-                  lineHeight: 24,
-                  fontWeight: '400',
-                  color: 'rgba(255, 255, 255, 0.7)',
-                },
-              }}
-            >
-              {tempDescriptions[item.id]}
-            </Description>
-            <Footer>
-              {item.eventAt && (
-                <DateHelper color="#fff">{dateFormat(item.eventAt)}</DateHelper>
-              )}
-            </Footer>
-          </StCard>
-        </View>
+        <StCard>
+          <Header>
+            <NewsDate>{dateFormat(item.eventAt)}</NewsDate>
+            <Title>{item.title}</Title>
+          </Header>
+          <Description
+            markdownStyles={{
+              text: {
+                fontSize: 16,
+                lineHeight: 22,
+                fontWeight: '400',
+                color: '#fff',
+              },
+            }}
+          >
+            {tempDescriptions[item.id]}
+          </Description>
+
+          {item.cta && (
+            <Button onPress={() => Linking.openURL(item.cta.link)}>
+              <ButtonText>{item.cta.text}</ButtonText>
+            </Button>
+          )}
+        </StCard>
       </Animated.View>
     </TouchableOpacity>
   );

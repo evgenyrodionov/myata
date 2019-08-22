@@ -16,9 +16,11 @@ const AlertText = styled.Text`
   text-align: ${p => (p.center ? 'center' : 'left')};
 `;
 
-export default function ({ white, center, children }) {
+export default function ({
+  white, center, children, ...props
+}) {
   return (
-    <Alert white={white}>
+    <Alert white={white} {...props}>
       <AlertText white={white} center={center}>
         {children}
       </AlertText>

@@ -7,7 +7,7 @@ import distanceInWordsStrict from 'date-fns/distance_in_words_strict';
 import EventCard from '../Places/EventCard';
 import NewsCard from './Card';
 import Card from '../Card/Card';
-import { Alert, FooterPusher } from '../ui';
+import { Alert as OrigAlert, FooterPusher } from '../ui';
 
 const { width: deviceWidth } = Dimensions.get('window');
 
@@ -34,12 +34,21 @@ const Heading = styled.Text`
     `}
 `;
 
+const Alert = styled(OrigAlert)`
+  margin-bottom: 32;
+`;
+
 const CardView = styled.View``;
 
 const EventsList = styled.FlatList``;
 
-const EventItem = styled.View`
-  margin-bottom: 16;
+const EventItem = styled.View``;
+
+const Separator = styled.View`
+  border-bottom-color: rgba(255, 255, 255, 0.05);
+  border-bottom-width: 1;
+  margin-top: 22;
+  margin-bottom: 30;
 `;
 
 function loadList() {
@@ -114,6 +123,7 @@ export default class Feed extends React.Component {
           <EventsList
             renderItem={args => this.renderItem(args, this.props)}
             onRefresh={() => dispatch(loadList())}
+            ItemSeparatorComponent={Separator}
             refreshing={isFetching}
             data={news}
             keyExtractor={item => String(item.id)}

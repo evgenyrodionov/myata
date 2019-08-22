@@ -100,7 +100,9 @@ function Main(props) {
 
   // listen to news updates
   React.useEffect(() => {
-    getNewsRef().onSnapshot(docs => setNews(mapNews(docs)));
+    getNewsRef()
+      .orderBy('eventAt', 'desc')
+      .onSnapshot(docs => setNews(mapNews(docs)));
   }, []);
 
   // callback after initial user loading
