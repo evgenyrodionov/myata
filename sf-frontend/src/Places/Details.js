@@ -1,20 +1,24 @@
 import React from 'react';
 import styled from 'styled-components';
-import { parsePhoneNumberFromString } from 'libphonenumber-js';
+import {
+  AsYouType,
+  isValidNumber,
+  parsePhoneNumberFromString,
+} from 'libphonenumber-js';
+
 import { ReactDadata } from 'react-dadata';
 import { Widget } from '@uploadcare/react-widget';
+import uploadcare from 'uploadcare-widget';
+
+import fb from '../firebase';
+import { mapOutput } from './mappers';
+
 import { Card, IconEdit } from '../ui';
 import * as FeaturesIcons from '../ui/icons/features';
 
 const getPhotoUrl = id => `https://ucarecdn.com/${id}/`;
 
 const fake = {
-  title: 'Сретенка',
-  phoneNumber: '79680099991',
-  waPhoneNumber: '79680099991',
-  coverId: 'c2878465-a59b-4aff-ae60-589738add9db',
-  city: 'moscow',
-  addressTitle: 'ул. Сретенка, 26/1',
   addressSubways: [
     {
       title: 'Сухаревская',
@@ -256,12 +260,20 @@ function Photos({ photoIds = [], isEdit, onChange = () => {} }) {
   }
 
   function onUpload(id) {
+    // function onUpload(groupUuid) {
+    // uploadcare
+    //   .loadFileGroup(groupUuid)
+    //   .done(res => console.log({ res: res.files() }))
+    //   .fail(e => console.error(e));
+
     setUploaded(null);
     return onChange([...photoIds, id]);
   }
 
   return (
     <Card title="Фотографии">
+      {!isEdit && !photoIds.length > 0 && <i>Фотографии ещё не загружены</i>}
+
       <PhotosSt>
         {photoIds.map(id => (
           <PhotoItem key={id}>
@@ -277,12 +289,14 @@ function Photos({ photoIds = [], isEdit, onChange = () => {} }) {
           <PhotoItem>
             <Widget
               publicKey={process.env.REACT_APP_UPLOADCARE_KEY}
+              // onChange={({ uuid: groupUuid }) => onUpload(groupUuid)}
               onChange={({ uuid }) => onUpload(uuid)}
               value={uploaded}
               tabs="file gdrive"
               locale="ru"
               imagesOnly
               previewStep
+              // multiple
             />
           </PhotoItem>
         )}
@@ -554,6 +568,11 @@ export default function ({ place = {} }) {
   const [state, setState] = React.useState(place);
   const [isEdit, setEdit] = React.useState(false);
   const [uploaded, setUploaded] = React.useState(null);
+  const { socialNetworks = {} } = state;
+
+  function formatPhoneNumber(phoneNumber) {
+    return new AsYouType('RU').input(phoneNumber);
+  }
 
   function onUpload(coverId) {
     setUploaded(null);
@@ -561,7 +580,18 @@ export default function ({ place = {} }) {
     return setState({ ...state, coverId });
   }
 
-  const { socialNetworks = {} } = state;
+  async function onSave() {
+    const { id, ...data } = mapOutput(state);
+    // const isValidPhoneNumber = isValidNumber(text);
+
+    try {
+      await fb.update('places', id, data);
+
+      setEdit(false);
+    } catch (e) {
+      console.error(e);
+    }
+  }
 
   React.useEffect(() => {
     setState(place);
@@ -581,9 +611,9 @@ export default function ({ place = {} }) {
           )}
         </Actions>
       </Header>
-      <Card title="Информация">
-        <div className="row">
-          <div className="col-xs-7">
+      <div className="row">
+        <div className="col-xs-7">
+          <Card title="Информация">
             <Row id="title" label="Название">
               {isEdit ? (
                 <Input
@@ -602,7 +632,7 @@ export default function ({ place = {} }) {
                 <Input
                   type="text"
                   id="phoneNumber"
-                  value={state.phoneNumber}
+                  value={formatPhoneNumber(state.phoneNumber)}
                   onChange={e =>
                     setState({ ...state, phoneNumber: e.target.value })
                   }
@@ -611,7 +641,7 @@ export default function ({ place = {} }) {
                 state.phoneNumber && (
                   <Value>
                     {parsePhoneNumberFromString(
-                      `+${state.phoneNumber}`,
+                      state.phoneNumber,
                     ).formatInternational()}
                   </Value>
                 )
@@ -623,7 +653,7 @@ export default function ({ place = {} }) {
                 <Input
                   type="text"
                   id="waPhoneNumber"
-                  value={state.waPhoneNumber}
+                  value={formatPhoneNumber(state.waPhoneNumber)}
                   onChange={e =>
                     setState({ ...state, waPhoneNumber: e.target.value })
                   }
@@ -632,7 +662,7 @@ export default function ({ place = {} }) {
                 state.waPhoneNumber && (
                   <Value>
                     {parsePhoneNumberFromString(
-                      `+${state.waPhoneNumber}`,
+                      state.waPhoneNumber,
                     ).formatInternational()}
                   </Value>
                 )
@@ -704,28 +734,30 @@ export default function ({ place = {} }) {
                 <Value>{socialNetworks.vk}</Value>
               )}
             </Row>
-          </div>
-          {state.coverId && (
-            <div className="col-xs-5">
-              <CoverColumn>
-                <Cover src={`${getPhotoUrl(state.coverId)}-/resize/x512/`} />
-
-                {isEdit && (
-                  <Widget
-                    publicKey={process.env.REACT_APP_UPLOADCARE_KEY}
-                    onChange={({ uuid }) => onUpload(uuid)}
-                    value={uploaded}
-                    tabs="file gdrive"
-                    locale="ru"
-                    imagesOnly
-                    previewStep
-                  />
-                )}
-              </CoverColumn>
-            </div>
-          )}
+          </Card>
         </div>
-      </Card>
+        <div className="col-xs-5">
+          <Card title="Обложка">
+            <CoverColumn>
+              {state.coverId && (
+                <Cover src={`${getPhotoUrl(state.coverId)}-/resize/x512/`} />
+              )}
+              {!isEdit && !state.coverId && <i>Обложка пока не загружена</i>}
+              {isEdit && (
+                <Widget
+                  publicKey={process.env.REACT_APP_UPLOADCARE_KEY}
+                  onChange={({ uuid }) => onUpload(uuid)}
+                  value={uploaded}
+                  tabs="file gdrive"
+                  locale="ru"
+                  imagesOnly
+                  previewStep
+                />
+              )}
+            </CoverColumn>
+          </Card>
+        </div>
+      </div>
 
       <Photos
         photoIds={state.photoIds}
@@ -741,7 +773,7 @@ export default function ({ place = {} }) {
 
       {isEdit && (
         <ActionsRow>
-          <Save onClick={() => setEdit(false)}>Сохранить</Save>
+          <Save onClick={onSave}>Сохранить</Save>
         </ActionsRow>
       )}
     </>
