@@ -265,7 +265,7 @@ function Actions({ navigation, item: place }) {
         textColor="#eee"
         onPress={() => Linking.openURL(`tel:+${place.phoneNumber}`)}
       >
-        Позвонить
+        Позвонить в заведение
       </ButtonWithIcon>
       <ButtonWithIcon
         icon={<IconWhatsApp color="#eee" size={20} />}

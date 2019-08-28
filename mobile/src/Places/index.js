@@ -3,6 +3,7 @@ import { RefreshControl, Dimensions } from 'react-native';
 import styled, { css } from 'styled-components';
 import * as Haptics from 'expo-haptics';
 import Card from './Card';
+import Filter from './Filter';
 import { places } from '../data';
 import { FooterPusher, Alert } from '../ui';
 
@@ -39,36 +40,6 @@ function loadList() {
   return [];
 }
 
-const Cities = styled.ScrollView`
-  margin-top: 6;
-  margin-bottom: 12;
-`;
-
-const City = styled.TouchableOpacity.attrs({ activeOpacity: 0.7 })`
-  border-radius: 20;
-  background-color: ${p => (p.isActive ? '#fff' : 'rgba(0,0,0,0.2)')};
-  padding-horizontal: 12;
-  padding-vertical: 8;
-  margin-right: 8;
-`;
-
-const CityText = styled.Text`
-  color: ${p => (p.isActive ? 'rgba(0,0,0,0.8)' : 'rgba(255,255,255,0.7)')};
-`;
-
-const cities = [
-  {
-    value: 'moscow',
-    title: 'Москва',
-    count: 4,
-  },
-  {
-    value: 'yekaterinburg',
-    title: 'Екатеринбург',
-    count: 1,
-  },
-];
-
 function renderItem({ item }, { navigation }) {
   return (
     <Item>
@@ -93,13 +64,43 @@ function ListEmptyComponent() {
   );
 }
 
+const filterParents = {
+  street: 'district',
+  district: 'city',
+  city: 'country',
+};
+
+function filter(data, selected = [], selectedKind) {
+  const filtered = selected.find(({ kind }) => kind === selectedKind) || {};
+
+  return data.filter(({ address }) => address[selectedKind] === filtered.title);
+}
+
 export default function Places(props) {
   const { dispatch = () => ({}), isFetching = false } = props;
-  const [selectedCities, updateCities] = React.useState([]);
+  const [selectedKind, updateKind] = React.useState([null, []]);
+  const [selectedValues, updateValues] = React.useState([]);
 
   React.useEffect(() => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => {});
-  }, [selectedCities]);
+  }, [selectedKind]);
+
+  function onFilterUpdate(kind, title, index) {
+    const [, indexes] = selectedKind;
+    const indexesPath = [...indexes, index];
+
+    updateKind([kind, indexesPath]);
+    updateValues([...selectedValues, { kind, title, indexesPath }]);
+  }
+
+  function onFilterRemove(kind, index) {
+    const [, indexes] = selectedKind;
+
+    updateKind([filterParents[kind], indexes.slice(0, index)]);
+    return updateValues(selectedValues.slice(0, index));
+  }
+
+  const data = filter(places, selectedValues, selectedKind[0]) || places;
 
   const refreshControl = (
     <RefreshControl
@@ -110,37 +111,16 @@ export default function Places(props) {
     />
   );
 
-  function toggleCity(value) {
-    if (selectedCities.includes(value)) {
-      const filtered = selectedCities.filter(city => city !== value);
-
-      return updateCities([...filtered]);
-    }
-
-    return updateCities([...selectedCities, value]);
-  }
-
-  const data = selectedCities.length > 0
-    ? places.filter(({ city }) => selectedCities.includes(city))
-    : places;
-
   return (
     <View refreshControl={refreshControl}>
       <Heading>Заведения</Heading>
 
-      <Cities horizontal>
-        {cities.map(({ value, title, count }) => (
-          <City
-            key={value}
-            onPress={() => toggleCity(value)}
-            isActive={selectedCities.includes(value)}
-          >
-            <CityText isActive={selectedCities.includes(value)}>
-              {title} — {count}
-            </CityText>
-          </City>
-        ))}
-      </Cities>
+      <Filter
+        update={onFilterUpdate}
+        remove={onFilterRemove}
+        selectedKind={selectedKind}
+        selectedValues={selectedValues}
+      />
 
       <List
         renderItem={args => renderItem(args, props)}

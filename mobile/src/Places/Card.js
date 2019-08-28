@@ -184,11 +184,6 @@ function renderTimes({ item }) {
   return null;
 }
 
-const cities = {
-  moscow: 'Москва',
-  yekaterinburg: 'Екатеринбург',
-};
-
 export default function Card({ item, onPress: parentOnPress = () => {} }) {
   const [isLiked, toggle] = React.useState(false);
 
@@ -228,7 +223,7 @@ export default function Card({ item, onPress: parentOnPress = () => {} }) {
           </Header>
           <Footer>
             <Address>
-              {cities[item.city]}, {item.addressTitle}
+              {item.address.city}, {item.addressTitle}
             </Address>
 
             {renderTimes({ item })}
