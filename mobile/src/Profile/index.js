@@ -127,7 +127,7 @@ function Friends({ user }) {
           <Friend>
             <FriendName>{item.displayName}</FriendName>
             <FriendPhoneNumber>
-              {parsePhoneNumberFromString(`+${item.id}`).formatInternational()}
+              {parsePhoneNumberFromString(item.id).formatInternational()}
             </FriendPhoneNumber>
           </Friend>
         )}

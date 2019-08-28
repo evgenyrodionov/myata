@@ -2,11 +2,16 @@
 
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
+const Twilio = require('twilio');
 const nanoid = require('nanoid/generate');
+
+const toDate = require('date-fns/toDate');
+const { ru: ruLocale } = require('date-fns/locale');
+const { format, utcToZonedTime } = require('date-fns-tz');
+
 const util = require('util');
 
-const nanoidAlphabet =
-  '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+const nanoidAlphabet = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
 
 const app = admin.initializeApp({
   credential: admin.credential.applicationDefault(),
@@ -28,7 +33,7 @@ const initialState = {
   visits: [],
 };
 
-exports.onUserCreate = functions.auth.user().onCreate(user => {
+exports.onUserCreate = functions.auth.user().onCreate((user) => {
   const userData = user.toJSON();
   const phoneNumber = userData.phoneNumber.replace(/\+/, '');
   const data = {
@@ -50,6 +55,57 @@ exports.onPosterWebhook = functions.https.onRequest((req, res) => {
 
   return res.sendStatus(200);
 });
+
+const {
+  sid,
+  token,
+  phone_number: twilioPhoneNumber,
+} = functions.config().twilio;
+
+const client = new Twilio(sid, token);
+
+function validE164(num) {
+  return /^\+?[1-9]\d{1,14}$/.test(num);
+}
+
+exports.onNewReservation = functions.firestore
+  .document('/reservations/{requestId}')
+  .onCreate((doc) => {
+    const data = doc.data();
+
+    const {
+      placeTitle,
+      count,
+      phoneNumber,
+      toPhoneNumber,
+      reservationAt,
+    } = data;
+
+    if (!validE164(toPhoneNumber)) {
+      throw new Error('number must be E164 format!');
+    }
+
+    const zonedTime = utcToZonedTime(
+      toDate(reservationAt.seconds * 1000),
+      'Europe/Moscow',
+    );
+
+    const date = format(zonedTime, 'dd MMM HH:mm', {
+      locale: ruLocale,
+      timeZone: 'Europe/Moscow',
+    });
+
+    const textMessage = {
+      body: `Бронь ${count} чел ${date} ${phoneNumber} ${placeTitle}`,
+      to: toPhoneNumber,
+      from: twilioPhoneNumber,
+    };
+
+    return client.messages
+      .create(textMessage)
+      .then(message => console.log(message.sid, 'success'))
+      .catch(err => console.log(err));
+  });
 
 // function listAllUsers(req, res) {
 //   admin

@@ -245,11 +245,11 @@ function Actions({ navigation, item: place }) {
       },
       (buttonIndex) => {
         if (buttonIndex === 0) {
-          return Linking.openURL(`tel:+${place.phoneNumber}`);
+          return Linking.openURL(`tel:${place.phoneNumber}`);
         }
 
         if (buttonIndex === 1) {
-          return Linking.openURL(`https://wa.me/+${place.phoneNumber}`);
+          return Linking.openURL(`https://wa.me/${place.phoneNumber}`);
         }
 
         return null;
@@ -277,7 +277,7 @@ function Actions({ navigation, item: place }) {
         icon={<IconReservation color="#eee" size={20} />}
         bgColor="#191919"
         textColor="#eee"
-        onPress={() => navigation.navigate('PlaceReservation', place)}
+        onPress={() => navigation.navigate('PlaceReservation', { place })}
       >
         Забронировать стол
       </ButtonWithIcon>

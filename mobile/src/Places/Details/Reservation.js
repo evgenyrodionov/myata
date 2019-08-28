@@ -1,15 +1,23 @@
 import React from 'react';
+import { Linking } from 'react-native';
 import styled from 'styled-components';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { BlurView } from '@react-native-community/blur';
+import firebase from 'react-native-firebase';
+import { parsePhoneNumberFromString } from 'libphonenumber-js';
 import pluralize from 'pluralize-ru';
+
 import { SimpleStepper } from 'react-native-simple-stepper';
+
+import { getCurrentUser } from '../../Profile/api';
 import {
   Card as OrigCard, Title as OrigTitle, Button, Alert,
 } from '../../ui';
 
 import increaseIcon from './increase.png';
 import decreaseIcon from './decrease.png';
+
+const firestore = firebase.firestore();
 
 const Card = styled(OrigCard)``;
 
@@ -43,46 +51,44 @@ const PeopleFormText = styled.Text`
 `;
 
 const ActivityIndicator = styled.ActivityIndicator``;
-
-function save(userId, data) {
-  // const { name: displayName, photo } = data;
-  // const url = 'https://upload.uploadcare.com/base/';
-  // const body = new FormData();
-  // body.append('file', {
-  //   name: 'noname',
-  //   type: 'image/jpg',
-  //   uri: photo.uri,
-  // });
-  // body.append('UPLOADCARE_PUB_KEY', '86a667e1f234c73e94a6');
-  // body.append('UPLOADCARE_STORE', '1');
-  // try {
-  //   const res = await fetch(url, {
-  //     method: 'POST',
-  //     body,
-  //   });
-  //   const { file: photoId } = await res.json();
-  //   return Promise.resolve(updateWithMerge(userId, { displayName, photoId }));
-  // } catch (e) {
-  //   return Promise.reject(e);
-  // }
-}
+const TouchableOpacity = styled.TouchableOpacity``;
 
 export default function ({ navigation }) {
   const place = navigation.getParam('place') || {};
   const [isLoading, updateLoading] = React.useState(false);
   const [success, setSuccess] = React.useState(null);
+  const [error, setError] = React.useState(null);
+
   const [people, updatePeople] = React.useState(1);
   const [date, updateDate] = React.useState(new Date());
+
+  const formattedPhoneNumber = parsePhoneNumberFromString(
+    String(place.phoneNumber),
+  ).formatInternational();
 
   function onSave() {
     updateLoading(true);
 
-    // save(place.id, {});
-
-    setTimeout(() => {
-      setSuccess(true);
-      updateLoading(false);
-    }, 1000);
+    firestore
+      .collection('reservations')
+      .add({
+        placeTitle: place.title,
+        phoneNumber: getCurrentUser().phoneNumber,
+        toPhoneNumber: place.phoneNumber,
+        count: people,
+        reservationAt: date,
+      })
+      .then(() => {
+        setSuccess(true);
+        setError(false);
+      })
+      .catch(() => {
+        setError(true);
+        setSuccess(false);
+      })
+      .finally(() => {
+        updateLoading(false);
+      });
   }
 
   return (
@@ -156,12 +162,23 @@ export default function ({ navigation }) {
       </People>
 
       {isLoading && <ActivityIndicator />}
-      {!isLoading && success && (
+      {!isLoading && !success && error && (
+        <Alert white center>
+          Произошла ошибка при бронировании, мы её зафиксировали и скоро
+          исправим. Позвоните в заведение для бронирования:{' '}
+          <TouchableOpacity
+            onPress={() => Linking.openURL(`tel:${place.phoneNumber}`)}
+          >
+            {formattedPhoneNumber}
+          </TouchableOpacity>
+        </Alert>
+      )}
+      {!isLoading && !error && success && (
         <Alert white center>
           Заявка принята, скоро вам перезвонит администратор для подтверждения
         </Alert>
       )}
-      {!isLoading && !success && (
+      {!isLoading && !error && !success && (
         <Button bgColor="#fff" textColor="#111" center onPress={onSave}>
           Запросить бронирование
         </Button>
