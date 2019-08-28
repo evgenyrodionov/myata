@@ -1,5 +1,7 @@
 import React from 'react';
-import { Dimensions, FlatList, Linking } from 'react-native';
+import {
+  Dimensions, FlatList, Linking, ActionSheetIOS,
+} from 'react-native';
 import styled from 'styled-components';
 import Accordion from 'react-native-collapsible/Accordion';
 
@@ -235,6 +237,26 @@ function Actions({ navigation, item: place }) {
       .catch(() => setCanUseNavi(false));
   }, []);
 
+  function onContact() {
+    ActionSheetIOS.showActionSheetWithOptions(
+      {
+        options: ['Позвонить в заведение', 'Написать администратору', 'Отмена'],
+        cancelButtonIndex: 2,
+      },
+      (buttonIndex) => {
+        if (buttonIndex === 0) {
+          return Linking.openURL(`tel:+${place.phoneNumber}`);
+        }
+
+        if (buttonIndex === 1) {
+          return Linking.openURL(`https://wa.me/+${place.phoneNumber}`);
+        }
+
+        return null;
+      },
+    );
+  }
+
   return (
     <ActionsSt>
       {canUseNavi && (
@@ -263,17 +285,9 @@ function Actions({ navigation, item: place }) {
         icon={<IconPhone color="#eee" size={20} />}
         bgColor="#191919"
         textColor="#eee"
-        onPress={() => Linking.openURL(`tel:+${place.phoneNumber}`)}
+        onPress={onContact}
       >
-        Позвонить в заведение
-      </ButtonWithIcon>
-      <ButtonWithIcon
-        icon={<IconWhatsApp color="#eee" size={20} />}
-        bgColor="#191919"
-        textColor="#eee"
-        onPress={() => Linking.openURL(`https://wa.me/+${place.phoneNumber}`)}
-      >
-        Написать администратору
+        Связаться
       </ButtonWithIcon>
     </ActionsSt>
   );
