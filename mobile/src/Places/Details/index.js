@@ -169,9 +169,7 @@ function Sales({ sales }) {
 }
 
 function TimeTable({ workingHours, sales }) {
-  const today = new Date();
-  const todayDay = getDay(today);
-  const [activeSections, updateActiveSections] = React.useState([todayDay]);
+  const [activeSections, updateActiveSections] = React.useState([]);
   const combinedSalesAndWH = workingHours.map((item, index) => ({
     workingHours: item,
     sales: sales[index],
