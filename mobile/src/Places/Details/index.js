@@ -63,12 +63,19 @@ const TimeTableTitle = styled(Text)`
   font-weight: 300;
 `;
 
+const TimeTableRight = styled.View`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+`;
+
 const TimeTableDate = styled(Text)`
   color: ${p => p.color || '#9c9c9c'};
   text-align: right;
   margin-right: 20;
   font-weight: 400;
   margin-right: 0;
+  margin-left: 6;
 `;
 
 const EventCardItem = styled.View`
@@ -106,7 +113,7 @@ const SaleRowTime = styled.Text`
   margin-top: 4;
 `;
 
-function renderTimeTableItem({ workingHours }, index, isActive) {
+function renderTimeTableItem({ workingHours, sales }, index, isActive) {
   const [minHour, maxHour] = workingHours;
   const todayDay = getDay(new Date());
   const todayColor = (isActive || index === todayDay) && '#fff';
@@ -116,9 +123,14 @@ function renderTimeTableItem({ workingHours }, index, isActive) {
   return (
     <TimeTableItem>
       <TimeTableTitle color={todayColor}>{daysOfWeek[index]}</TimeTableTitle>
-      <TimeTableDate color={todayColor}>
-        {min}:00—{max}:00
-      </TimeTableDate>
+      <TimeTableRight>
+        {sales.length > 0 && !isActive && (
+          <IconSale color="#7dce56" size={16} />
+        )}
+        <TimeTableDate color={todayColor}>
+          {min}:00—{max}:00
+        </TimeTableDate>
+      </TimeTableRight>
     </TimeTableItem>
   );
 }
