@@ -31,25 +31,25 @@ import { mapNews } from '../Feed/mappers';
 import { getRef as getNewsRef } from '../Feed/api';
 
 const { width: deviceWidth } = Dimensions.get('window');
-const headerSize = 32;
+const headerSize = 38;
 
-const View = styled.SafeAreaView`
+const View = styled.View`
   flex: 1;
   background-color: #191919;
 `;
 
 const ScrollView = styled.ScrollView`
-  margin-top: ${headerSize};
-`;
-
-const HeaderWrapper = styled.View`
-  position: absolute;
-  top: ${isIphoneX() ? headerSize + 12 : headerSize - 12};
-  width: ${deviceWidth};
+  margin-top: ${isIphoneX() ? headerSize * 2 : headerSize * 1.5};
 `;
 
 const Header = styled.View`
-  margin-horizontal: 16;
+  z-index: 10000;
+  position: absolute;
+  top: ${isIphoneX() ? headerSize : headerSize - 12};
+  width: ${deviceWidth};
+  background-color: #191919;
+  padding-bottom: 4;
+  padding-horizontal: 16;
   flex: 1;
   justify-content: space-between;
   flex-direction: row;
@@ -71,7 +71,7 @@ const HeaderButtonRight = styled(HeaderButton)`
 function Main(props) {
   const [user, setUser] = React.useState({});
   const [news, setNews] = React.useState([]);
-  const [ref, setRef] = React.useState(null);
+  const ref = React.useRef(null);
   const [isLoading, updateLoading] = React.useState(true);
   const [screenOffset, updateStateOffset] = React.useState(1);
   const currentUser = getCurrentUser();
@@ -124,7 +124,7 @@ function Main(props) {
   }, [user]);
 
   function scrollTo(offset) {
-    ref.scrollTo({ x: deviceWidth * offset, animated: true });
+    ref.current.scrollTo({ x: deviceWidth * offset, animated: true });
   }
 
   function getColor(offset) {
@@ -134,19 +134,17 @@ function Main(props) {
   if (!isLoading) {
     return (
       <View>
-        <HeaderWrapper>
-          <Header blurType="extraDark">
-            <HeaderButtonLeft onPress={() => scrollTo(0)}>
-              <IconProfile color={getColor(0)} />
-            </HeaderButtonLeft>
-            <HeaderButton onPress={() => scrollTo(1)}>
-              <IconFeed color={getColor(1)} />
-            </HeaderButton>
-            <HeaderButtonRight onPress={() => scrollTo(2)}>
-              <IconMap color={getColor(2)} />
-            </HeaderButtonRight>
-          </Header>
-        </HeaderWrapper>
+        <Header>
+          <HeaderButtonLeft onPress={() => scrollTo(0)}>
+            <IconProfile color={getColor(0)} />
+          </HeaderButtonLeft>
+          <HeaderButton onPress={() => scrollTo(1)}>
+            <IconFeed color={getColor(1)} />
+          </HeaderButton>
+          <HeaderButtonRight onPress={() => scrollTo(2)}>
+            <IconMap color={getColor(2)} />
+          </HeaderButtonRight>
+        </Header>
 
         <ScrollView
           pagingEnabled
@@ -154,7 +152,7 @@ function Main(props) {
           showsHorizontalScrollIndicator={false}
           contentOffset={{ x: deviceWidth * screenOffset }}
           onMomentumScrollEnd={onMomentumScrollEnd}
-          ref={el => setRef(el)}
+          ref={ref}
         >
           <Profile user={user} {...props} />
           <Feed user={user} news={news} {...props} />
