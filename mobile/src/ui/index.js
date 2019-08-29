@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-export { default as HeaderButton, HeaderTextButton } from './HeaderButton';
+export { HeaderTextButton } from './HeaderButton';
 export { default as Button, ButtonWithIcon } from './Button';
 export { default as Alert } from './Alert';
 export { default as Card } from './Card';

@@ -6,9 +6,7 @@ import * as Haptics from 'expo-haptics';
 
 import { createStackNavigator } from 'react-navigation';
 import { isIphoneX } from 'react-native-iphone-x-helper';
-import {
-  HeaderButton, IconProfile, IconFeed, IconMap,
-} from '../ui';
+import { IconProfile, IconFeed, IconMap } from '../ui';
 
 import Feed from '../Feed';
 import Profile from '../Profile';
@@ -40,7 +38,7 @@ const View = styled.SafeAreaView`
 `;
 
 const ScrollView = styled.ScrollView`
-  padding-top: 48;
+  margin-top: 48;
 `;
 
 const HeaderWrapper = styled.View`
@@ -56,9 +54,12 @@ const Header = styled.View`
   flex-direction: row;
 `;
 
+const HeaderButton = styled.TouchableOpacity.attrs({ activeOpacity: 0.8 })``;
+
 function Main(props) {
   const [user, setUser] = React.useState({});
   const [news, setNews] = React.useState([]);
+  const [ref, setRef] = React.useState(null);
   const [isLoading, updateLoading] = React.useState(true);
   const [screenOffset, updateStateOffset] = React.useState(1);
   const currentUser = getCurrentUser();
@@ -110,19 +111,27 @@ function Main(props) {
     updateLoading(false);
   }, [user]);
 
+  function scrollTo(offset) {
+    ref.scrollTo({ x: deviceWidth * offset, animated: true });
+  }
+
+  function getColor(offset) {
+    return screenOffset === offset ? '#fff' : 'rgba(255, 255, 255, 0.3)';
+  }
+
   if (!isLoading) {
     return (
       <View>
         <HeaderWrapper>
           <Header blurType="extraDark">
-            <HeaderButton isActive={screenOffset === 0}>
-              <IconProfile />
+            <HeaderButton onPress={() => scrollTo(0)}>
+              <IconProfile color={getColor(0)} />
             </HeaderButton>
-            <HeaderButton isActive={screenOffset === 1}>
-              <IconFeed />
+            <HeaderButton onPress={() => scrollTo(1)}>
+              <IconFeed color={getColor(1)} />
             </HeaderButton>
-            <HeaderButton isActive={screenOffset === 2}>
-              <IconMap />
+            <HeaderButton onPress={() => scrollTo(2)}>
+              <IconMap color={getColor(2)} />
             </HeaderButton>
           </Header>
         </HeaderWrapper>
@@ -133,6 +142,7 @@ function Main(props) {
           showsHorizontalScrollIndicator={false}
           contentOffset={{ x: deviceWidth * screenOffset }}
           onMomentumScrollEnd={onMomentumScrollEnd}
+          ref={el => setRef(el)}
         >
           <Profile user={user} {...props} />
           <Feed user={user} news={news} {...props} />
