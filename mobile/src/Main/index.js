@@ -31,6 +31,7 @@ import { mapNews } from '../Feed/mappers';
 import { getRef as getNewsRef } from '../Feed/api';
 
 const { width: deviceWidth } = Dimensions.get('window');
+const headerSize = 32;
 
 const View = styled.SafeAreaView`
   flex: 1;
@@ -38,12 +39,12 @@ const View = styled.SafeAreaView`
 `;
 
 const ScrollView = styled.ScrollView`
-  margin-top: 48;
+  margin-top: ${headerSize};
 `;
 
 const HeaderWrapper = styled.View`
   position: absolute;
-  top: ${isIphoneX() ? 48 + 12 : 48 - 12};
+  top: ${isIphoneX() ? headerSize + 12 : headerSize - 12};
   width: ${deviceWidth};
 `;
 
