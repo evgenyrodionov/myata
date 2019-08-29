@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from 'styled-components';
-import { BlurView } from '@react-native-community/blur';
 import { isIphoneX } from 'react-native-iphone-x-helper';
 import IconArrow from './icons/Arrow';
 import FooterPusher from './FooterPusher';
@@ -17,14 +16,14 @@ const View = styled.ScrollView`
   position: relative;
 `;
 
-const Close = styled.TouchableOpacity`
+const Close = styled.TouchableOpacity.attrs({ activeOpacity: 0.9 })`
   background: #111;
   /* background: #fff; */
   display: flex;
   align-items: center;
   position: absolute;
   padding-top: 20;
-  padding-bottom: 8;
+  padding-bottom: 20;
   top: ${isIphoneX() ? topOffset : topOffset / 1.5};
   z-index: 1000;
   left: 0;

@@ -1,17 +1,23 @@
 import React from 'react';
 import styled from 'styled-components';
 import { NavLink as RouterLink } from 'react-router-dom';
+import media from '../ui/media';
 
 const Nav = styled.nav`
-  background: #fff;
-  box-shadow: 6px 0 18px rgba(0, 0, 0, 0.06);
-  height: 100vh;
-  transition: width 0.3s ease-in-out;
-  width: 256px;
-  padding-left: 24px;
-  padding-right: 24px;
-  padding-top: 32px;
-  position: fixed;
+  display: none;
+
+  ${media.greaterThan('sm')`
+    display: block;
+    background: #fff;
+    box-shadow: 6px 0 18px rgba(0, 0, 0, 0.06);
+    height: 100vh;
+    transition: width 0.3s ease-in-out;
+    width: 256px;
+    padding-left: 24px;
+    padding-right: 24px;
+    padding-top: 32px;
+    position: fixed;
+  `}
 `;
 
 const Logo = styled(RouterLink)`

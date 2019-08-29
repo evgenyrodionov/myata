@@ -12,11 +12,10 @@ import uploadcare from 'uploadcare-widget';
 
 import fb from '../firebase';
 import { mapOutput } from './mappers';
+import { getPhotoUrl } from '../utils/photos';
 
 import { Card, IconEdit } from '../ui';
 import * as FeaturesIcons from '../ui/icons/features';
-
-const getPhotoUrl = id => `https://ucarecdn.com/${id}/`;
 
 const fake = {
   addressSubways: [

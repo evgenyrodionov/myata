@@ -2,7 +2,11 @@ import React from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import snarkdown from 'snarkdown';
+import format from 'date-fns/format';
+import ruLocale from 'date-fns/locale/ru';
+
 import Card from '../ui/Card';
+import { getPhotoUrl } from '../utils/photos';
 
 const PlacesSt = styled.ul`
   list-style-type: none;
@@ -56,7 +60,6 @@ const NewsSt = styled.ul`
   padding: 0;
 `;
 
-const NewsItem = styled.li``;
 const NewsCard = styled.div`
   padding-top: 16px;
   padding-bottom: 16px;
@@ -69,6 +72,34 @@ const NewsCard = styled.div`
   } */
 `;
 
+const NewsItem = styled.li`
+  &:first-child {
+    ${NewsCard} {
+      padding-top: 0;
+    }
+  }
+
+  &:last-child {
+    ${NewsCard} {
+      padding-bottom: 0;
+    }
+  }
+`;
+
+const NewsDate = styled.p`
+  color: #8e8e8e;
+  font-size: 12px;
+  margin-bottom: 4px;
+`;
+
+const NewsImage = styled.img`
+  height: 256px;
+  width: auto;
+  object-fit: contain;
+  border-radius: 10px;
+  margin-top: 16px;
+`;
+
 const NewsTitle = styled(Link)`
   color: #323c47;
   letter-spacing: 0.01em;
@@ -76,23 +107,33 @@ const NewsTitle = styled(Link)`
   line-height: 22px;
   font-size: 15px;
   margin-bottom: 8px;
+  margin-top: 0;
   display: block;
 `;
 const NewsDescription = styled.div``;
 
 const generateHTML = md => ({ __html: snarkdown(md) });
 
+const defaultDateFormat = eventAt =>
+  format(eventAt, 'DD MMMM в HH:MM', { locale: ruLocale });
+
 function News({ news = [], ...props }) {
   return (
     <Card title={props.title}>
       <NewsSt>
-        {news.map(({ title, description }) => (
+        {news.map(({
+          title, description, coverId, eventAt,
+        }) => (
           <NewsItem key={title}>
             <NewsCard>
+              <NewsDate>{defaultDateFormat(eventAt.seconds * 1000)}</NewsDate>
               <NewsTitle to="/">{title}</NewsTitle>
               <NewsDescription
                 dangerouslySetInnerHTML={generateHTML(description)}
               />
+              {coverId && (
+              <NewsImage src={`${getPhotoUrl(coverId)}/-/resize/x512/`} />
+              )}
             </NewsCard>
           </NewsItem>
         ))}
@@ -113,13 +154,13 @@ export default function ({ places = [], news = [] }) {
       </div>
 
       <div className="row">
-        <div className="col-xs-7">
+        <div className="col-lg-7">
           <Card title="Новости УК">
             <i>Нужно получить контент</i>
           </Card>
           <News news={news} title="Федеральные новости" />
         </div>
-        <div className="col-xs-5">
+        <div className="col-lg-5">
           <Places places={places} />
           <Card title="Последние события">
             <i>Запланировано на будущие релизы</i>

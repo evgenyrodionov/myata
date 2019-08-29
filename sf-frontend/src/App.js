@@ -11,6 +11,8 @@ import fb from './firebase';
 import { mapPlaces } from './Places/mappers';
 import { mapUser } from './Users/mappers';
 
+import media from './ui/media';
+
 // eslint-disable-next-line import/prefer-default-export
 function mapNews(docs) {
   const mappedDocs = [];
@@ -26,9 +28,13 @@ const Main = styled.main`
 `;
 
 const View = styled.div`
-  padding: 36px;
-  margin-left: 256px;
+  padding: 22px;
   width: 100%;
+
+  ${media.greaterThan('sm')`
+    margin-left: 256px;
+    padding: 36px;
+  `}
 `;
 
 function App() {
