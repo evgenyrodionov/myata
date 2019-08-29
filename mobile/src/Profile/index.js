@@ -3,6 +3,7 @@ import {
   RefreshControl, Dimensions, Alert, Switch,
 } from 'react-native';
 import firebase from 'react-native-firebase';
+import codePush from 'react-native-code-push';
 import styled, { css } from 'styled-components';
 import { parsePhoneNumberFromString } from 'libphonenumber-js';
 import Safari from 'react-native-safari-view';
@@ -231,13 +232,32 @@ const Logout = styled.View`
   margin-top: 24;
 `;
 
+const Version = styled.Text`
+  font-size: 12;
+  color: #ccc;
+  margin-top: 12;
+  margin-bottom: 24;
+  text-align: center;
+`;
+
 export default function Profile({ user, navigation, ...props }) {
   const { dispatch = () => ({}), isFetching = false } = props;
+
+  const [appInfo, updateAppInfo] = React.useState({
+    label: '...',
+    appVersion: '...',
+  });
 
   const onLogoutConfirm = () => {
     firebase.auth().signOut();
     props.navigation.navigate('Auth');
   };
+
+  React.useEffect(() => {
+    codePush
+      .getUpdateMetadata(codePush.UpdateState.RUNNING)
+      .then(information => updateAppInfo(information));
+  }, []);
 
   const refreshControl = (
     <RefreshControl
@@ -281,6 +301,10 @@ export default function Profile({ user, navigation, ...props }) {
             Выйти из аккаунта
           </Button>
         </Logout>
+
+        <Version>
+          Версия приложения {appInfo.appVersion} ({appInfo.label})
+        </Version>
 
         <FooterPusher />
       </View>
