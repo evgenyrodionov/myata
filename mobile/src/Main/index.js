@@ -54,7 +54,18 @@ const Header = styled.View`
   flex-direction: row;
 `;
 
-const HeaderButton = styled.TouchableOpacity.attrs({ activeOpacity: 0.8 })``;
+const HeaderButton = styled.TouchableOpacity.attrs({ activeOpacity: 0.8 })`
+  padding-vertical: 8;
+  padding-horizontal: 8;
+`;
+
+const HeaderButtonLeft = styled(HeaderButton)`
+  padding-left: 0;
+`;
+
+const HeaderButtonRight = styled(HeaderButton)`
+  padding-right: 0;
+`;
 
 function Main(props) {
   const [user, setUser] = React.useState({});
@@ -124,15 +135,15 @@ function Main(props) {
       <View>
         <HeaderWrapper>
           <Header blurType="extraDark">
-            <HeaderButton onPress={() => scrollTo(0)}>
+            <HeaderButtonLeft onPress={() => scrollTo(0)}>
               <IconProfile color={getColor(0)} />
-            </HeaderButton>
+            </HeaderButtonLeft>
             <HeaderButton onPress={() => scrollTo(1)}>
               <IconFeed color={getColor(1)} />
             </HeaderButton>
-            <HeaderButton onPress={() => scrollTo(2)}>
+            <HeaderButtonRight onPress={() => scrollTo(2)}>
               <IconMap color={getColor(2)} />
-            </HeaderButton>
+            </HeaderButtonRight>
           </Header>
         </HeaderWrapper>
 
