@@ -13,6 +13,7 @@ import uploadcare from 'uploadcare-widget';
 import fb from '../firebase';
 import { mapOutput } from './mappers';
 import { getPhotoUrl } from '../utils/photos';
+import media from '../ui/media';
 
 import { Card, IconEdit } from '../ui';
 import * as FeaturesIcons from '../ui/icons/features';
@@ -217,7 +218,11 @@ const PhotoItem = styled.li`
   margin-right: 10px;
   margin-bottom: 10px;
   position: relative;
-  width: calc(100% / 5 - 10px);
+  width: calc(100% / 2 - 10px);
+
+  ${media.greaterThan('md')`
+    width: calc(100% / 5 - 10px);
+  `}
 `;
 
 const Photo = styled.img`
@@ -361,7 +366,7 @@ const HighlightsSt = styled.ul.attrs({ className: 'row' })`
   padding: 0;
 `;
 
-const Highlight = styled.li.attrs({ className: 'col-xs-3' })`
+const Highlight = styled.li.attrs({ className: 'col-sm-6 col-lg-4 col-xl-3' })`
   align-items: center;
   display: flex;
   margin-bottom: 12px;
@@ -611,7 +616,7 @@ export default function ({ place = {} }) {
         </Actions>
       </Header>
       <div className="row">
-        <div className="col-xs-7">
+        <div className="col-lg-7">
           <Card title="Информация">
             <Row id="title" label="Название">
               {isEdit ? (
@@ -735,7 +740,7 @@ export default function ({ place = {} }) {
             </Row>
           </Card>
         </div>
-        <div className="col-xs-5">
+        <div className="col-lg-5">
           <Card title="Обложка">
             <CoverColumn>
               {state.coverId && (
