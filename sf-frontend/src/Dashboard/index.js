@@ -4,6 +4,17 @@ import { Link } from 'react-router-dom';
 import snarkdown from 'snarkdown';
 import format from 'date-fns/format';
 import ruLocale from 'date-fns/locale/ru';
+import {
+  ResponsiveContainer,
+  ComposedChart,
+  Line,
+  CartesianGrid,
+  XAxis,
+  YAxis,
+  Tooltip,
+  Bar,
+  Legend,
+} from 'recharts';
 
 import Card from '../ui/Card';
 import { getPhotoUrl } from '../utils/photos';
@@ -142,25 +153,127 @@ function News({ news = [], ...props }) {
   );
 }
 
+const data = [
+  {
+    квартал: '1 квартал 2018',
+    Выручка: 0,
+    'Кол-во чеков': 0,
+  },
+  {
+    квартал: '2 квартал 2018',
+    Выручка: 2884903,
+    'Кол-во чеков': 1727,
+  },
+  {
+    квартал: '3 квартал 2018',
+    Выручка: 6462742,
+    'Кол-во чеков': 3532,
+  },
+  {
+    квартал: '4 квартал 2018',
+    Выручка: 9642859,
+    'Кол-во чеков': 4761,
+  },
+  {
+    квартал: '1 квартал 2019',
+    Выручка: 10076836,
+    'Кол-во чеков': 4801,
+  },
+  {
+    квартал: '2 квартал 2019',
+    Выручка: 9491922,
+    'Кол-во чеков': 4577,
+  },
+  {
+    квартал: '3 квартал 2019',
+    Выручка: 5882076,
+    'Кол-во чеков': 2826,
+  },
+];
+
+function renderColorfulLegendText(value, entry) {
+  const { color } = entry;
+
+  return <span style={{ color }}>{value}</span>;
+}
+
+function formatNumber(value) {
+  return new Intl.NumberFormat('ru').format(value);
+}
+
+function formatCurrency(value) {
+  return `${formatNumber(value)}₽`;
+}
+
+function formatNumberAndCurrency(value, name) {
+  if (name.includes('Выручка')) return formatCurrency(value);
+
+  return formatNumber(value);
+}
+
 export default function ({ places = [], news = [] }) {
   return (
     <div className="container-fluid">
       <div className="row">
         <div className="col-xs-12">
           <Card title="Статистика">
-            <i>Запланировано на будущие релизы</i>
+            <div style={{ width: '100%', height: 300 }}>
+              <ResponsiveContainer>
+                <ComposedChart
+                  width={400}
+                  height={300}
+                  data={data}
+                  margin={{
+                    left: 20,
+                    bottom: 0,
+                    top: 10,
+                  }}
+                >
+                  <CartesianGrid stroke="#eee" strokeDasharray="5 5" />
+                  <XAxis dataKey="квартал" />
+                  <YAxis
+                    yAxisId="revenue"
+                    tickFormatter={formatCurrency}
+                    name="выручка"
+                  />
+                  <YAxis
+                    yAxisId="invoices_amount"
+                    tickFormatter={formatNumber}
+                    orientation="right"
+                  />
+
+                  <Bar
+                    yAxisId="invoices_amount"
+                    dataKey="Кол-во чеков"
+                    barSize={20}
+                    fill="#5784BD"
+                  />
+                  <Line
+                    yAxisId="revenue"
+                    type="monotone"
+                    dataKey="Выручка"
+                    stroke="#A30D2F"
+                  />
+                  {/* <Line
+                  type="monotone"
+                   dataKey="edition" stroke="#111" /> */}
+                  {/* <Bar dataKey="uv" barSize={20} fill="#413ea0" /> */}
+                  <Legend formatter={renderColorfulLegendText} />
+                  <Tooltip formatter={formatNumberAndCurrency} />
+                  {/* <Tooltip content={<CustomTooltip />} /> */}
+                </ComposedChart>
+              </ResponsiveContainer>
+            </div>
           </Card>
         </div>
       </div>
 
       <div className="row">
-        <div className="col-lg-7">
-          <Card title="Новости УК">
-            <i>Нужно получить контент</i>
-          </Card>
+        <div className="col-lg-6">
+          <Card title="Новости УК">Новостей пока нет 😔</Card>
           <News news={news} title="Федеральные новости" />
         </div>
-        <div className="col-lg-5">
+        <div className="col-lg-6">
           <Places places={places} />
           <Card title="Последние события">
             <i>Запланировано на будущие релизы</i>
