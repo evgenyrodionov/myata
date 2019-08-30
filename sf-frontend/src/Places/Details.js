@@ -19,24 +19,6 @@ import { Card, IconEdit } from '../ui';
 import * as FeaturesIcons from '../ui/icons/features';
 
 const fake = {
-  addressSubways: [
-    {
-      title: 'Сухаревская',
-      color: '#FD7F23',
-      walkMeters: 240,
-    },
-    {
-      title: 'Сретенский бульвар',
-      color: '#9ACA40',
-      walkMeters: 710,
-    },
-  ],
-  workingHours: [[12, 2], [12, 2], [12, 2], [12, 2], [12, 2], [12, 4], [12, 4]],
-  generalSales: [
-    {
-      title: 'Оставьте отзыв в Яндекс.Картах и получите скидку 10%',
-    },
-  ],
   sales: [
     [
       {
@@ -572,7 +554,7 @@ export default function ({ place = {} }) {
   const [state, setState] = React.useState(place);
   const [isEdit, setEdit] = React.useState(false);
   const [uploaded, setUploaded] = React.useState(null);
-  const { socialNetworks = {} } = state;
+  const { socialNetworks = {}, address = {} } = state;
 
   function formatPhoneNumber(phoneNumber) {
     return new AsYouType('RU').input(phoneNumber);
@@ -678,20 +660,26 @@ export default function ({ place = {} }) {
                 <ReactDadata
                   token={process.env.REACT_APP_DADATA_KEY}
                   id="address"
-                  query={state.address}
+                  query={address.title}
                   onChange={({ data }) =>
                     setState({
                       ...state,
-                      address: `${data.street} ${data.street_type_full}, ${
-                        data.house_type_full
-                      } ${data.house}`,
-                      city: data.city,
+                      address: {
+                        ...address,
+                        title: `${data.street_with_type}, ${
+                          data.house_type_full
+                        } ${data.house}`,
+                        country: data.country,
+                        city: data.city,
+                        district: data.city_district,
+                        street: data.street_with_type,
+                      },
                     })
                   }
                   placeholder="Адрес"
                 />
               ) : (
-                <Value>{state.address}</Value>
+                <Value>{address.title}</Value>
               )}
             </Row>
 
