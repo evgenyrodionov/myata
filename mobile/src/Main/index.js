@@ -128,9 +128,11 @@ function Main(props) {
       .onSnapshot(docs => setNews(mapNews(docs)));
   }, []);
 
-  // listen to news updates
+  // listen to places updates
   React.useEffect(() => {
-    getPlacesRef().onSnapshot(docs => setPlaces(mapPlaces(docs)));
+    getPlacesRef()
+      .get()
+      .then(docs => setPlaces(mapPlaces(docs)));
   }, []);
 
   // callback after initial user loading
