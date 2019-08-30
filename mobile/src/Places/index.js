@@ -4,7 +4,6 @@ import styled, { css } from 'styled-components';
 import * as Haptics from 'expo-haptics';
 import Card from './Card';
 import Filter from './Filter';
-import { places } from '../data';
 import { FooterPusher, Alert } from '../ui';
 
 const { width: deviceWidth } = Dimensions.get('window');
@@ -40,7 +39,7 @@ function loadList() {
   return [];
 }
 
-function renderItem({ item }, { navigation }) {
+function renderItem({ item }, { navigation, user }) {
   return (
     <Item>
       <Card
@@ -49,6 +48,7 @@ function renderItem({ item }, { navigation }) {
           navigation.navigate('PlaceDetails', {
             id: item.id,
             item,
+            user,
           });
         }}
       />
@@ -76,7 +76,7 @@ function filter(data, selected = [], selectedKind) {
   return data.filter(({ address }) => address[selectedKind] === filtered.title);
 }
 
-export default function Places(props) {
+export default function Places({ places, ...props }) {
   const { dispatch = () => ({}), isFetching = false } = props;
   const [selectedKind, updateKind] = React.useState([null, []]);
   const [selectedValues, updateValues] = React.useState([]);

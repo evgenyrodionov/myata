@@ -6,8 +6,19 @@ import FooterPusher from './FooterPusher';
 
 const topOffset = 48;
 
+const getOffset = (stackLevel) => {
+  const baseOffset = topOffset * stackLevel;
+  const offsetWithLevel = baseOffset * 0.75;
+
+  if (stackLevel > 1) {
+    return isIphoneX() ? offsetWithLevel : offsetWithLevel / 1.5;
+  }
+
+  return isIphoneX() ? baseOffset : baseOffset / 1.5;
+};
+
 const View = styled.ScrollView`
-  margin-top: ${isIphoneX() ? topOffset : topOffset / 1.5};
+  margin-top: ${p => getOffset(p.stackLevel)};
   padding-top: 48;
   padding-horizontal: 16;
   background-color: #111;
@@ -24,7 +35,7 @@ const Close = styled.TouchableOpacity.attrs({ activeOpacity: 0.9 })`
   position: absolute;
   padding-top: 20;
   padding-bottom: 20;
-  top: ${isIphoneX() ? topOffset : topOffset / 1.5};
+  top: ${p => getOffset(p.stackLevel)};
   z-index: 1000;
   left: 0;
   right: 0;
@@ -32,14 +43,14 @@ const Close = styled.TouchableOpacity.attrs({ activeOpacity: 0.9 })`
   border-top-right-radius: 20;
 `;
 
-export default function Card({ onGoBack, children }) {
+export default function Card({ onGoBack, stackLevel = 1, children }) {
   return (
     <>
-      <Close blurType="extraDark" onPress={onGoBack}>
+      <Close blurType="extraDark" stackLevel={stackLevel} onPress={onGoBack}>
         <IconArrow color="#eee" />
       </Close>
 
-      <View>
+      <View stackLevel={stackLevel}>
         {children}
 
         <FooterPusher size={96} />

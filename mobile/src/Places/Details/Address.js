@@ -5,7 +5,7 @@ const AddressSt = styled.View``;
 
 const Street = styled.Text`
   color: #fff;
-  margin-top: 16;
+  margin-top: 4;
   font-size: 22;
 `;
 
@@ -44,17 +44,19 @@ const SubwayStationDistance = styled.Text`
 const averageMetersPerMinute = 83;
 
 export default function Address({ item }) {
-  const { addressSubways = [], addressTitle } = item;
+  const { subways = [], title, city } = item.address || {};
 
   return (
     <AddressSt>
-      <Street>{addressTitle}</Street>
+      <Street>
+        {city}, {title}
+      </Street>
 
       <Subways>
-        {addressSubways.map(({ title, color, walkMeters }) => (
-          <SubwayStation key={title}>
+        {subways.map(({ title: swTitle, color, walkMeters }) => (
+          <SubwayStation key={swTitle}>
             <SubwayStationColor color={color} />
-            <SubwayStationTitle>{title}</SubwayStationTitle>
+            <SubwayStationTitle>{swTitle}</SubwayStationTitle>
 
             <SubwayStationDistance>
               ≈{parseInt(walkMeters / averageMetersPerMinute, 10)} мин

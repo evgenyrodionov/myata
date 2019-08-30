@@ -14,6 +14,7 @@ import ProfileEdit from '../Profile/Edit';
 import Places from '../Places';
 import PlaceDetails from '../Places/Details';
 import PlaceReservation from '../Places/Details/Reservation';
+import PlaceNewReview from '../Places/Details/Reviews/Details';
 import CardDetails from '../Card/Details';
 
 import {
@@ -29,6 +30,11 @@ import {
 
 import { mapNews } from '../Feed/mappers';
 import { getRef as getNewsRef } from '../Feed/api';
+
+import {
+  mapDocs as mapPlaces,
+  getCollectionRef as getPlacesRef,
+} from '../Places/api';
 
 const { width: deviceWidth } = Dimensions.get('window');
 const headerSize = 38;
@@ -71,9 +77,11 @@ const HeaderButtonRight = styled(HeaderButton)`
 function Main(props) {
   const [user, setUser] = React.useState({});
   const [news, setNews] = React.useState([]);
-  const ref = React.useRef(null);
+  const [places, setPlaces] = React.useState([]);
   const [isLoading, updateLoading] = React.useState(true);
   const [screenOffset, updateStateOffset] = React.useState(1);
+
+  const ref = React.useRef(null);
   const currentUser = getCurrentUser();
 
   const userId = mapPhoneNumberToId(currentUser.phoneNumber);
@@ -108,7 +116,9 @@ function Main(props) {
 
   // listen to user updates
   React.useEffect(() => {
-    getUserRef(userId).onSnapshot(async doc => setUser(await mapUser(doc)));
+    const userRef = getUserRef(userId);
+
+    userRef.onSnapshot(async doc => setUser(await mapUser(doc, userRef)));
   }, []);
 
   // listen to news updates
@@ -116,6 +126,11 @@ function Main(props) {
     getNewsRef()
       .orderBy('eventAt', 'desc')
       .onSnapshot(docs => setNews(mapNews(docs)));
+  }, []);
+
+  // listen to news updates
+  React.useEffect(() => {
+    getPlacesRef().onSnapshot(docs => setPlaces(mapPlaces(docs)));
   }, []);
 
   // callback after initial user loading
@@ -156,7 +171,7 @@ function Main(props) {
         >
           <Profile user={user} {...props} />
           <Feed user={user} news={news} {...props} />
-          <Places user={user} {...props} />
+          <Places user={user} places={places} {...props} />
         </ScrollView>
       </View>
     );
@@ -173,6 +188,9 @@ export default createStackNavigator(
     },
     PlaceReservation: {
       screen: PlaceReservation,
+    },
+    PlaceNewReview: {
+      screen: PlaceNewReview,
     },
     CardDetails: {
       screen: CardDetails,

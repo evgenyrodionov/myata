@@ -4051,7 +4051,7 @@ lodash.throttle@^4.1.1:
   resolved "https://registry.yarnpkg.com/lodash.throttle/-/lodash.throttle-4.1.1.tgz#c23e91b710242ac70c37f1e1cda9274cc39bf2f4"
   integrity sha1-wj6RtxAkKscMN/HhzaknTMOb8vQ=
 
-lodash@^4.17.11, lodash@^4.17.13, lodash@^4.17.14, lodash@^4.17.4, lodash@^4.17.5, lodash@^4.3.0, lodash@^4.6.1:
+lodash@^4.17.11, lodash@^4.17.13, lodash@^4.17.14, lodash@^4.17.15, lodash@^4.17.4, lodash@^4.17.5, lodash@^4.3.0, lodash@^4.6.1:
   version "4.17.15"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.15.tgz#b447f6670a0455bbfeedd11392eff330ea097548"
   integrity sha512-8xOcRHvCjnocdS5cpwXQXVzmmh5e5+saE2QGoeQmbKmRS6J3VQppPOIt0MnmE+4xlZoumy0GPG0D0MVIQbNA1A==
@@ -5590,6 +5590,14 @@ react-native-passkit-wallet@^0.1.4:
   version "0.1.4"
   resolved "https://registry.yarnpkg.com/react-native-passkit-wallet/-/react-native-passkit-wallet-0.1.4.tgz#246476c8163813a4b054d06215a9d06042757ec3"
   integrity sha512-H1EQ1NyRVPRujivOZrUkcn7OWGAtsAqGVYghxOLBFHpFLpyGyCvGnfpGjcu4UVej8X50SJsh9d9ysZtVTct23Q==
+
+react-native-ratings@^6.4.0:
+  version "6.4.0"
+  resolved "https://registry.yarnpkg.com/react-native-ratings/-/react-native-ratings-6.4.0.tgz#1923e445dbb4092eb880937ac4f7498b06815c3c"
+  integrity sha512-QvRJiEzjXZa7OL1MhJzbc50yUaOzPgjU6vGpkfIpWvgOyrjjkoQQqQ7EFvkoQMSEoRLD33eKTT3huJolScFoHQ==
+  dependencies:
+    lodash "^4.17.4"
+    prop-types "^15.5.10"
 
 react-native-reanimated@^1.0.1:
   version "1.1.0"

@@ -18,271 +18,175 @@ export const featuresTitles = {
   round_the_clock: 'Круглосуточно',
 };
 
+export const salesByPlaceId = {
+  V9LHkyrdT93OdS6V4SrS: [
+    [
+      {
+        allDay: true,
+        title: '20% скидка на кальян-коктейли',
+      },
+    ],
+    [
+      {
+        title: '20% скидка на смузи',
+        allDay: true,
+      },
+
+      {
+        hourFrom: 12,
+        hourTo: 17,
+        title: '1 100 ₽ кальян',
+      },
+      {
+        hourFrom: 12,
+        hourTo: 17,
+        title: '1 400 ₽ кальян + чай или лимонад',
+      },
+      {
+        hourFrom: 12,
+        hourTo: 17,
+        title: '1 700 ₽ кальян + чай + десерт или сэндвич',
+      },
+      {
+        hourFrom: 12,
+        hourTo: 17,
+        title: '1 700 ₽ кальян на грейпфруте + чай или лимонад',
+      },
+      {
+        hourFrom: 12,
+        hourTo: 17,
+        title: '2 300 ₽ кальян на грейпфруте + чай + 2 десерта или 2 сэндвича',
+      },
+    ],
+    [
+      {
+        title: '2 200 ₽ сразу 2 кальяна',
+        allDay: true,
+      },
+
+      {
+        hourFrom: 12,
+        hourTo: 17,
+        title: '1 100 ₽ кальян',
+      },
+      {
+        hourFrom: 12,
+        hourTo: 17,
+        title: '1 400 ₽ кальян + чай или лимонад ',
+      },
+      {
+        hourFrom: 12,
+        hourTo: 17,
+        title: '1 700 ₽ кальян + чай + десерт или сэндвич',
+      },
+      {
+        hourFrom: 12,
+        hourTo: 17,
+        title: '1 700 ₽ кальян на грейпфруте + чай или лимонад',
+      },
+      {
+        hourFrom: 12,
+        hourTo: 17,
+        title: '2 300 ₽ кальян на грейпфруте + чай + 2 десерта или 2 сэндвича',
+      },
+    ],
+    [
+      {
+        title: '20% скидка на кальян на фруктовой чаше',
+        allDay: true,
+      },
+
+      {
+        hourFrom: 12,
+        hourTo: 17,
+        title: '1 100 ₽ кальян',
+      },
+      {
+        hourFrom: 12,
+        hourTo: 17,
+        title: '1 400 ₽ кальян + чай или лимонад ',
+      },
+      {
+        hourFrom: 12,
+        hourTo: 17,
+        title: '1 700 ₽ кальян + чай + десерт или сэндвич',
+      },
+      {
+        hourFrom: 12,
+        hourTo: 17,
+        title: '1 700 ₽ кальян на грейпфруте + чай или лимонад',
+      },
+      {
+        hourFrom: 12,
+        hourTo: 17,
+        title: '2 300 ₽ кальян на грейпфруте + чай + 2 десерта или 2 сэндвича',
+      },
+    ],
+    [
+      {
+        title: '20% скидка на фреши',
+        allDay: true,
+      },
+
+      {
+        hourFrom: 12,
+        hourTo: 17,
+        title: '1 100 ₽ кальян',
+      },
+      {
+        hourFrom: 12,
+        hourTo: 17,
+        title: '1 400 ₽ кальян + чай или лимонад ',
+      },
+      {
+        hourFrom: 12,
+        hourTo: 17,
+        title: '1 700 ₽ кальян + чай + десерт или сэндвич',
+      },
+      {
+        hourFrom: 12,
+        hourTo: 17,
+        title: '1 700 ₽ кальян на грейпфруте + чай или лимонад',
+      },
+      {
+        hourFrom: 12,
+        hourTo: 17,
+        title: '2 300 ₽ кальян на грейпфруте + чай + 2 десерта или 2 сэндвича',
+      },
+    ],
+    [
+      {
+        hourFrom: 12,
+        hourTo: 17,
+        title: '1 100 ₽ кальян',
+      },
+      {
+        hourFrom: 12,
+        hourTo: 17,
+        title: '1 400 ₽ кальян + чай или лимонад ',
+      },
+      {
+        hourFrom: 12,
+        hourTo: 17,
+        title: '1 700 ₽ кальян + чай + десерт или сэндвич',
+      },
+      {
+        hourFrom: 12,
+        hourTo: 17,
+        title: '1 700 ₽ кальян на грейпфруте + чай или лимонад',
+      },
+      {
+        hourFrom: 12,
+        hourTo: 17,
+        title: '2 300 ₽ кальян на грейпфруте + чай + 2 десерта или 2 сэндвича',
+      },
+    ],
+    [],
+    [],
+  ],
+};
+
 export const places = [
-  {
-    id: 3,
-    title: 'Сретенка',
-    phoneNumber: '+79680099991',
-    waPhoneNumber: '+79680099991',
-    coverId: 'c2878465-a59b-4aff-ae60-589738add9db',
-    addressTitle: 'ул. Сретенка, 26/1',
-    address: {
-      country: 'Россия',
-      city: 'Москва',
-      district: 'Мещанский',
-      street: 'ул Сретенка',
-    },
-    addressSubways: [
-      {
-        title: 'Сухаревская',
-        color: '#FD7F23',
-        walkMeters: 240,
-      },
-      {
-        title: 'Сретенский бульвар',
-        color: '#9ACA40',
-        walkMeters: 710,
-      },
-    ],
-    workingHours: [
-      [12, 2],
-      [12, 2],
-      [12, 2],
-      [12, 2],
-      [12, 2],
-      [12, 4],
-      [12, 4],
-    ],
-    generalSales: [
-      {
-        title: 'Оставьте отзыв в Яндекс.Картах и получите скидку 10%',
-      },
-    ],
-    sales: [
-      [
-        {
-          allDay: true,
-          title: '20% скидка на кальян-коктейли',
-        },
-      ],
-      [
-        {
-          title: '20% скидка на смузи',
-          allDay: true,
-        },
-
-        {
-          hourFrom: 12,
-          hourTo: 17,
-          title: '1 100 ₽ кальян',
-        },
-        {
-          hourFrom: 12,
-          hourTo: 17,
-          title: '1 400 ₽ кальян + чай или лимонад',
-        },
-        {
-          hourFrom: 12,
-          hourTo: 17,
-          title: '1 700 ₽ кальян + чай + десерт или сэндвич',
-        },
-        {
-          hourFrom: 12,
-          hourTo: 17,
-          title: '1 700 ₽ кальян на грейпфруте + чай или лимонад',
-        },
-        {
-          hourFrom: 12,
-          hourTo: 17,
-          title:
-            '2 300 ₽ кальян на грейпфруте + чай + 2 десерта или 2 сэндвича',
-        },
-      ],
-      [
-        {
-          title: '2 200 ₽ сразу 2 кальяна',
-          allDay: true,
-        },
-
-        {
-          hourFrom: 12,
-          hourTo: 17,
-          title: '1 100 ₽ кальян',
-        },
-        {
-          hourFrom: 12,
-          hourTo: 17,
-          title: '1 400 ₽ кальян + чай или лимонад ',
-        },
-        {
-          hourFrom: 12,
-          hourTo: 17,
-          title: '1 700 ₽ кальян + чай + десерт или сэндвич',
-        },
-        {
-          hourFrom: 12,
-          hourTo: 17,
-          title: '1 700 ₽ кальян на грейпфруте + чай или лимонад',
-        },
-        {
-          hourFrom: 12,
-          hourTo: 17,
-          title:
-            '2 300 ₽ кальян на грейпфруте + чай + 2 десерта или 2 сэндвича',
-        },
-      ],
-      [
-        {
-          title: '20% скидка на кальян на фруктовой чаше',
-          allDay: true,
-        },
-
-        {
-          hourFrom: 12,
-          hourTo: 17,
-          title: '1 100 ₽ кальян',
-        },
-        {
-          hourFrom: 12,
-          hourTo: 17,
-          title: '1 400 ₽ кальян + чай или лимонад ',
-        },
-        {
-          hourFrom: 12,
-          hourTo: 17,
-          title: '1 700 ₽ кальян + чай + десерт или сэндвич',
-        },
-        {
-          hourFrom: 12,
-          hourTo: 17,
-          title: '1 700 ₽ кальян на грейпфруте + чай или лимонад',
-        },
-        {
-          hourFrom: 12,
-          hourTo: 17,
-          title:
-            '2 300 ₽ кальян на грейпфруте + чай + 2 десерта или 2 сэндвича',
-        },
-      ],
-      [
-        {
-          title: '20% скидка на фреши',
-          allDay: true,
-        },
-
-        {
-          hourFrom: 12,
-          hourTo: 17,
-          title: '1 100 ₽ кальян',
-        },
-        {
-          hourFrom: 12,
-          hourTo: 17,
-          title: '1 400 ₽ кальян + чай или лимонад ',
-        },
-        {
-          hourFrom: 12,
-          hourTo: 17,
-          title: '1 700 ₽ кальян + чай + десерт или сэндвич',
-        },
-        {
-          hourFrom: 12,
-          hourTo: 17,
-          title: '1 700 ₽ кальян на грейпфруте + чай или лимонад',
-        },
-        {
-          hourFrom: 12,
-          hourTo: 17,
-          title:
-            '2 300 ₽ кальян на грейпфруте + чай + 2 десерта или 2 сэндвича',
-        },
-      ],
-      [
-        {
-          hourFrom: 12,
-          hourTo: 17,
-          title: '1 100 ₽ кальян',
-        },
-        {
-          hourFrom: 12,
-          hourTo: 17,
-          title: '1 400 ₽ кальян + чай или лимонад ',
-        },
-        {
-          hourFrom: 12,
-          hourTo: 17,
-          title: '1 700 ₽ кальян + чай + десерт или сэндвич',
-        },
-        {
-          hourFrom: 12,
-          hourTo: 17,
-          title: '1 700 ₽ кальян на грейпфруте + чай или лимонад',
-        },
-        {
-          hourFrom: 12,
-          hourTo: 17,
-          title:
-            '2 300 ₽ кальян на грейпфруте + чай + 2 десерта или 2 сэндвича',
-        },
-      ],
-      [],
-      [],
-    ],
-    highlights: [
-      'vip_rooms',
-      'ps4',
-      'board_games',
-      'fast_delivery_from_partners',
-      'business_lunches',
-      'light_snacks_or_desserts',
-    ],
-    photoIds: [
-      'c2878465-a59b-4aff-ae60-589738add9db',
-      'c41586db-0c0a-42c4-82c2-d61fad5acf27',
-      '568651d5-0492-46e4-9b86-44cfe4d97b7c',
-      '9dbbf936-2c1a-457f-a34e-88f1b685c1d8',
-      '64111ffe-7902-49b3-b9dc-16fa78e7c2eb',
-      '593a2da6-f029-4b55-9224-a5b843da3235',
-    ],
-    socialNetworks: {
-      instagram: 'myata_sretenka',
-      vk: 'myata_sretenka',
-    },
-  },
-  {
-    id: 2,
-    disabled: true,
-    title: 'Edition',
-    addressTitle: 'ул. Рочдельская, 15 стр 13',
-    address: {
-      country: 'Россия',
-      city: 'Москва',
-      district: 'Пресненский',
-      street: 'ул Рочдельская',
-    },
-    coverId: '3e4d8e1c-e9bc-48f0-b292-d7acf8802f24',
-    phoneNumber: '+79653886688',
-    waPhoneNumber: '+79653886688',
-    photoIds: [
-      '862ea0b3-3692-4394-9d0e-587b9a424560',
-      'c635dae1-fb2b-4d02-a3bf-680f35bd73b1',
-      'e8a5fd63-f432-4e8f-9004-2d2f4bbc2ecf',
-      '2c992da3-8827-4a47-a9e5-92b091e1905f',
-      '9d62d6a9-d58b-4bc6-ac4b-c595c6fcc63c',
-      '0ea5f787-b68c-45b3-bed9-4c6be521f76b',
-      '893522ef-e73c-4bb0-895c-b45af407f78c',
-      'b01b5ed2-709a-44d7-88e7-574f676c0f19',
-    ],
-    workingHours: [
-      [12, 1],
-      [12, 1],
-      [12, 1],
-      [12, 1],
-      [12, 1],
-      [12, 3],
-      [12, 3],
-    ],
-  },
   {
     id: 15,
     disabled: true,

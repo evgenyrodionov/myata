@@ -12,7 +12,11 @@ import { elevationShadowStyle } from '../utils/shadow';
 import * as animateScale from '../utils/animateScale';
 import { getPhotoUrl } from '../utils/photos';
 
-import { IconHeart, IconFutureClock as OrigIconFutureClock } from '../ui';
+import {
+  IconHeart,
+  IconFutureClock as OrigIconFutureClock,
+  IconStar,
+} from '../ui';
 
 const styles = StyleSheet.create({
   card: {
@@ -29,7 +33,7 @@ const styles = StyleSheet.create({
 
 const StCard = styled.View`
   padding-horizontal: 16;
-  padding-top: 20;
+  padding-top: 8;
   padding-bottom: 16;
   height: 172;
 
@@ -42,15 +46,9 @@ const StCard = styled.View`
   );
 `;
 
-const Header = styled.View`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-`;
-
 const Title = styled.Text`
   font-size: 32;
-  line-height: 26;
+  line-height: 34;
   font-weight: 600;
   padding-top: 4;
   color: #fff;
@@ -154,11 +152,9 @@ function renderTimes({ item }) {
   if (!item.disabled) {
     const today = new Date();
     const todayDayOfWeek = getDay(today);
-    const [minHour, maxHour] = item.workingHours[todayDayOfWeek];
-    const min = minHour < 10 ? `0${minHour}` : minHour;
-    const max = maxHour < 10 ? `0${maxHour}` : maxHour;
+    const { from, to } = item.workingHours[todayDayOfWeek];
 
-    const openingAt = format(today, `YYYY-MM-DD ${min}`);
+    const openingAt = format(today, `YYYY-MM-DD ${to}`);
     const isOpeningInFuture = isFuture(openingAt);
 
     // const closingAt = format(today, `YYYY-MM-DD ${todayWH[1]}`);
@@ -173,16 +169,33 @@ function renderTimes({ item }) {
             locale: ruLocale,
             addSuffix: true,
           })}{' '}
-          в {min}
+          в {from}:00
         </DateHelper>
       );
     }
 
-    return <DateHelper color="#7dce56">Открыто до {max}:00</DateHelper>;
+    return <DateHelper color="#7dce56">Открыто до {to}:00</DateHelper>;
   }
 
   return null;
 }
+
+const Header = styled.View`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+`;
+
+const Rating = styled.View`
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+`;
+
+const RatingNumber = styled(Title)``;
+const RatingIcon = styled(IconStar)`
+  margin-right: 4;
+`;
 
 export default function Card({ item, onPress: parentOnPress = () => {} }) {
   const [isLiked, toggle] = React.useState(false);
@@ -214,23 +227,32 @@ export default function Card({ item, onPress: parentOnPress = () => {} }) {
         <StCard isDisabled={item.disabled}>
           <Header>
             <Title>{title}</Title>
+            {!item.disabled && (
+              <Rating>
+                <RatingIcon color="#20B4AB" size={24} />
+                <RatingNumber>{item.rating}</RatingNumber>
+              </Rating>
+            )}
+          </Header>
+          {/* <Header>
+            <Title>{title}</Title>
 
             {!item.disabled && (
               <LikeButton onPress={() => toggle(!isLiked)}>
                 <IconHeart color={isLiked ? '#E74C3C' : '#fff'} />
               </LikeButton>
             )}
-          </Header>
+          </Header> */}
           <Footer>
             <Address>
-              {item.address.city}, {item.addressTitle}
+              {item.address.city}, {item.address.title}
             </Address>
 
             {renderTimes({ item })}
           </Footer>
         </StCard>
 
-        {renderSpecialOffer({ item })}
+        {/* {renderSpecialOffer({ item })} */}
       </ImageBackground>
     </TouchableOpacity>
   );

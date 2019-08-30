@@ -21,13 +21,14 @@ import {
   ButtonWithIcon,
   IconPhone,
   IconGPS,
-  IconWhatsApp,
   IconReservation,
   IconSale,
+  IconStar,
 } from '../../ui';
 import { places } from '../../data';
 import Address from './Address';
 import Highlights from './Highlights';
+import Reviews from './Reviews';
 
 const { width: deviceWidth } = Dimensions.get('window');
 
@@ -114,11 +115,9 @@ const SaleRowTime = styled.Text`
 `;
 
 function renderTimeTableItem({ workingHours, sales }, index, isActive) {
-  const [minHour, maxHour] = workingHours;
+  const { from, to } = workingHours;
   const todayDay = getDay(new Date());
   const todayColor = (isActive || index === todayDay) && '#fff';
-  const min = minHour < 10 ? `0${minHour}` : minHour;
-  const max = maxHour < 10 ? `0${maxHour}` : maxHour;
 
   return (
     <TimeTableItem>
@@ -128,7 +127,7 @@ function renderTimeTableItem({ workingHours, sales }, index, isActive) {
           <IconSale color="#7dce56" size={16} />
         )}
         <TimeTableDate color={todayColor}>
-          {min}:00—{max}:00
+          {from}:00—{to}:00
         </TimeTableDate>
       </TimeTableRight>
     </TimeTableItem>
@@ -375,8 +374,26 @@ function renderSpecialOffer({ item }) {
   return null;
 }
 
+const Header = styled.View`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+`;
+
+const Rating = styled.View`
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+`;
+
+const RatingNumber = styled(Title)``;
+const RatingIcon = styled(IconStar)`
+  margin-right: 4;
+`;
+
 export default function OrderDetails({ navigation }) {
   const id = navigation.getParam('id');
+  const user = navigation.getParam('user');
   const item = places.find(place => place.id === id) || navigation.getParam('item', {});
   const {
     workingHours = [],
@@ -388,13 +405,24 @@ export default function OrderDetails({ navigation }) {
 
   return (
     <Card onGoBack={() => navigation.goBack()}>
-      <Title>{item.title}</Title>
+      <Header>
+        <Title>{item.title}</Title>
+        <Rating>
+          <RatingIcon color="#20B4AB" size={24} />
+          <RatingNumber>{item.rating}</RatingNumber>
+        </Rating>
+      </Header>
 
       {/* {renderSpecialOffer({ item })} */}
 
       <Address item={item} />
       <Actions item={item} navigation={navigation} />
       <Highlights item={item} />
+
+      <TimeTableSt>
+        <Reviews item={item} navigation={navigation} user={user} />
+      </TimeTableSt>
+
       <TimeTable sales={sales} workingHours={workingHours} />
 
       {photoIds.length > 0 && <Photos photoIds={photoIds} />}

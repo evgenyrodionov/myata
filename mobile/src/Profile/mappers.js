@@ -12,13 +12,34 @@ export function mapPhoneNumberToId(phoneNumber) {
   return phoneNumber.replace(/\+/, '');
 }
 
-export async function mapUser(doc) {
+export function mapUserBasic(doc) {
   const data = doc.data();
   const phoneNumber = doc.id;
 
   const formattedPhoneNumber = parsePhoneNumberFromString(
     String(`+${phoneNumber}`),
   ).formatInternational();
+
+  return {
+    ...data,
+    id: doc.id,
+    formattedPhoneNumber,
+  };
+}
+
+export function mapUserForPublic(doc) {
+  const data = doc.data();
+  const { displayName, photoId } = data;
+
+  return {
+    id: doc.id,
+    displayName,
+    photoId,
+  };
+}
+
+export async function mapUser(doc, ref) {
+  const data = mapUserBasic(doc);
 
   const visits = await Promise.all(
     (data.visits || []).map(async ({ placeRef, ...visit }) => {
@@ -61,9 +82,8 @@ export async function mapUser(doc) {
   );
 
   return {
-    id: doc.id,
     ...data,
-    formattedPhoneNumber,
+    ref,
     visits,
     friends,
     superBalance,
