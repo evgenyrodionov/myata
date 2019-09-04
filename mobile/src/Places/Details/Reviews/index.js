@@ -5,14 +5,20 @@ import distanceInWordsStrict from 'date-fns/distance_in_words_strict';
 import differenceInHours from 'date-fns/difference_in_hours';
 import ruLocale from 'date-fns/locale/ru';
 import times from 'lodash/times';
-import pluralize from 'pluralize-ru';
 import {
-  Title, Alert as UIAlert, Button, IconStar,
+  Title as OrigTitle,
+  Alert as UIAlert,
+  Button,
+  IconStar,
 } from '../../../ui';
 import { getPhotoUrl } from '../../../utils/photos';
 import { saveReviews } from '../../api';
 
 const { width: deviceWidth } = Dimensions.get('window');
+
+const Title = styled(OrigTitle)`
+  margin-bottom: 12;
+`;
 
 const List = styled.FlatList`
   margin-bottom: 24;
