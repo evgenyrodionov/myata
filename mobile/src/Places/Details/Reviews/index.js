@@ -5,6 +5,7 @@ import distanceInWordsStrict from 'date-fns/distance_in_words_strict';
 import differenceInHours from 'date-fns/difference_in_hours';
 import ruLocale from 'date-fns/locale/ru';
 import times from 'lodash/times';
+import pluralize from 'pluralize-ru';
 import {
   Title, Alert as UIAlert, Button, IconStar,
 } from '../../../ui';
@@ -25,7 +26,7 @@ const Disclaimer = styled.Text`
 `;
 
 const Review = styled.TouchableOpacity.attrs({ activeOpacity: 0.8 })`
-  background: #000;
+  background: #191919;
   border-radius: 10;
   /* padding-horizontal: 12; */
   padding-vertical: 12;
@@ -187,7 +188,7 @@ export default function Reviews({
 }) {
   return (
     <>
-      <Title>Отзывы</Title>
+      <Title>Отзывы {reviews.length > 0 && `(${reviews.length})`}</Title>
 
       {reviews.length > 0 && (
         <List
@@ -198,7 +199,10 @@ export default function Reviews({
           keyExtractor={({ createdAt }) => String(createdAt)}
           renderItem={({ item }) =>
             renderReview({
-              item, user, reviews, placeId: place.id,
+              item,
+              user,
+              reviews,
+              placeId: place.id,
             })
           }
           ItemSeparatorComponent={ItemSeparatorComponent}
