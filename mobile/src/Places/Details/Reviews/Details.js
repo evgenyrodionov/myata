@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { AirbnbRating } from 'react-native-ratings';
 import firebase from 'react-native-firebase';
+import nanoid from 'nanoid/non-secure';
 import { Card, Title as OrigTitle, Button } from '../../../ui';
 
 const firestore = firebase.firestore();
@@ -38,6 +39,7 @@ const ActivityIndicator = styled.ActivityIndicator`
 
 function save(placeId, { user, text, rating }) {
   const data = {
+    id: nanoid(),
     text,
     rating,
     userRef: user.ref,
@@ -74,7 +76,7 @@ export default function ({ navigation }) {
       <AirbnbRating
         defaultRating={rating}
         showRating={false}
-        selectedColor="#20B4AB"
+        selectedColor="#FECB2E"
         imageSize={12}
         onFinishRating={setRating}
       />
@@ -90,7 +92,7 @@ export default function ({ navigation }) {
       {isLoading ? (
         <ActivityIndicator />
       ) : (
-        <Button bgColor="#fff" textColor="#111" center onPress={onSave}>
+        <Button bgColor="#20B4AB" textColor="#ADEBE6" center onPress={onSave}>
           Оставить отзыв
         </Button>
       )}

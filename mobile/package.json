@@ -16,6 +16,7 @@
     "expo-haptics": "^5.0.1",
     "libphonenumber-js": "^1.7.18",
     "lodash": "^4.17.15",
+    "nanoid": "^2.1.0",
     "pluralize-ru": "^1.0.1",
     "react": "16.8.3",
     "react-native": "0.59.9",

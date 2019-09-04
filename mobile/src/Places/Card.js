@@ -184,15 +184,21 @@ const Header = styled.View`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  align-items: center;
 `;
 
 const Rating = styled.View`
   display: flex;
   flex-direction: row;
-  align-items: flex-start;
+  align-items: center;
 `;
 
-const RatingNumber = styled(Title)``;
+const RatingNumber = styled.Text`
+  /* margin-top: 4; */
+  color: #fff;
+  font-weight: bold;
+`;
+
 const RatingIcon = styled(IconStar)`
   margin-right: 4;
 `;
@@ -229,7 +235,7 @@ export default function Card({ item, onPress: parentOnPress = () => {} }) {
             <Title>{title}</Title>
             {!item.disabled && (
               <Rating>
-                <RatingIcon color="#20B4AB" size={24} />
+                <RatingIcon color="#FECB2E" size={16} />
                 <RatingNumber>{item.rating}</RatingNumber>
               </Rating>
             )}

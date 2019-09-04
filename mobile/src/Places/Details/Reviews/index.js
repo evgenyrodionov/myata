@@ -1,20 +1,20 @@
 import React from 'react';
-import { Dimensions } from 'react-native';
+import { Dimensions, Alert } from 'react-native';
 import styled from 'styled-components';
 import distanceInWordsStrict from 'date-fns/distance_in_words_strict';
+import differenceInHours from 'date-fns/difference_in_hours';
 import ruLocale from 'date-fns/locale/ru';
 import times from 'lodash/times';
 import {
-  Title, Alert, Button, IconStar,
+  Title, Alert as UIAlert, Button, IconStar,
 } from '../../../ui';
 import { getPhotoUrl } from '../../../utils/photos';
+import { saveReviews } from '../../api';
 
 const { width: deviceWidth } = Dimensions.get('window');
 
 const List = styled.FlatList`
-  margin-bottom: 16;
-  border-bottom-color: rgba(255, 255, 255, 0.05);
-  border-bottom-width: 1;
+  margin-bottom: 24;
 `;
 
 const Disclaimer = styled.Text`
@@ -25,13 +25,15 @@ const Disclaimer = styled.Text`
 `;
 
 const Review = styled.TouchableOpacity.attrs({ activeOpacity: 0.8 })`
-  /* background: #fff; */
+  background: #000;
   border-radius: 10;
   /* padding-horizontal: 12; */
   padding-vertical: 12;
   padding-bottom: 14;
+  padding-horizontal: 12;
   width: ${deviceWidth - 16 * 2 - 16};
   margin-right: 8;
+  position: relative;
 `;
 
 const ReviewHeader = styled.View`
@@ -70,6 +72,7 @@ const ReviewDate = styled.Text`
 const ReviewText = styled.Text`
   font-size: 14;
   color: #fff;
+  min-height: 64;
 `;
 
 const ReviewIcon = styled(IconStar)`
@@ -80,15 +83,62 @@ const ItemSeparatorComponent = styled.View`
   width: 2;
 `;
 
-function renderReview({ item }) {
-  const { displayName, photoId, id } = item.user || {};
+const ReviewDeleteButton = styled.TouchableOpacity.attrs({
+  activeOpacity: 0.8,
+})`
+  border-bottom-left-radius: 10;
+  border-bottom-right-radius: 10;
+  padding-vertical: 10;
+  background-color: #af282d;
+  /* width: 100%; */
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+`;
+
+const ReviewDeleteButtonText = styled.Text`
+  font-size: 12;
+  color: #ecacae;
+  text-align: center;
+  font-weight: bold;
+`;
+
+function renderReview({ item, reviews, placeId }) {
+  const { displayName, photoId } = item.user || {};
   const reviewDate = distanceInWordsStrict(new Date(), item.createdAt, {
     locale: ruLocale,
     addSuffix: true,
   });
 
+  const diffInHours = differenceInHours(new Date(), item.createdAt);
+  const canDelete = diffInHours < 72;
+
+  function onConfirmDelete() {
+    return saveReviews(
+      placeId,
+      reviews.filter(({ id }) => id !== item.id),
+    ).then(() => {
+      Alert.alert('Отзыв удалён');
+    });
+  }
+
+  function onDelete() {
+    return Alert.alert('Удалить отзыв?', null, [
+      {
+        text: 'Нет',
+        style: 'cancel',
+      },
+      {
+        text: 'Да',
+        style: 'destructive',
+        onPress: onConfirmDelete,
+      },
+    ]);
+  }
+
   return (
-    <Review key={id}>
+    <Review key={item.id}>
       <ReviewHeader>
         <ReviewAuthorPhoto
           source={{ uri: getPhotoUrl(`${photoId}/-/resize/x84`) }}
@@ -100,7 +150,7 @@ function renderReview({ item }) {
             {times(5, num => (
               <ReviewIcon
                 key={num}
-                color={num < item.rating ? '#20B4AB' : '#eee'}
+                color={num < item.rating ? '#FECB2E' : '#eee'}
                 size={16}
               />
             ))}
@@ -110,15 +160,21 @@ function renderReview({ item }) {
       </ReviewHeader>
 
       <ReviewText>{item.text.trim()}</ReviewText>
+
+      {canDelete && (
+        <ReviewDeleteButton onPress={onDelete}>
+          <ReviewDeleteButtonText>Удалить мой отзыв</ReviewDeleteButtonText>
+        </ReviewDeleteButton>
+      )}
     </Review>
   );
 }
 
 function ListEmptyComponent() {
   return (
-    <Alert white center>
+    <UIAlert white center>
       Пока нет ни одного отзыва о заведении. Оставите свой?
-    </Alert>
+    </UIAlert>
   );
 }
 
@@ -139,7 +195,9 @@ export default function Reviews({
           showsHorizontalScrollIndicator={false}
           data={reviews}
           keyExtractor={({ createdAt }) => String(createdAt)}
-          renderItem={renderReview}
+          renderItem={({ item }) =>
+            renderReview({ item, reviews, placeId: place.id })
+          }
           ItemSeparatorComponent={ItemSeparatorComponent}
         />
       )}
@@ -147,8 +205,8 @@ export default function Reviews({
       {reviews.length === 0 && <ListEmptyComponent />}
 
       <Button
-        bgColor="#fff"
-        textColor="#111"
+        bgColor="#20B4AB"
+        textColor="#ADEBE6"
         center
         onPress={() => navigation.navigate('PlaceNewReview', { place, user })}
       >

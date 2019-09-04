@@ -79,7 +79,7 @@ function Main(props) {
   const [news, setNews] = React.useState([]);
   const [places, setPlaces] = React.useState([]);
   const [isLoading, updateLoading] = React.useState(true);
-  const [screenOffset, updateStateOffset] = React.useState(1);
+  const [screenOffset, updateStateOffset] = React.useState(2);
 
   const ref = React.useRef(null);
   const currentUser = getCurrentUser();
