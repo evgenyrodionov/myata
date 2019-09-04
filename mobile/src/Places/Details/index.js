@@ -375,6 +375,7 @@ function renderSpecialOffer({ item }) {
 }
 
 const ReviewsWrapper = styled.View`
+  margin-top: 42;
   margin-bottom: 24;
 `;
 

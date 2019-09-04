@@ -213,7 +213,7 @@ export default function Reviews({
 
       <Button
         bgColor="#20B4AB"
-        textColor="#ADEBE6"
+        textColor="#C2F0ED"
         center
         onPress={() => navigation.navigate('PlaceNewReview', { place, user })}
       >

@@ -61,6 +61,8 @@ export default function ({ navigation }) {
   const [rating, setRating] = React.useState(5);
   const [isLoading, updateLoading] = React.useState(false);
 
+  const disabled = text.length === 0;
+
   async function onSave() {
     updateLoading(true);
 
@@ -92,7 +94,13 @@ export default function ({ navigation }) {
       {isLoading ? (
         <ActivityIndicator />
       ) : (
-        <Button bgColor="#20B4AB" textColor="#ADEBE6" center onPress={onSave}>
+        <Button
+          bgColor="#20B4AB"
+          textColor="#C2F0ED"
+          center
+          onPress={onSave}
+          disabled={disabled}
+        >
           Оставить отзыв
         </Button>
       )}
