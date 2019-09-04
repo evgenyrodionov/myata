@@ -90,7 +90,6 @@ const ReviewDeleteButton = styled.TouchableOpacity.attrs({
   border-bottom-right-radius: 10;
   padding-vertical: 10;
   background-color: #af282d;
-  /* width: 100%; */
   position: absolute;
   bottom: 0;
   left: 0;
@@ -104,7 +103,9 @@ const ReviewDeleteButtonText = styled.Text`
   font-weight: bold;
 `;
 
-function renderReview({ item, reviews, placeId }) {
+function renderReview({
+  item, user, reviews, placeId,
+}) {
   const { displayName, photoId } = item.user || {};
   const reviewDate = distanceInWordsStrict(new Date(), item.createdAt, {
     locale: ruLocale,
@@ -112,7 +113,7 @@ function renderReview({ item, reviews, placeId }) {
   });
 
   const diffInHours = differenceInHours(new Date(), item.createdAt);
-  const canDelete = diffInHours < 72;
+  const canDelete = diffInHours < 72 && user.id === item.user.id;
 
   function onConfirmDelete() {
     return saveReviews(
@@ -196,7 +197,9 @@ export default function Reviews({
           data={reviews}
           keyExtractor={({ createdAt }) => String(createdAt)}
           renderItem={({ item }) =>
-            renderReview({ item, reviews, placeId: place.id })
+            renderReview({
+              item, user, reviews, placeId: place.id,
+            })
           }
           ItemSeparatorComponent={ItemSeparatorComponent}
         />
