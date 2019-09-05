@@ -88,6 +88,7 @@ export default function ({ navigation }) {
         numberOfLines={4}
         onChangeText={setText}
         value={text}
+        keyboardAppearance="dark"
         autoFocus
       />
 
