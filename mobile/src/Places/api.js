@@ -1,6 +1,7 @@
 import firebase from 'react-native-firebase';
 import { parsePhoneNumber } from 'libphonenumber-js';
 import orderBy from 'lodash/orderBy';
+import keyBy from 'lodash/keyBy';
 import parse from 'date-fns/parse';
 import { mapUserForPublic } from '../Profile/mappers';
 import { getRef as getUserRef } from '../Profile/api';
@@ -35,14 +36,18 @@ export async function map(doc) {
   };
 }
 
-export function mapDocs(docs) {
+export async function mapDocs(docs) {
   const mappedDocs = [];
 
-  docs.forEach(async (doc) => {
-    mappedDocs.push(await map(doc));
+  docs.forEach((doc) => {
+    mappedDocs.push(map(doc));
   });
 
-  return mappedDocs;
+  return Promise.all(mappedDocs);
+}
+
+export function keyById(docs) {
+  return keyBy(docs, 'id');
 }
 
 export function mapOutputReviews(reviews) {

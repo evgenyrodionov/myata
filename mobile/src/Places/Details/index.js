@@ -5,6 +5,8 @@ import {
 import styled from 'styled-components';
 import Accordion from 'react-native-collapsible/Accordion';
 
+import useStoreon from 'storeon/react';
+
 import getDay from 'date-fns/get_day';
 import isFuture from 'date-fns/is_future';
 import distanceInWordsStrict from 'date-fns/distance_in_words_strict';
@@ -25,7 +27,6 @@ import {
   IconSale,
   IconStar,
 } from '../../ui';
-import { places } from '../../data';
 import Address from './Address';
 import Highlights from './Highlights';
 import Reviews from './Reviews';
@@ -402,9 +403,11 @@ const RatingIcon = styled(IconStar)`
 `;
 
 export default function OrderDetails({ navigation }) {
+  const { placesById = {} } = useStoreon('placesById');
   const id = navigation.getParam('id');
   const user = navigation.getParam('user');
-  const item = places.find(place => place.id === id) || navigation.getParam('item', {});
+  const item = placesById[id] || {};
+
   const {
     workingHours = [],
     events = [],

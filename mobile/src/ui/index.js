@@ -5,6 +5,7 @@ export { default as Button, ButtonWithIcon } from './Button';
 export { default as Alert } from './Alert';
 export { default as Card } from './Card';
 export { default as FooterPusher } from './FooterPusher';
+export { default as CollapsibleText } from './CollapsibleText';
 
 export const Title = styled.Text`
   font-size: 36;

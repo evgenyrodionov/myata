@@ -42,6 +42,7 @@
     "react-navigation": "^3.11.0",
     "react-navigation-animated-switch": "^0.2.0",
     "react-redux": "^7.0.3",
+    "storeon": "^0.9.5",
     "styled-components": "^4.2.1",
     "typograf": "^6.8.2"
   },

@@ -3,6 +3,7 @@ import { Dimensions } from 'react-native';
 import styled from 'styled-components';
 import { Permissions } from 'react-native-unimodules';
 import * as Haptics from 'expo-haptics';
+import useStoreon from 'storeon/react';
 
 import { createStackNavigator } from 'react-navigation';
 import { isIphoneX } from 'react-native-iphone-x-helper';
@@ -34,6 +35,7 @@ import { getRef as getNewsRef } from '../Feed/api';
 import {
   mapDocs as mapPlaces,
   getCollectionRef as getPlacesRef,
+  keyById as keyPlacesById,
 } from '../Places/api';
 
 const { width: deviceWidth } = Dimensions.get('window');
@@ -77,9 +79,9 @@ const HeaderButtonRight = styled(HeaderButton)`
 function Main(props) {
   const [user, setUser] = React.useState({});
   const [news, setNews] = React.useState([]);
-  const [places, setPlaces] = React.useState([]);
   const [isLoading, updateLoading] = React.useState(true);
   const [screenOffset, updateStateOffset] = React.useState(1);
+  const { dispatch } = useStoreon('places');
 
   const ref = React.useRef(null);
   const currentUser = getCurrentUser();
@@ -130,9 +132,12 @@ function Main(props) {
 
   // listen to places updates
   React.useEffect(() => {
-    getPlacesRef()
-      .get()
-      .then(docs => setPlaces(mapPlaces(docs)));
+    getPlacesRef().onSnapshot(async (docs) => {
+      const places = await mapPlaces(docs);
+      const placesById = keyPlacesById(places);
+
+      dispatch('places/update', { places, placesById });
+    });
   }, []);
 
   // callback after initial user loading
@@ -173,7 +178,7 @@ function Main(props) {
         >
           <Profile user={user} {...props} />
           <Feed user={user} news={news} {...props} />
-          <Places user={user} places={places} {...props} />
+          <Places user={user} {...props} />
         </ScrollView>
       </View>
     );

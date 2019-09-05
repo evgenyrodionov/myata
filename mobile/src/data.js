@@ -187,19 +187,19 @@ export const salesByPlaceId = {
 };
 
 export const places = [
-  {
-    id: 15,
-    disabled: true,
-    title: 'Вайнера',
-    address: {
-      country: 'Россия',
-      city: 'Екатеринбург',
-      district: 'Верх-Исетский',
-      street: 'ул Вайнера',
-    },
-    addressTitle: 'ул. Вайнера, 12',
-    coverId: '991044fc-2a1f-44c2-8720-b22f7945c27b',
-  },
+  // {
+  //   id: 15,
+  //   disabled: true,
+  //   title: 'Вайнера',
+  //   address: {
+  //     country: 'Россия',
+  //     city: 'Екатеринбург',
+  //     district: 'Верх-Исетский',
+  //     street: 'ул Вайнера',
+  //   },
+  //   addressTitle: 'ул. Вайнера, 12',
+  //   coverId: '991044fc-2a1f-44c2-8720-b22f7945c27b',
+  // },
   // {
   //   id: 4,
   //   disabled: true,

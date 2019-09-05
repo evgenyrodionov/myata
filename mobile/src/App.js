@@ -2,9 +2,12 @@ import React from 'react';
 import firebase from 'react-native-firebase';
 import { createSwitchNavigator, createAppContainer } from 'react-navigation';
 import codePush from 'react-native-code-push';
+import StoreContext from 'storeon/react/context';
 
 import Main from './Main';
 import Auth from './Auth';
+
+import store from './store';
 
 function AuthChecker(props) {
   React.useEffect(() => {
@@ -30,7 +33,11 @@ const rootNavigator = createSwitchNavigator(
 function App() {
   const Layout = createAppContainer(rootNavigator);
 
-  return <Layout />;
+  return (
+    <StoreContext.Provider value={store}>
+      <Layout />
+    </StoreContext.Provider>
+  );
 }
 
 export default codePush(App);

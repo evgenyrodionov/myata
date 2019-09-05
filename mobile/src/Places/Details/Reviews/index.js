@@ -4,12 +4,14 @@ import styled from 'styled-components';
 import distanceInWordsStrict from 'date-fns/distance_in_words_strict';
 import differenceInHours from 'date-fns/difference_in_hours';
 import ruLocale from 'date-fns/locale/ru';
+import pluralize from 'pluralize-ru';
 import times from 'lodash/times';
 import {
   Title as OrigTitle,
   Alert as UIAlert,
   Button,
   IconStar,
+  CollapsibleText,
 } from '../../../ui';
 import { getPhotoUrl } from '../../../utils/photos';
 import { saveReviews } from '../../api';
@@ -26,7 +28,7 @@ const List = styled.FlatList`
 
 const Disclaimer = styled.Text`
   text-align: center;
-  margin-top: 6;
+  margin-top: 2;
   font-size: 12;
   color: #ccc;
 `;
@@ -39,7 +41,7 @@ const Review = styled.TouchableOpacity.attrs({ activeOpacity: 0.8 })`
   padding-bottom: 14;
   padding-horizontal: 12;
   width: ${deviceWidth - 16 * 2 - 16};
-  margin-right: 8;
+  /* margin-right: 8; */
   position: relative;
 `;
 
@@ -76,20 +78,28 @@ const ReviewDate = styled.Text`
   margin-left: 4;
 `;
 
-const ReviewText = styled.Text`
-  font-size: 14;
-  color: #fff;
+const ReviewText = styled.View`
   min-height: 64;
 
-  ${({ withButton }) => withButton && 'margin-bottom: 32;'}
+  ${({ withButton }) => withButton && 'margin-bottom: 64;'}
 `;
 
 const ReviewIcon = styled(IconStar)`
-  margin-right: 2;
+  margin-right: 4;
 `;
 
 const ItemSeparatorComponent = styled.View`
-  width: 2;
+  width: 10;
+`;
+
+const ReviewDisclaimer = styled.Text`
+  position: absolute;
+  bottom: 42;
+  left: 0;
+  right: 0;
+  text-align: center;
+  color: #ccc;
+  font-size: 12;
 `;
 
 const ReviewDeleteButton = styled.TouchableOpacity.attrs({
@@ -122,15 +132,11 @@ function renderReview({
   });
 
   const diffInHours = differenceInHours(new Date(), item.createdAt);
+  const remainingHours = 72 - diffInHours;
   const canDelete = diffInHours < 72 && user.id === item.user.id;
 
   function onConfirmDelete() {
-    return saveReviews(
-      placeId,
-      reviews.filter(({ id }) => id !== item.id),
-    ).then(() => {
-      Alert.alert('Отзыв удалён');
-    });
+    return saveReviews(placeId, reviews.filter(({ id }) => id !== item.id));
   }
 
   function onDelete() {
@@ -169,12 +175,30 @@ function renderReview({
         </ReviewAuthor>
       </ReviewHeader>
 
-      <ReviewText withButton={canDelete}>{item.text.trim()}</ReviewText>
+      <ReviewText withButton={canDelete}>
+        <CollapsibleText
+          initialTextLength={400}
+          textStyle={{ fontSize: 14, color: '#fff' }}
+          text={item.text.trim()}
+        />
+      </ReviewText>
 
       {canDelete && (
-        <ReviewDeleteButton onPress={onDelete}>
-          <ReviewDeleteButtonText>Удалить мой отзыв</ReviewDeleteButtonText>
-        </ReviewDeleteButton>
+        <>
+          <ReviewDisclaimer>
+            Опубликуется через{' '}
+            {pluralize(
+              remainingHours,
+              '0 часов',
+              '%d час',
+              '%d часа',
+              '%d часов',
+            )}
+          </ReviewDisclaimer>
+          <ReviewDeleteButton onPress={onDelete}>
+            <ReviewDeleteButtonText>Удалить</ReviewDeleteButtonText>
+          </ReviewDeleteButton>
+        </>
       )}
     </Review>
   );

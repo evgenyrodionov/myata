@@ -2,6 +2,8 @@ import React from 'react';
 import { RefreshControl, Dimensions } from 'react-native';
 import styled, { css } from 'styled-components';
 import * as Haptics from 'expo-haptics';
+import useStoreon from 'storeon/react';
+
 import Card from './Card';
 import Filter from './Filter';
 import { FooterPusher, Alert } from '../ui';
@@ -47,7 +49,6 @@ function renderItem({ item }, { navigation, user }) {
         onPress={() => {
           navigation.navigate('PlaceDetails', {
             id: item.id,
-            item,
             user,
           });
         }}
@@ -76,10 +77,11 @@ function filter(data, selected = [], selectedKind) {
   return data.filter(({ address }) => address[selectedKind] === filtered.title);
 }
 
-export default function Places({ places, ...props }) {
+export default function Places({ ...props }) {
   const { dispatch = () => ({}), isFetching = false } = props;
   const [selectedKind, updateKind] = React.useState([null, []]);
   const [selectedValues, updateValues] = React.useState([]);
+  const { places } = useStoreon('places');
 
   React.useEffect(() => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => {});

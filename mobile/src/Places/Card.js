@@ -154,7 +154,7 @@ function renderTimes({ item }) {
     const todayDayOfWeek = getDay(today);
     const { from, to } = item.workingHours[todayDayOfWeek];
 
-    const openingAt = format(today, `YYYY-MM-DD ${to}`);
+    const openingAt = format(today, `YYYY-MM-DD ${from}`);
     const isOpeningInFuture = isFuture(openingAt);
 
     // const closingAt = format(today, `YYYY-MM-DD ${todayWH[1]}`);
@@ -163,7 +163,7 @@ function renderTimes({ item }) {
     if (isOpeningInFuture) {
       return (
         <DateHelper color="#bd8851">
-          <IconFutureClock color="#bd8851" size={12} strokeWidth={4} />
+          {/* <IconFutureClock color="#bd8851" size={12} strokeWidth={4} /> */}
           Откроется{' '}
           {distanceInWordsStrict(today, openingAt, {
             locale: ruLocale,

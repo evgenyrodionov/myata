@@ -27,8 +27,8 @@ const Textarea = styled.TextInput`
 
 const Disclaimer = styled.Text`
   text-align: center;
-  margin-top: 10;
-  font-size: 14;
+  margin-top: 0;
+  font-size: 12;
   color: #ccc;
 `;
 
