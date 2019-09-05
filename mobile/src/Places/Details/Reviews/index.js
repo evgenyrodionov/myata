@@ -80,6 +80,8 @@ const ReviewText = styled.Text`
   font-size: 14;
   color: #fff;
   min-height: 64;
+
+  ${({ withButton }) => withButton && 'margin-bottom: 32;'}
 `;
 
 const ReviewIcon = styled(IconStar)`
@@ -167,7 +169,7 @@ function renderReview({
         </ReviewAuthor>
       </ReviewHeader>
 
-      <ReviewText>{item.text.trim()}</ReviewText>
+      <ReviewText withButton={canDelete}>{item.text.trim()}</ReviewText>
 
       {canDelete && (
         <ReviewDeleteButton onPress={onDelete}>
