@@ -42,3 +42,5 @@ export { default as IconVk } from './icons/Vk';
 export { default as IconReservation } from './icons/Reservation';
 export { default as IconSale } from './icons/Sale';
 export { default as IconStar } from './icons/Star';
+export { default as IconChecked } from './icons/Checked';
+export { default as IconUnchecked } from './icons/Unchecked';

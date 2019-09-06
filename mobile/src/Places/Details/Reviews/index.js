@@ -24,6 +24,7 @@ const Title = styled(OrigTitle)`
 
 const List = styled.FlatList`
   margin-bottom: 24;
+  /* width: ${deviceWidth + 16 * 2 + 10}; */
 `;
 
 const Disclaimer = styled.Text`
@@ -40,7 +41,7 @@ const Review = styled.TouchableOpacity.attrs({ activeOpacity: 0.8 })`
   padding-vertical: 12;
   padding-bottom: 14;
   padding-horizontal: 12;
-  width: ${deviceWidth - 16 * 2 - 16};
+  width: ${deviceWidth - 16 * 2 - 10};
   /* margin-right: 8; */
   position: relative;
 `;
@@ -79,9 +80,9 @@ const ReviewDate = styled.Text`
 `;
 
 const ReviewText = styled.View`
-  min-height: 64;
+  /* min-height: 64; */
 
-  ${({ withButton }) => withButton && 'margin-bottom: 64;'}
+  ${({ canDelete }) => canDelete && 'margin-bottom: 44;'}
 `;
 
 const ReviewIcon = styled(IconStar)`
@@ -117,7 +118,7 @@ const ReviewDeleteButton = styled.TouchableOpacity.attrs({
 
 const ReviewDeleteButtonText = styled.Text`
   font-size: 12;
-  color: #ecacae;
+  color: #fff;
   text-align: center;
   font-weight: bold;
 `;
@@ -134,6 +135,7 @@ function renderReview({
   const diffInHours = differenceInHours(new Date(), item.createdAt);
   const remainingHours = 72 - diffInHours;
   const canDelete = diffInHours < 72 && user.id === item.user.id;
+  const initialTextLength = canDelete ? 155 : 360;
 
   function onConfirmDelete() {
     return saveReviews(placeId, reviews.filter(({ id }) => id !== item.id));
@@ -175,9 +177,9 @@ function renderReview({
         </ReviewAuthor>
       </ReviewHeader>
 
-      <ReviewText withButton={canDelete}>
+      <ReviewText canDelete={canDelete}>
         <CollapsibleText
-          initialTextLength={400}
+          initialTextLength={initialTextLength}
           textStyle={{ fontSize: 14, color: '#fff' }}
           text={item.text.trim()}
         />
@@ -218,16 +220,27 @@ export default function Reviews({
   item: place,
   user,
 }) {
+  const filteredReviews = reviews.filter((review) => {
+    const diffInHours = differenceInHours(new Date(), review.createdAt);
+    const remainingHours = 72 - diffInHours;
+    const isVisible = user.id === review.user.id
+      || (user.id !== review.user.id && remainingHours < 0);
+
+    return isVisible && !review.personal;
+  });
+
   return (
     <>
-      <Title>Отзывы {reviews.length > 0 && `(${reviews.length})`}</Title>
+      <Title>
+        Отзывы {filteredReviews.length > 0 && `(${filteredReviews.length})`}
+      </Title>
 
-      {reviews.length > 0 && (
+      {filteredReviews.length > 0 && (
         <List
           horizontal
-          // pagingEnabled
+          pagingEnabled
           showsHorizontalScrollIndicator={false}
-          data={reviews}
+          data={filteredReviews}
           keyExtractor={({ createdAt }) => String(createdAt)}
           renderItem={({ item }) =>
             renderReview({
@@ -241,11 +254,11 @@ export default function Reviews({
         />
       )}
 
-      {reviews.length === 0 && <ListEmptyComponent />}
+      {filteredReviews.length === 0 && <ListEmptyComponent />}
 
       <Button
         bgColor="#20B4AB"
-        textColor="#C2F0ED"
+        textColor="#fff"
         center
         onPress={() => navigation.navigate('PlaceNewReview', { place, user })}
       >

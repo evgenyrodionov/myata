@@ -51,12 +51,10 @@ export function keyById(docs) {
 }
 
 export function mapOutputReviews(reviews) {
-  return reviews.map(review => ({
-    id: review.id,
-    createdAt: parse(review.createdAt),
-    rating: review.rating,
-    text: review.text,
-    userRef: getUserRef(review.user.id),
+  return reviews.map(({ createdAt, user, ...review }) => ({
+    ...review,
+    createdAt: parse(createdAt),
+    userRef: getUserRef(user.id),
   }));
 }
 

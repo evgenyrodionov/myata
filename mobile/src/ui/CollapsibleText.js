@@ -6,7 +6,7 @@ import {
 class TextCollapse extends PureComponent {
   static defaultProps = {
     initialTextLength: 70,
-    collapseDuration: 250,
+    collapseDuration: 600,
     collapseType: 'spring',
     springDamping: 0.7,
     showMoreTextStyle: {
