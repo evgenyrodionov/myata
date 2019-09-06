@@ -206,6 +206,7 @@ const RatingIcon = styled(IconStar)`
 export default function Card({ item, onPress: parentOnPress = () => {} }) {
   const [isLiked, toggle] = React.useState(false);
 
+  const { address = {} } = item;
   const title = item.disabled ? `${item.title} — скоро` : item.title;
   const scaleInAnimated = new Animated.Value(0);
 
@@ -251,7 +252,7 @@ export default function Card({ item, onPress: parentOnPress = () => {} }) {
           </Header> */}
           <Footer>
             <Address>
-              {item.address.city}, {item.address.title}
+              {address.city}, {address.title}
             </Address>
 
             {renderTimes({ item })}

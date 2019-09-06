@@ -132,12 +132,14 @@ function Main(props) {
 
   // listen to places updates
   React.useEffect(() => {
-    getPlacesRef().onSnapshot(async (docs) => {
-      const places = await mapPlaces(docs);
-      const placesById = keyPlacesById(places);
+    getPlacesRef()
+      .orderBy('rating', 'desc')
+      .onSnapshot(async (docs) => {
+        const places = await mapPlaces(docs);
+        const placesById = keyPlacesById(places);
 
-      dispatch('places/update', { places, placesById });
-    });
+        dispatch('places/update', { places, placesById });
+      });
   }, []);
 
   // callback after initial user loading
