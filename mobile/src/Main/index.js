@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { Permissions } from 'react-native-unimodules';
 import * as Haptics from 'expo-haptics';
 import useStoreon from 'storeon/react';
+import orderBy from 'lodash/orderBy';
 
 import { createStackNavigator } from 'react-navigation';
 import { isIphoneX } from 'react-native-iphone-x-helper';
@@ -116,11 +117,22 @@ function Main(props) {
       ));
   }, []);
 
+  React.useEffect(() => {
+    Permissions.askAsync(Permissions.LOCATION).then(({ status }) => {
+      dispatch('user/update', { permission: Permissions.LOCATION, status });
+    });
+  });
+
   // listen to user updates
   React.useEffect(() => {
     const userRef = getUserRef(userId);
 
-    userRef.onSnapshot(async doc => setUser(await mapUser(doc, userRef)));
+    userRef.onSnapshot(async (doc) => {
+      const mappedUser = await mapUser(doc, userRef);
+
+      setUser(mappedUser);
+      dispatch('user/update', mappedUser);
+    });
   }, []);
 
   // listen to news updates
@@ -135,7 +147,12 @@ function Main(props) {
     getPlacesRef()
       .orderBy('rating', 'desc')
       .onSnapshot(async (docs) => {
-        const places = await mapPlaces(docs);
+        const mapped = await mapPlaces(docs);
+        const places = orderBy(
+          mapped,
+          ['address.distance', 'disabled'],
+          ['asc'],
+        );
         const placesById = keyPlacesById(places);
 
         dispatch('places/update', { places, placesById });

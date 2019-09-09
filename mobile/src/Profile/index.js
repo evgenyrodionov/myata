@@ -161,7 +161,7 @@ const NotificationsSt = styled.View`
   margin-top: 56;
 `;
 
-const Notification = styled.View`
+const Notification = styled.TouchableOpacity.attrs({ activeOpacity: 0.8 })`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -199,7 +199,7 @@ function Notifications({ user }) {
         data={Object.entries(notifications)}
         keyExtractor={([key]) => String(key)}
         renderItem={({ item: [key, value] }) => (
-          <Notification>
+          <Notification onPress={() => onChange(key, value)}>
             <NotificationTitle>{notificationsDict[key]}</NotificationTitle>
             <Switch value={value} onValueChange={() => onChange(key, value)} />
           </Notification>

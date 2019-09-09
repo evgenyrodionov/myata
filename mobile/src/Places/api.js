@@ -3,6 +3,11 @@ import { parsePhoneNumber } from 'libphonenumber-js';
 import orderBy from 'lodash/orderBy';
 import keyBy from 'lodash/keyBy';
 import parse from 'date-fns/parse';
+
+import geodist from 'geodist';
+import * as Location from 'expo-location';
+import { Permissions } from 'react-native-unimodules';
+
 import { mapUserForPublic } from '../Profile/mappers';
 import { getRef as getUserRef } from '../Profile/api';
 import { salesByPlaceId } from '../data';
@@ -15,6 +20,38 @@ export function getCollectionRef() {
 
 export function getRef(id) {
   return getCollectionRef().doc(id);
+}
+
+async function getDistance(place) {
+  if (place.address.lat && place.address.lon) {
+    const { status } = await Permissions.askAsync(Permissions.LOCATION);
+
+    if (status === 'granted') {
+      try {
+        const { coords } = await Location.getCurrentPositionAsync({});
+
+        const distance = geodist(
+          {
+            lat: coords.latitude,
+            lon: coords.longitude,
+          },
+          {
+            lat: place.address.lat,
+            lon: place.address.lon,
+          },
+          { unit: 'km', exact: true },
+        );
+
+        return parseFloat(distance).toFixed(2);
+      } catch (e) {
+        //
+      }
+    }
+
+    return undefined;
+  }
+
+  return undefined;
 }
 
 export async function map(doc) {
@@ -31,6 +68,10 @@ export async function map(doc) {
   return {
     id: doc.id,
     ...data,
+    address: {
+      ...data.address,
+      distance: await getDistance(data),
+    },
     sales: salesByPlaceId[doc.id] || [],
     reviews: orderBy(reviews, ['createdAt'], ['desc']),
   };

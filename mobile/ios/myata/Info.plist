@@ -32,7 +32,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>4</string>
+	<string>5</string>
 	<key>CodePushDeploymentKey</key>
 	<string>iVw0kJXUUK3m_4tXPvVdIV-Nr1G8BJT6dOq-r</string>
 	<key>LSApplicationQueriesSchemes</key>
@@ -80,6 +80,7 @@
 	<string>Allow Мята to access your reminders</string>
 	<key>UIBackgroundModes</key>
 	<array>
+		<string>location</string>
 		<string>remote-notification</string>
 	</array>
 	<key>UILaunchStoryboardName</key>

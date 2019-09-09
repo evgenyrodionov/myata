@@ -14,6 +14,8 @@
     "expo-asset-utils": "^1.1.1",
     "expo-blur": "4.0.0",
     "expo-haptics": "^5.0.1",
+    "expo-location": "^6.0.0",
+    "geodist": "^0.2.1",
     "libphonenumber-js": "^1.7.18",
     "lodash": "^4.17.15",
     "nanoid": "^2.1.0",

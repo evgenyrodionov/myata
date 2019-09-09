@@ -73,15 +73,15 @@ const Footer = styled.View`
 `;
 
 const Address = styled.Text`
-  font-size: 14;
+  font-size: 12;
   font-weight: 400;
   color: #fff;
 `;
 
 const DateHelper = styled.Text`
-  font-size: 12;
+  font-size: 14;
   color: ${p => p.color};
-  margin-top: 6;
+  margin-top: 8;
 `;
 
 const IconFutureClock = styled(OrigIconFutureClock)`
@@ -180,6 +180,22 @@ function renderTimes({ item }) {
   return null;
 }
 
+const DistanceText = styled.Text`
+  color: #fff;
+  font-size: 12;
+  margin-bottom: 4;
+`;
+
+function renderDistance({ item }) {
+  const { address = {} } = item;
+
+  if (address.distance) {
+    return <DistanceText>{address.distance} км</DistanceText>;
+  }
+
+  return null;
+}
+
 const Header = styled.View`
   display: flex;
   flex-direction: row;
@@ -237,7 +253,9 @@ export default function Card({ item, onPress: parentOnPress = () => {} }) {
             {!item.disabled && (
               <Rating>
                 <RatingIcon color="#FECB2E" size={16} />
-                <RatingNumber>{item.rating}</RatingNumber>
+                <RatingNumber>
+                  {parseFloat(item.rating).toFixed(2)}
+                </RatingNumber>
               </Rating>
             )}
           </Header>
@@ -251,6 +269,8 @@ export default function Card({ item, onPress: parentOnPress = () => {} }) {
             )}
           </Header> */}
           <Footer>
+            {renderDistance({ item })}
+
             <Address>
               {address.city}, {address.title}
             </Address>

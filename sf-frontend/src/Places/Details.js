@@ -666,6 +666,8 @@ export default function ({ place = {} }) {
                       ...state,
                       address: {
                         ...address,
+                        lat: data.geo_lat,
+                        lon: data.geo_lon,
                         title: `${data.street_with_type}, ${
                           data.house_type_full
                         } ${data.house}`,

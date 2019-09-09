@@ -26,6 +26,10 @@ PODS:
     - UMFileSystemInterface
   - EXHaptics (5.0.1):
     - UMCore
+  - EXLocation (6.0.0):
+    - UMCore
+    - UMPermissionsInterface
+    - UMTaskManagerInterface
   - EXPermissions (4.0.0):
     - UMCore
     - UMPermissionsInterface
@@ -231,6 +235,7 @@ DEPENDENCIES:
   - EXConstants (from `../node_modules/expo-constants/ios`)
   - EXFileSystem (from `../node_modules/expo-file-system/ios`)
   - EXHaptics (from `../node_modules/expo-haptics/ios`)
+  - EXLocation (from `../node_modules/expo-location/ios`)
   - EXPermissions (from `../node_modules/expo-permissions/ios`)
   - Fabric (~> 1.9.0)
   - Firebase/Auth (~> 5.20.1)
@@ -319,6 +324,9 @@ EXTERNAL SOURCES:
   EXHaptics:
     :path: !ruby/object:Pathname
     path: "../node_modules/expo-haptics/ios"
+  EXLocation:
+    :path: !ruby/object:Pathname
+    path: "../node_modules/expo-location/ios"
   EXPermissions:
     :path: !ruby/object:Pathname
     path: "../node_modules/expo-permissions/ios"
@@ -395,6 +403,7 @@ SPEC CHECKSUMS:
   EXConstants: a338ed187829ab25b8817f84cd84eecc13e64fd4
   EXFileSystem: 18c9980f52e3bd6a28670c17e0d33a9c1584a336
   EXHaptics: 6d594612afa321bfc8e167bdfb0b47f940f8f537
+  EXLocation: 4eb76115832f08b1e78003b335c210e18fa60424
   EXPermissions: ce3e170052df9d496aa51e1c372080cb2508fb16
   Fabric: f988e33c97f08930a413e08123064d2e5f68d655
   Firebase: 0c8cf33f266410c61ab3e2265cfa412200351d9c
