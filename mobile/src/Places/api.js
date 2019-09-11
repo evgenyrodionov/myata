@@ -10,7 +10,7 @@ import { Permissions } from 'react-native-unimodules';
 
 import { mapUserForPublic } from '../Profile/mappers';
 import { getRef as getUserRef } from '../Profile/api';
-import { salesByPlaceId } from '../data';
+import { salesByPlaceId, productsByPlacesId } from '../data';
 
 const firestore = firebase.firestore();
 
@@ -42,7 +42,7 @@ async function getDistance(place) {
           { unit: 'km', exact: true },
         );
 
-        return parseFloat(distance).toFixed(2);
+        return parseFloat(parseFloat(distance).toFixed(2));
       } catch (e) {
         //
       }
@@ -72,7 +72,8 @@ export async function map(doc) {
       ...data.address,
       distance: await getDistance(data),
     },
-    sales: salesByPlaceId[doc.id] || [],
+    sales: salesByPlaceId[doc.id] ? salesByPlaceId[doc.id] : [],
+    products: productsByPlacesId[doc.id] ? productsByPlacesId[doc.id] : [],
     reviews: orderBy(reviews, ['createdAt'], ['desc']),
   };
 }

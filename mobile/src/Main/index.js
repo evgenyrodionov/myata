@@ -17,6 +17,7 @@ import Places from '../Places';
 import PlaceDetails from '../Places/Details';
 import PlaceReservation from '../Places/Details/Reservation';
 import PlaceNewReview from '../Places/Details/Reviews/Details';
+import PlaceMenu from '../Places/Details/Menu';
 import CardDetails from '../Card/Details';
 
 import {
@@ -144,19 +145,17 @@ function Main(props) {
 
   // listen to places updates
   React.useEffect(() => {
-    getPlacesRef()
-      .orderBy('rating', 'desc')
-      .onSnapshot(async (docs) => {
-        const mapped = await mapPlaces(docs);
-        const places = orderBy(
-          mapped,
-          ['address.distance', 'disabled'],
-          ['asc'],
-        );
-        const placesById = keyPlacesById(places);
+    getPlacesRef().onSnapshot(async (docs) => {
+      const mapped = await mapPlaces(docs);
+      const places = orderBy(
+        mapped,
+        ['rating', 'address.distance'],
+        ['desc', 'asc'],
+      );
+      const placesById = keyPlacesById(places);
 
-        dispatch('places/update', { places, placesById });
-      });
+      dispatch('places/update', { places, placesById });
+    });
   }, []);
 
   // callback after initial user loading
@@ -217,6 +216,9 @@ export default createStackNavigator(
     },
     PlaceNewReview: {
       screen: PlaceNewReview,
+    },
+    PlaceMenu: {
+      screen: PlaceMenu,
     },
     CardDetails: {
       screen: CardDetails,

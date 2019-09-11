@@ -3,6 +3,8 @@ import { RefreshControl, Dimensions } from 'react-native';
 import styled, { css } from 'styled-components';
 import * as Haptics from 'expo-haptics';
 import useStoreon from 'storeon/react';
+import * as Location from 'expo-location';
+import { Permissions } from 'react-native-unimodules';
 
 import Card from './Card';
 import Filter from './Filter';
@@ -81,11 +83,29 @@ export default function Places({ ...props }) {
   const { dispatch = () => ({}), isFetching = false } = props;
   const [selectedKind, updateKind] = React.useState([null, []]);
   const [selectedValues, updateValues] = React.useState([]);
+  // const [debug, setDebug] = React.useState({});
   const { places } = useStoreon('places');
 
   React.useEffect(() => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => {});
   }, [selectedKind]);
+
+  // React.useEffect(() => {
+  //   const effect = async () => {
+  //     const isEnabled = await Location.hasServicesEnabledAsync();
+  //     const { status } = await Permissions.askAsync(Permissions.LOCATION);
+
+  //     // setDebug({ isEnabled, status });
+
+  //     if (status === 'granted') {
+  //       const res = await Location.getCurrentPositionAsync({});
+
+  //       setDebug({ isEnabled, status, res });
+  //     }
+  //   };
+
+  //   effect();
+  // }, []);
 
   function onFilterUpdate(kind, title, index) {
     const [, indexes] = selectedKind;
@@ -116,6 +136,8 @@ export default function Places({ ...props }) {
   return (
     <View refreshControl={refreshControl}>
       <Heading>Заведения</Heading>
+
+      {/* <Alert white>debug: {JSON.stringify(debug, null, 2)}</Alert> */}
 
       <Filter
         update={onFilterUpdate}

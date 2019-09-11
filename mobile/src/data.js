@@ -186,6 +186,81 @@ export const salesByPlaceId = {
   ],
 };
 
+export const productsByPlacesId = {
+  V9LHkyrdT93OdS6V4SrS: [
+    {
+      title: 'Кальян-коктейли',
+      items: [
+        {
+          title: 'Бон-пари',
+          uploadcareId: '5153c93b-eedb-43af-bd18-6d71d7f24b9c',
+          price: 2700,
+        },
+        {
+          title: 'Summer time',
+          uploadcareId: '5153c93b-eedb-43af-bd18-6d71d7f24b9c',
+          price: 2700,
+        },
+        {
+          title: 'Бабушка передала',
+          uploadcareId: '5153c93b-eedb-43af-bd18-6d71d7f24b9c',
+          price: 2700,
+        },
+        {
+          title: 'Pina Colada',
+          uploadcareId: '5153c93b-eedb-43af-bd18-6d71d7f24b9c',
+          price: 2900,
+        },
+        {
+          title: 'Сникерс',
+          uploadcareId: '5153c93b-eedb-43af-bd18-6d71d7f24b9c',
+          price: 2900,
+        },
+        {
+          title: 'Ягодный пряник',
+          uploadcareId: '5153c93b-eedb-43af-bd18-6d71d7f24b9c',
+          price: 2700,
+        },
+      ],
+    },
+    {
+      title: 'Бодрые чаи',
+      items: [
+        {
+          title: 'Да Хун Пао',
+          uploadcareId: 'd66d9a41-5c2f-4006-9604-3949441829c8',
+          price: 400,
+        },
+        {
+          title: 'Тропики',
+          uploadcareId: 'd66d9a41-5c2f-4006-9604-3949441829c8',
+          price: 400,
+        },
+        {
+          title: 'Чай с бергамотом',
+          uploadcareId: 'd66d9a41-5c2f-4006-9604-3949441829c8',
+          price: 400,
+        },
+        {
+          title: 'Ассам',
+          uploadcareId: 'd66d9a41-5c2f-4006-9604-3949441829c8',
+          price: 400,
+        },
+        {
+          title: 'Шу Пу Эр Гун Тин',
+          uploadcareId: 'd66d9a41-5c2f-4006-9604-3949441829c8',
+          price: 400,
+        },
+        {
+          title: 'Ли Чжи Хун Ча',
+          uploadcareId: 'd66d9a41-5c2f-4006-9604-3949441829c8',
+          price: 400,
+        },
+      ],
+    },
+  ],
+};
+
 export const places = [
   // {
   //   id: 15,

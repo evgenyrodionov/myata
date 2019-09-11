@@ -26,6 +26,7 @@ import {
   IconReservation,
   IconSale,
   IconStar,
+  IconMenu,
 } from '../../ui';
 import Address from './Address';
 import Highlights from './Highlights';
@@ -115,7 +116,7 @@ const SaleRowTime = styled.Text`
   margin-top: 4;
 `;
 
-function renderTimeTableItem({ workingHours, sales }, index, isActive) {
+function renderTimeTableItem({ workingHours, sales = [] }, index, isActive) {
   const { from, to } = workingHours;
   const todayDay = getDay(new Date());
   const todayColor = (isActive || index === todayDay) && '#fff';
@@ -283,6 +284,18 @@ function Actions({ navigation, item: place }) {
           }
         >
           Проложить маршрут
+        </ButtonWithIcon>
+      )}
+      {place.products.length > 0 && (
+        <ButtonWithIcon
+          icon={<IconMenu color="#eee" size={20} />}
+          bgColor="#191919"
+          textColor="#eee"
+          onPress={() =>
+            navigation.navigate('PlaceMenu', { placeId: place.id })
+          }
+        >
+          Посмотреть меню
         </ButtonWithIcon>
       )}
       <ButtonWithIcon

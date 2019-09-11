@@ -23,6 +23,14 @@ export const Title2 = styled.Text`
   color: #fff;
 `;
 
+export const Title3 = styled.Text`
+  font-size: 18;
+  line-height: 22;
+  font-weight: 600;
+  margin-bottom: 16;
+  color: #fff;
+`;
+
 export { default as IconProfile } from './icons/Profile';
 export { default as IconUser } from './icons/User';
 export { default as IconFeed } from './icons/Feed';
@@ -44,3 +52,4 @@ export { default as IconSale } from './icons/Sale';
 export { default as IconStar } from './icons/Star';
 export { default as IconChecked } from './icons/Checked';
 export { default as IconUnchecked } from './icons/Unchecked';
+export { default as IconMenu } from './icons/Menu';
