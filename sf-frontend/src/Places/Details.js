@@ -5,6 +5,10 @@ import {
   isValidNumber,
   parsePhoneNumberFromString,
 } from 'libphonenumber-js';
+import distanceInWordsStrict from 'date-fns/distance_in_words_strict';
+import ruLocale from 'date-fns/locale/ru';
+import differenceInHours from 'date-fns/difference_in_hours';
+import pluralize from 'pluralize-ru';
 
 import { ReactDadata } from 'react-dadata';
 import { Widget } from '@uploadcare/react-widget';
@@ -550,6 +554,111 @@ const Title = styled.h1`
   font-weight: bold;
 `;
 
+const ReviewsSt = styled.div``;
+
+const Review = styled.div`
+  width: 100%;
+  margin-bottom: 42px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+`;
+
+const ReviewHeader = styled.header`
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 4px;
+`;
+
+const ReviewDate = styled.time`
+  color: #111;
+  font-weight: bold;
+`;
+
+const ReviewStars = styled.p`
+  margin-left: 10px;
+`;
+
+const ReviewText = styled.p`
+  margin-bottom: 10px;
+`;
+
+const ReviewLabel = styled.span`
+  background: #eee;
+  height: auto;
+  padding: 4px 10px;
+  border-radius: 6px;
+  line-height: 1;
+  display: inline-block;
+  margin-bottom: 4px;
+`;
+
+const ReviewButtons = styled.div``;
+
+const ReviewReplyButton = styled.button`
+  background: #eee;
+  height: auto;
+  padding: 4px 10px;
+  border-radius: 6px;
+  line-height: 1;
+  display: inline-block;
+  margin-bottom: 4px;
+`;
+
+function Reviews({ reviews = [] }) {
+  console.log(reviews);
+  return (
+    <Card title="Отзывы">
+      <ReviewsSt>
+        {reviews.map(({
+          id, createdAt, rating, text, personal,
+        }) => {
+          const diffInHours = differenceInHours(new Date(), createdAt);
+          const remainingHours = 72 - diffInHours;
+          const isPublic = diffInHours > 72;
+
+          return (
+            <Review key={id}>
+              <ReviewHeader>
+                <ReviewDate>
+                  {distanceInWordsStrict(new Date(), createdAt, {
+                    locale: ruLocale,
+                    addSuffix: true,
+                  })}
+                </ReviewDate>
+                <ReviewStars>⭐️ {parseFloat(rating).toFixed(2)}</ReviewStars>
+              </ReviewHeader>
+              {personal && <ReviewLabel>управляющему</ReviewLabel>}
+              {isPublic ? (
+                <ReviewLabel>опубликован</ReviewLabel>
+              ) : (
+                <ReviewLabel>
+                  опубликуется через{' '}
+                  {pluralize(
+                    remainingHours,
+                    '0 часов',
+                    '%d час',
+                    '%d часа',
+                    '%d часов',
+                  )}
+                </ReviewLabel>
+              )}
+              <ReviewText>{text}</ReviewText>
+
+              <ReviewButtons>
+                {!personal && (
+                  <ReviewReplyButton type="button">ответить</ReviewReplyButton>
+                )}
+              </ReviewButtons>
+            </Review>
+          );
+        })}
+      </ReviewsSt>
+    </Card>
+  );
+}
+
 export default function ({ place = {} }) {
   const [state, setState] = React.useState(place);
   const [isEdit, setEdit] = React.useState(false);
@@ -770,6 +879,8 @@ export default function ({ place = {} }) {
           <Save onClick={onSave}>Сохранить</Save>
         </ActionsRow>
       )}
+
+      <Reviews reviews={state.reviews} />
     </>
   );
 }

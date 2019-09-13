@@ -193,32 +193,27 @@ export const productsByPlacesId = {
       items: [
         {
           title: 'Бон-пари',
-          uploadcareId: '5153c93b-eedb-43af-bd18-6d71d7f24b9c',
+          uploadcareId: 'ab4d44ae-d73d-4091-9aa7-e1f23c5ab457',
           price: 2700,
         },
+      ],
+    },
+    {
+      title: 'Кальяны на фрукте',
+      items: [
         {
-          title: 'Summer time',
-          uploadcareId: '5153c93b-eedb-43af-bd18-6d71d7f24b9c',
+          title: 'Фруктовый кальян, пример',
+          uploadcareId: 'd0ae1c24-fbc8-45e4-b5fe-acd2c81fa1ed',
           price: 2700,
         },
+      ],
+    },
+    {
+      title: 'Классические кальяны',
+      items: [
         {
-          title: 'Бабушка передала',
-          uploadcareId: '5153c93b-eedb-43af-bd18-6d71d7f24b9c',
-          price: 2700,
-        },
-        {
-          title: 'Pina Colada',
-          uploadcareId: '5153c93b-eedb-43af-bd18-6d71d7f24b9c',
-          price: 2900,
-        },
-        {
-          title: 'Сникерс',
-          uploadcareId: '5153c93b-eedb-43af-bd18-6d71d7f24b9c',
-          price: 2900,
-        },
-        {
-          title: 'Ягодный пряник',
-          uploadcareId: '5153c93b-eedb-43af-bd18-6d71d7f24b9c',
+          title: 'Классический кальян, пример',
+          uploadcareId: 'd33ef8e9-d9e0-49dc-8458-d9842bbca7e1',
           price: 2700,
         },
       ],
@@ -228,32 +223,7 @@ export const productsByPlacesId = {
       items: [
         {
           title: 'Да Хун Пао',
-          uploadcareId: 'd66d9a41-5c2f-4006-9604-3949441829c8',
-          price: 400,
-        },
-        {
-          title: 'Тропики',
-          uploadcareId: 'd66d9a41-5c2f-4006-9604-3949441829c8',
-          price: 400,
-        },
-        {
-          title: 'Чай с бергамотом',
-          uploadcareId: 'd66d9a41-5c2f-4006-9604-3949441829c8',
-          price: 400,
-        },
-        {
-          title: 'Ассам',
-          uploadcareId: 'd66d9a41-5c2f-4006-9604-3949441829c8',
-          price: 400,
-        },
-        {
-          title: 'Шу Пу Эр Гун Тин',
-          uploadcareId: 'd66d9a41-5c2f-4006-9604-3949441829c8',
-          price: 400,
-        },
-        {
-          title: 'Ли Чжи Хун Ча',
-          uploadcareId: 'd66d9a41-5c2f-4006-9604-3949441829c8',
+          uploadcareId: '54bc6e5a-f5bb-4d0e-8688-5c2556a7f515',
           price: 400,
         },
       ],
