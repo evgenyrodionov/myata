@@ -32,28 +32,51 @@ const List = styled.FlatList`
 
 const Row = styled.TouchableOpacity.attrs({ activeOpacity: 0.8 })`
   display: flex;
-  flex-direction: row;
-  align-items: center;
+  flex-direction: column;
 `;
 
 const RowDescription = styled.View`
+  margin-bottom: 12;
+`;
+
+const Header = styled.View`
+  flex-direction: row;
+  justify-content: space-between;
   display: flex;
-  flex-direction: column;
-  margin-left: 12;
+  margin-bottom: 4;
+  align-items: flex-start;
+`;
+
+const Description = styled.Text`
+  font-size: 14;
+  color: rgba(255, 255, 255, 0.4);
+`;
+
+const Button = styled.View`
+  background: #191919;
+  border-radius: 20;
+  display: flex;
+  align-items: flex-start;
 `;
 
 const ButtonText = styled.Text`
-  color: rgba(255, 255, 255, 0.5);
+  font-weight: bold;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 13;
+  padding-vertical: 2;
+  padding-horizontal: 8;
 `;
 
 const ItemSeparatorComponent = styled.View`
-  height: 16;
+  height: 1;
+  background: rgba(255, 255, 255, 0.1);
+  margin-vertical: 22;
 `;
 
 const photoStyle = {
-  height: 64,
+  height: 192,
   // marginVertical: 12,
-  width: 64,
+  width: '100%',
   objectFit: 'contain',
   borderRadius: 10,
   backgroundColor: '#fff',
@@ -62,6 +85,19 @@ const photoStyle = {
 function renderProduct({ item: { title, uploadcareId, price } }) {
   return (
     <Row>
+      <RowDescription>
+        <Header>
+          <Title3>{title}</Title3>
+
+          <Button>
+            <ButtonText>{price} ₽</ButtonText>
+          </Button>
+        </Header>
+        <Description>
+          Тестовое описание продукта, здесь может быть всё что угодно
+        </Description>
+      </RowDescription>
+
       <Image
         onLoad={onImageLoad}
         style={photoStyle}
@@ -70,12 +106,6 @@ function renderProduct({ item: { title, uploadcareId, price } }) {
         preview={{ uri: `${getPhotoUrl(uploadcareId)}-/resize/x48/` }}
         uri={`${getPhotoUrl(uploadcareId)}-/resize/x512/`}
       />
-
-      <RowDescription>
-        <Title3>{title}</Title3>
-
-        <ButtonText>{price} ₽</ButtonText>
-      </RowDescription>
     </Row>
   );
 }

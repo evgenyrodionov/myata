@@ -83,7 +83,7 @@ function Main(props) {
   const [news, setNews] = React.useState([]);
   const [isLoading, updateLoading] = React.useState(true);
   const [screenOffset, updateStateOffset] = React.useState(1);
-  const { dispatch } = useStoreon('places');
+  const { orderBy: orderByKey, dispatch } = useStoreon('places', 'orderBy');
 
   const ref = React.useRef(null);
   const currentUser = getCurrentUser();
@@ -147,11 +147,15 @@ function Main(props) {
   React.useEffect(() => {
     getPlacesRef().onSnapshot(async (docs) => {
       const mapped = await mapPlaces(docs);
-      const places = orderBy(
-        mapped,
-        ['rating', 'address.distance'],
-        ['desc', 'asc'],
-      );
+      function getOrder() {
+        if (orderByKey) {
+          return orderBy(mapped, orderByKey);
+        }
+
+        return orderBy(mapped, ['rating', 'address.distance'], ['desc', 'asc']);
+      }
+
+      const places = getOrder();
       const placesById = keyPlacesById(places);
 
       dispatch('places/update', { places, placesById });

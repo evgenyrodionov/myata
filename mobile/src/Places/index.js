@@ -1,8 +1,8 @@
 import React from 'react';
 import { RefreshControl, Dimensions } from 'react-native';
 import styled, { css } from 'styled-components';
-import * as Haptics from 'expo-haptics';
 import useStoreon from 'storeon/react';
+import * as Haptics from 'expo-haptics';
 import * as Location from 'expo-location';
 import { Permissions } from 'react-native-unimodules';
 
@@ -67,28 +67,77 @@ function ListEmptyComponent() {
   );
 }
 
-const filterParents = {
-  street: 'district',
-  district: 'city',
-  city: 'country',
-};
+const OrderSt = styled.View`
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 24;
+`;
 
-function filter(data, selected = [], selectedKind) {
-  const filtered = selected.find(({ kind }) => kind === selectedKind) || {};
+const Value = styled.TouchableOpacity.attrs({ activeOpacity: 0.7 })`
+  border-radius: 20;
+  background-color: ${p => (p.isActive ? '#2CB4AA' : 'rgba(0,0,0,0.2)')};
+  padding-horizontal: 12;
+  padding-vertical: 8;
+  margin-right: 8;
+  display: flex;
+  flex-direction: row;
+  flex-basis: 50%;
+  align-items: center;
+`;
 
-  return data.filter(({ address }) => address[selectedKind] === filtered.title);
+const ValueText = styled.Text`
+  color: ${p => (p.isActive ? '#fff' : 'rgba(255,255,255,0.7)')};
+  font-weight: bold;
+`;
+
+function Order() {
+  const { orderBy, dispatch } = useStoreon('orderBy');
+
+  function toggle(key) {
+    if (orderBy === key) {
+      return dispatch('places/orderBy', { key: null });
+    }
+
+    return dispatch('places/orderBy', { key });
+  }
+
+  return (
+    <OrderSt>
+      <Value isActive={orderBy === 'rating'} onPress={() => toggle('rating')}>
+        <ValueText isActive={orderBy === 'rating'}>По рейтингу</ValueText>
+      </Value>
+      <Value
+        isActive={orderBy === 'address.distance'}
+        onPress={() => toggle('address.distance')}
+      >
+        <ValueText isActive={orderBy === 'rating'}>По удалённости</ValueText>
+      </Value>
+    </OrderSt>
+  );
 }
+
+// const filterParents = {
+//   street: 'district',
+//   district: 'city',
+//   city: 'country',
+// };
+
+// function filter(data, selected = [], selectedKind) {
+//   const filtered = selected.find(({ kind }) => kind === selectedKind) || {};
+
+//   return data.filter(({ address }) => address[selectedKind] === filtered.title);
+// }
 
 export default function Places({ ...props }) {
   const { dispatch = () => ({}), isFetching = false } = props;
-  const [selectedKind, updateKind] = React.useState([null, []]);
-  const [selectedValues, updateValues] = React.useState([]);
+  // const [selectedKind, updateKind] = React.useState([null, []]);
+  // const [selectedValues, updateValues] = React.useState([]);
   // const [debug, setDebug] = React.useState({});
   const { places } = useStoreon('places');
 
-  React.useEffect(() => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => {});
-  }, [selectedKind]);
+  // React.useEffect(() => {
+  //   Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => {});
+  // }, [selectedKind]);
 
   // React.useEffect(() => {
   //   const effect = async () => {
@@ -107,22 +156,23 @@ export default function Places({ ...props }) {
   //   effect();
   // }, []);
 
-  function onFilterUpdate(kind, title, index) {
-    const [, indexes] = selectedKind;
-    const indexesPath = [...indexes, index];
+  // function onFilterUpdate(kind, title, index) {
+  //   const [, indexes] = selectedKind;
+  //   const indexesPath = [...indexes, index];
 
-    updateKind([kind, indexesPath]);
-    updateValues([...selectedValues, { kind, title, indexesPath }]);
-  }
+  //   updateKind([kind, indexesPath]);
+  //   updateValues([...selectedValues, { kind, title, indexesPath }]);
+  // }
 
-  function onFilterRemove(kind, index) {
-    const [, indexes] = selectedKind;
+  // function onFilterRemove(kind, index) {
+  //   const [, indexes] = selectedKind;
 
-    updateKind([filterParents[kind], indexes.slice(0, index)]);
-    return updateValues(selectedValues.slice(0, index));
-  }
+  //   updateKind([filterParents[kind], indexes.slice(0, index)]);
+  //   return updateValues(selectedValues.slice(0, index));
+  // }
 
-  const data = filter(places, selectedValues, selectedKind[0]) || places;
+  // const data = filter(places, selectedValues, selectedKind[0]) || places;
+  const data = places;
 
   const refreshControl = (
     <RefreshControl
@@ -139,12 +189,14 @@ export default function Places({ ...props }) {
 
       {/* <Alert white>debug: {JSON.stringify(debug, null, 2)}</Alert> */}
 
-      <Filter
+      {/* <Filter
         update={onFilterUpdate}
         remove={onFilterRemove}
         selectedKind={selectedKind}
         selectedValues={selectedValues}
-      />
+      /> */}
+
+      <Order />
 
       <List
         renderItem={args => renderItem(args, props)}

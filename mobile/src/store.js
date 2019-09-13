@@ -4,6 +4,10 @@ const placesReducer = (store) => {
   store.on('@init', () => ({ places: [], placesById: {} }));
 
   store.on('places/update', (prevState, state) => state);
+  store.on('places/orderBy', (prevState, { key }) => ({
+    ...prevState,
+    orderBy: key,
+  }));
 };
 
 const userReducer = (store) => {
