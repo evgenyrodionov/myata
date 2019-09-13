@@ -53,3 +53,4 @@ export { default as IconStar } from './icons/Star';
 export { default as IconChecked } from './icons/Checked';
 export { default as IconUnchecked } from './icons/Unchecked';
 export { default as IconMenu } from './icons/Menu';
+export { default as IconEmail } from './icons/Email';

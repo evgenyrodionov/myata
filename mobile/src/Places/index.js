@@ -88,6 +88,8 @@ const Value = styled.TouchableOpacity.attrs({ activeOpacity: 0.7 })`
 const ValueText = styled.Text`
   color: ${p => (p.isActive ? '#fff' : 'rgba(255,255,255,0.7)')};
   font-weight: bold;
+  text-align: center;
+  width: 100%;
 `;
 
 function Order() {

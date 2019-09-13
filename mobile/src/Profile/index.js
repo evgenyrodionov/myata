@@ -1,17 +1,23 @@
 import React from 'react';
 import {
-  RefreshControl, Dimensions, Alert, Switch,
+  RefreshControl,
+  Dimensions,
+  Alert,
+  Switch,
+  Linking,
 } from 'react-native';
 import firebase from 'react-native-firebase';
 import codePush from 'react-native-code-push';
 import styled, { css } from 'styled-components';
 import { parsePhoneNumberFromString } from 'libphonenumber-js';
 import Safari from 'react-native-safari-view';
+import qs from 'qs';
 import {
   Title as OrigTitle,
   ButtonWithIcon,
   IconLogout,
   IconEdit,
+  IconEmail,
   FooterPusher,
 } from '../ui';
 import { getPhotoUrl } from '../utils/photos';
@@ -80,7 +86,9 @@ const FriendsSt = styled.View`
   margin-top: 56;
 `;
 
-const FriendList = styled.FlatList``;
+const FriendList = styled.FlatList`
+  margin-bottom: 24;
+`;
 
 const Friend = styled.TouchableOpacity`
   display: flex;
@@ -105,7 +113,6 @@ const ReferralDesc = styled.Text`
 `;
 
 const ReferralInput = styled.TouchableOpacity`
-  margin-top: 24;
   margin-bottom: 16;
 `;
 
@@ -116,42 +123,44 @@ const ReferralInputText = styled.Text`
   font-weight: bold;
 `;
 
-function Friends({ user }) {
+function Friends({ user: { referralId, friends = [] } }) {
   return (
     <FriendsSt>
       <Title>Мои друзья</Title>
 
-      <FriendList
-        data={user.friends}
-        keyExtractor={({ id }) => id}
-        renderItem={({ item }) => (
-          <Friend>
-            <FriendName>{item.displayName}</FriendName>
-            <FriendPhoneNumber>
-              {parsePhoneNumberFromString(item.id).formatInternational()}
-            </FriendPhoneNumber>
-          </Friend>
-        )}
-        ItemSeparatorComponent={HollowSeparator}
-      />
+      {friends.length > 0 && (
+        <FriendList
+          data={friends}
+          keyExtractor={({ id }) => id}
+          renderItem={({ item }) => (
+            <Friend>
+              <FriendName>{item.displayName}</FriendName>
+              <FriendPhoneNumber>
+                {parsePhoneNumberFromString(item.id).formatInternational()}
+              </FriendPhoneNumber>
+            </Friend>
+          )}
+          ItemSeparatorComponent={HollowSeparator}
+        />
+      )}
 
-      {user.referralId && (
+      {referralId && (
         <ReferralInput
           onPress={() =>
             Safari.show({
-              url: `https://myata.page.link/invites/${user.referralId}`,
+              url: `https://invites.myataofficial.com/${referralId}`,
             })
           }
         >
           <ReferralInputText>
-            myata.page.link/invites/{user.referralId}
+            invites.myataofficial.com/{referralId}
           </ReferralInputText>
         </ReferralInput>
       )}
 
       <ReferralDesc>
-        Приведи друга и получи 100 баллов после того, как он потратит первые 1
-        000 ₽
+        Приведите друга и получите 100 баллов после того, как он потратит первые
+        1 000 ₽
       </ReferralDesc>
     </FriendsSt>
   );
@@ -232,32 +241,77 @@ const Logout = styled.View`
   margin-top: 24;
 `;
 
+const SupportSt = styled.View`
+  margin-top: 24;
+`;
+
 const Version = styled.Text`
   font-size: 12;
   color: #ccc;
   margin-top: 12;
-  margin-bottom: 24;
+  margin-bottom: 12;
   text-align: center;
 `;
 
-export default function Profile({ user, navigation, ...props }) {
-  const { dispatch = () => ({}), isFetching = false } = props;
+export async function sendEmail(to) {
+  const url = `mailto:${to}`;
 
+  // Create email link query
+  const query = qs.stringify(
+    {
+      subject: 'Приложение Мята Lounge',
+      // body,
+    },
+    { addQueryPrefix: true },
+  );
+
+  // check if we can use this link
+  const canOpen = await Linking.canOpenURL(url);
+
+  if (!canOpen) {
+    throw new Error('Provided URL can not be handled');
+  }
+
+  return Linking.openURL(url + query);
+}
+
+function Support() {
   const [appInfo, updateAppInfo] = React.useState({
     label: '...',
     appVersion: '...',
   });
-
-  const onLogoutConfirm = () => {
-    firebase.auth().signOut();
-    props.navigation.navigate('Auth');
-  };
 
   React.useEffect(() => {
     codePush
       .getUpdateMetadata(codePush.UpdateState.RUNNING)
       .then(information => updateAppInfo(information));
   }, []);
+
+  return (
+    <SupportSt>
+      <Version>
+        Версия приложения {appInfo.appVersion} ({appInfo.label})
+      </Version>
+
+      <Button
+        icon={<IconEmail color="#eee" size={18} />}
+        bgColor="#111"
+        textColor="#ccc"
+        onPress={() => sendEmail('company-156969-2@inbound.usedesk.ru')}
+      >
+        Написать в поддержку
+      </Button>
+    </SupportSt>
+  );
+}
+
+export default function Profile({ user, navigation, ...props }) {
+  const { dispatch = () => ({}), isFetching = false } = props;
+
+  const onLogoutConfirm = () => {
+    firebase.auth().signOut();
+    props.navigation.navigate('Auth');
+  };
 
   const refreshControl = (
     <RefreshControl
@@ -280,7 +334,7 @@ export default function Profile({ user, navigation, ...props }) {
         <Heading center>{user.displayName || ''}</Heading>
         <PhoneNumber>{user.formattedPhoneNumber || ''}</PhoneNumber>
 
-        {/* {user && <Friends user={user} />} */}
+        {user && <Friends user={user} />}
         {user && <Notifications user={user} />}
 
         <Logout>
@@ -302,10 +356,9 @@ export default function Profile({ user, navigation, ...props }) {
           </Button>
         </Logout>
 
-        <Version>
-          Версия приложения {appInfo.appVersion} ({appInfo.label})
-        </Version>
+        <Support />
 
+        <FooterPusher />
         <FooterPusher />
       </View>
     </Wrapper>

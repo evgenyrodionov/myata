@@ -22,3 +22,7 @@
     ]
   }
 }
+
+// Dynamic Links will start with https://invites.myataofficial.com
+// "appAssociation": "AUTO",
+// "rewrites": [ { "source": "/**", "dynamicLinks": true } ]
