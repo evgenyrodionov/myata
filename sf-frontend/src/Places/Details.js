@@ -12,184 +12,21 @@ import pluralize from 'pluralize-ru';
 
 import { ReactDadata } from 'react-dadata';
 import { Widget } from '@uploadcare/react-widget';
-import uploadcare from 'uploadcare-widget';
 
 import fb from '../firebase';
 import { mapOutput } from './mappers';
 import { getPhotoUrl } from '../utils/photos';
 import media from '../ui/media';
 
-import { Card, IconEdit } from '../ui';
+import { Card, IconEdit, Input, TextOrInput } from '../ui';
 import * as FeaturesIcons from '../ui/icons/features';
 
-const fake = {
-  sales: [
-    [
-      {
-        allDay: true,
-        title: '20% скидка на кальян-коктейли',
-      },
-    ],
-    [
-      {
-        title: '20% скидка на смузи',
-        allDay: true,
-      },
-
-      {
-        hourFrom: 12,
-        hourTo: 17,
-        title: '1 100 ₽ кальян',
-      },
-      {
-        hourFrom: 12,
-        hourTo: 17,
-        title: '1 400 ₽ кальян + чай или лимонад',
-      },
-      {
-        hourFrom: 12,
-        hourTo: 17,
-        title: '1 700 ₽ кальян + чай + десерт или сэндвич',
-      },
-      {
-        hourFrom: 12,
-        hourTo: 17,
-        title: '1 700 ₽ кальян на грейпфруте + чай или лимонад',
-      },
-      {
-        hourFrom: 12,
-        hourTo: 17,
-        title: '2 300 ₽ кальян на грейпфруте + чай + 2 десерта или 2 сэндвича',
-      },
-    ],
-    [
-      {
-        title: '2 200 ₽ сразу 2 кальяна',
-        allDay: true,
-      },
-
-      {
-        hourFrom: 12,
-        hourTo: 17,
-        title: '1 100 ₽ кальян',
-      },
-      {
-        hourFrom: 12,
-        hourTo: 17,
-        title: '1 400 ₽ кальян + чай или лимонад ',
-      },
-      {
-        hourFrom: 12,
-        hourTo: 17,
-        title: '1 700 ₽ кальян + чай + десерт или сэндвич',
-      },
-      {
-        hourFrom: 12,
-        hourTo: 17,
-        title: '1 700 ₽ кальян на грейпфруте + чай или лимонад',
-      },
-      {
-        hourFrom: 12,
-        hourTo: 17,
-        title: '2 300 ₽ кальян на грейпфруте + чай + 2 десерта или 2 сэндвича',
-      },
-    ],
-    [
-      {
-        title: '20% скидка на кальян на фруктовой чаше',
-        allDay: true,
-      },
-
-      {
-        hourFrom: 12,
-        hourTo: 17,
-        title: '1 100 ₽ кальян',
-      },
-      {
-        hourFrom: 12,
-        hourTo: 17,
-        title: '1 400 ₽ кальян + чай или лимонад ',
-      },
-      {
-        hourFrom: 12,
-        hourTo: 17,
-        title: '1 700 ₽ кальян + чай + десерт или сэндвич',
-      },
-      {
-        hourFrom: 12,
-        hourTo: 17,
-        title: '1 700 ₽ кальян на грейпфруте + чай или лимонад',
-      },
-      {
-        hourFrom: 12,
-        hourTo: 17,
-        title: '2 300 ₽ кальян на грейпфруте + чай + 2 десерта или 2 сэндвича',
-      },
-    ],
-    [
-      {
-        title: '20% скидка на фреши',
-        allDay: true,
-      },
-
-      {
-        hourFrom: 12,
-        hourTo: 17,
-        title: '1 100 ₽ кальян',
-      },
-      {
-        hourFrom: 12,
-        hourTo: 17,
-        title: '1 400 ₽ кальян + чай или лимонад ',
-      },
-      {
-        hourFrom: 12,
-        hourTo: 17,
-        title: '1 700 ₽ кальян + чай + десерт или сэндвич',
-      },
-      {
-        hourFrom: 12,
-        hourTo: 17,
-        title: '1 700 ₽ кальян на грейпфруте + чай или лимонад',
-      },
-      {
-        hourFrom: 12,
-        hourTo: 17,
-        title: '2 300 ₽ кальян на грейпфруте + чай + 2 десерта или 2 сэндвича',
-      },
-    ],
-    [
-      {
-        hourFrom: 12,
-        hourTo: 17,
-        title: '1 100 ₽ кальян',
-      },
-      {
-        hourFrom: 12,
-        hourTo: 17,
-        title: '1 400 ₽ кальян + чай или лимонад ',
-      },
-      {
-        hourFrom: 12,
-        hourTo: 17,
-        title: '1 700 ₽ кальян + чай + десерт или сэндвич',
-      },
-      {
-        hourFrom: 12,
-        hourTo: 17,
-        title: '1 700 ₽ кальян на грейпфруте + чай или лимонад',
-      },
-      {
-        hourFrom: 12,
-        hourTo: 17,
-        title: '2 300 ₽ кальян на грейпфруте + чай + 2 десерта или 2 сэндвича',
-      },
-    ],
-    [],
-    [],
-  ],
-};
-
+const Value = styled.p`
+  font-size: 16px;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  color: #111;
+`;
 const PhotosSt = styled.ul`
   list-style-type: none;
   margin: 0;
@@ -390,7 +227,7 @@ function Highlights({
   return (
     <Card title="Витрина">
       <HighlightsSt>
-        {highlights.map((highlight) => {
+        {highlights.map(highlight => {
           if (isEdit) {
             const isActive = stateHighlights.includes(highlight);
 
@@ -429,28 +266,6 @@ const Label = styled.label`
   font-size: 16px;
   padding-top: 8px;
   padding-bottom: 8px;
-`;
-
-const Input = styled.input`
-  width: 100%;
-  font-size: 16px;
-  border: 0;
-  border-bottom: 1px solid #eee;
-  padding-top: 8px;
-  padding-bottom: 8px;
-  transition: border-bottom-color 0.2s;
-
-  &:focus {
-    border-bottom-color: #23a960;
-    outline: 0;
-  }
-`;
-
-const Value = styled.p`
-  font-size: 16px;
-  padding-top: 8px;
-  padding-bottom: 8px;
-  color: #111;
 `;
 
 const Save = styled.button`
@@ -498,6 +313,7 @@ const RowSt = styled.div.attrs({ className: 'row' })`
 
 const ActionsRowSt = styled.div`
   margin-top: 36px;
+  margin-bottom: 36px;
 `;
 
 function Row({ id, label, children }) {
@@ -566,9 +382,9 @@ const Review = styled.div`
 `;
 
 const ReviewHeader = styled.header`
-  display: flex;
-  flex-direction: row;
   margin-bottom: 4px;
+  display: flex;
+  align-items: baseline;
 `;
 
 const ReviewDate = styled.time`
@@ -578,6 +394,7 @@ const ReviewDate = styled.time`
 
 const ReviewStars = styled.p`
   margin-left: 10px;
+  margin-bottom: 0;
 `;
 
 const ReviewText = styled.p`
@@ -591,7 +408,7 @@ const ReviewLabel = styled.span`
   border-radius: 6px;
   line-height: 1;
   display: inline-block;
-  margin-bottom: 4px;
+  margin-left: 4px;
 `;
 
 const ReviewButtons = styled.div``;
@@ -607,13 +424,10 @@ const ReviewReplyButton = styled.button`
 `;
 
 function Reviews({ reviews = [] }) {
-  console.log(reviews);
   return (
     <Card title="Отзывы">
       <ReviewsSt>
-        {reviews.map(({
-          id, createdAt, rating, text, personal,
-        }) => {
+        {reviews.map(({ id, createdAt, rating, text, personal }) => {
           const diffInHours = differenceInHours(new Date(), createdAt);
           const remainingHours = 72 - diffInHours;
           const isPublic = diffInHours > 72;
@@ -628,22 +442,23 @@ function Reviews({ reviews = [] }) {
                   })}
                 </ReviewDate>
                 <ReviewStars>⭐️ {parseFloat(rating).toFixed(2)}</ReviewStars>
+                {personal && <ReviewLabel>управляющему</ReviewLabel>}
+                {!personal &&
+                  (isPublic ? (
+                    <ReviewLabel>опубликован</ReviewLabel>
+                  ) : (
+                    <ReviewLabel>
+                      опубликуется через{' '}
+                      {pluralize(
+                        remainingHours,
+                        '0 часов',
+                        '%d час',
+                        '%d часа',
+                        '%d часов',
+                      )}
+                    </ReviewLabel>
+                  ))}
               </ReviewHeader>
-              {personal && <ReviewLabel>управляющему</ReviewLabel>}
-              {isPublic ? (
-                <ReviewLabel>опубликован</ReviewLabel>
-              ) : (
-                <ReviewLabel>
-                  опубликуется через{' '}
-                  {pluralize(
-                    remainingHours,
-                    '0 часов',
-                    '%d час',
-                    '%d часа',
-                    '%d часов',
-                  )}
-                </ReviewLabel>
-              )}
               <ReviewText>{text}</ReviewText>
 
               <ReviewButtons>
@@ -659,7 +474,7 @@ function Reviews({ reviews = [] }) {
   );
 }
 
-export default function ({ place = {} }) {
+export default function({ place = {} }) {
   const [state, setState] = React.useState(place);
   const [isEdit, setEdit] = React.useState(false);
   const [uploaded, setUploaded] = React.useState(null);
@@ -680,7 +495,11 @@ export default function ({ place = {} }) {
     // const isValidPhoneNumber = isValidNumber(text);
 
     try {
-      await fb.update('places', id, data);
+      await fb
+        .firestore()
+        .collection('places')
+        .doc(id)
+        .update(data);
 
       setEdit(false);
     } catch (e) {
@@ -710,132 +529,121 @@ export default function ({ place = {} }) {
         <div className="col-lg-7">
           <Card title="Информация">
             <Row id="title" label="Название">
-              {isEdit ? (
-                <Input
-                  type="text"
-                  id="title"
-                  value={state.title}
-                  onChange={e => setState({ ...state, title: e.target.value })}
-                />
-              ) : (
-                <Value>{state.title}</Value>
-              )}
+              <TextOrInput
+                type="text"
+                id="title"
+                value={state.title}
+                onChange={e => setState({ ...state, title: e.target.value })}
+                isEdit={isEdit}
+              >
+                {state.title}
+              </TextOrInput>
             </Row>
 
             <Row id="phoneNumber" label="Номер телефона">
-              {isEdit ? (
-                <Input
-                  type="text"
-                  id="phoneNumber"
-                  value={formatPhoneNumber(state.phoneNumber)}
-                  onChange={e =>
-                    setState({ ...state, phoneNumber: e.target.value })
-                  }
-                />
-              ) : (
-                state.phoneNumber && (
-                  <Value>
-                    {parsePhoneNumberFromString(
-                      state.phoneNumber,
-                    ).formatInternational()}
-                  </Value>
-                )
-              )}
+              <TextOrInput
+                type="text"
+                id="phoneNumber"
+                value={formatPhoneNumber(state.phoneNumber)}
+                onChange={e =>
+                  setState({ ...state, phoneNumber: e.target.value })
+                }
+                isEdit={isEdit}
+              >
+                {state.phoneNumber &&
+                  parsePhoneNumberFromString(
+                    state.phoneNumber,
+                  ).formatInternational()}
+              </TextOrInput>
             </Row>
 
             <Row id="waPhoneNumber" label="WhatsApp">
-              {isEdit ? (
-                <Input
-                  type="text"
-                  id="waPhoneNumber"
-                  value={formatPhoneNumber(state.waPhoneNumber)}
-                  onChange={e =>
-                    setState({ ...state, waPhoneNumber: e.target.value })
-                  }
-                />
-              ) : (
-                state.waPhoneNumber && (
-                  <Value>
-                    {parsePhoneNumberFromString(
-                      state.waPhoneNumber,
-                    ).formatInternational()}
-                  </Value>
-                )
-              )}
+              <TextOrInput
+                type="text"
+                id="waPhoneNumber"
+                value={formatPhoneNumber(state.waPhoneNumber)}
+                onChange={e =>
+                  setState({ ...state, waPhoneNumber: e.target.value })
+                }
+                isEdit={isEdit}
+              >
+                {state.waPhoneNumber &&
+                  parsePhoneNumberFromString(
+                    state.waPhoneNumber,
+                  ).formatInternational()}
+              </TextOrInput>
             </Row>
 
             <Row id="address" label="Адрес">
-              {isEdit ? (
-                <ReactDadata
-                  token={process.env.REACT_APP_DADATA_KEY}
-                  id="address"
-                  query={address.title}
-                  onChange={({ data }) =>
-                    setState({
-                      ...state,
-                      address: {
-                        ...address,
-                        lat: data.geo_lat,
-                        lon: data.geo_lon,
-                        title: `${data.street_with_type}, ${
-                          data.house_type_full
-                        } ${data.house}`,
-                        country: data.country,
-                        city: data.city,
-                        district: data.city_district,
-                        street: data.street_with_type,
-                      },
-                    })
-                  }
-                  placeholder="Адрес"
-                />
-              ) : (
-                <Value>{address.title}</Value>
-              )}
+              <TextOrInput
+                InputComponent={ReactDadata}
+                token={process.env.REACT_APP_DADATA_KEY}
+                id="address"
+                query={address.title}
+                onChange={({ data }) =>
+                  setState({
+                    ...state,
+                    address: {
+                      ...address,
+                      lat: data.geo_lat,
+                      lon: data.geo_lon,
+                      title: `${data.street_with_type}, ${
+                        data.house_type_full
+                      } ${data.house}`,
+                      country: data.country,
+                      city: data.city,
+                      district: data.city_district,
+                      street: data.street_with_type,
+                    },
+                  })
+                }
+                placeholder="Адрес"
+                isEdit={isEdit}
+              >
+                {address.title}
+              </TextOrInput>
             </Row>
 
             <Divider />
 
             <Row id="instagram" label="Инстаграм">
-              {isEdit ? (
-                <Input
-                  type="text"
-                  id="instagram"
-                  value={socialNetworks.instagram}
-                  onChange={e =>
-                    setState({
-                      ...state,
-                      socialNetworks: {
-                        ...socialNetworks,
-                        instagram: e.target.value,
-                      },
-                    })
-                  }
-                />
-              ) : (
-                <Value>{socialNetworks.instagram}</Value>
-              )}
+              <TextOrInput
+                type="text"
+                id="instagram"
+                value={socialNetworks.instagram}
+                onChange={e =>
+                  setState({
+                    ...state,
+                    socialNetworks: {
+                      ...socialNetworks,
+                      instagram: e.target.value,
+                    },
+                  })
+                }
+                isEdit={isEdit}
+              >
+                {socialNetworks.instagram}
+              </TextOrInput>
             </Row>
 
-            <Row id="instagram" label="ВК">
-              {isEdit ? (
-                <Input
-                  type="text"
-                  id="vk"
-                  value={socialNetworks.vk}
-                  onChange={e =>
-                    setState({
-                      ...state,
-                      socialNetworks: {
-                        ...socialNetworks,
-                        vk: e.target.value,
-                      },
-                    })
-                  }
-                />
-              ) : (
-                <Value>{socialNetworks.vk}</Value>
-              )}
+            <Row id="vk" label="ВК">
+              <TextOrInput
+                type="text"
+                id="vk"
+                value={socialNetworks.vk}
+                onChange={e =>
+                  setState({
+                    ...state,
+                    socialNetworks: {
+                      ...socialNetworks,
+                      vk: e.target.value,
+                    },
+                  })
+                }
+                isEdit={isEdit}
+              >
+                {socialNetworks.vk}
+              </TextOrInput>
             </Row>
           </Card>
         </div>

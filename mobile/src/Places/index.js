@@ -1,7 +1,8 @@
 import React from 'react';
-import { RefreshControl, Dimensions } from 'react-native';
+import { RefreshControl, ActivityIndicator, Dimensions } from 'react-native';
 import styled, { css } from 'styled-components';
 import useStoreon from 'storeon/react';
+import orderBy from 'lodash/orderBy';
 import * as Haptics from 'expo-haptics';
 import * as Location from 'expo-location';
 import { Permissions } from 'react-native-unimodules';
@@ -25,8 +26,8 @@ const Heading = styled.Text`
   color: #fff;
 
   ${p =>
-    p.center
-    && css`
+    p.center &&
+    css`
       text-align: center;
     `}
 `;
@@ -93,10 +94,10 @@ const ValueText = styled.Text`
 `;
 
 function Order() {
-  const { orderBy, dispatch } = useStoreon('orderBy');
+  const { orderBy: orderByKey, dispatch } = useStoreon('orderBy');
 
   function toggle(key) {
-    if (orderBy === key) {
+    if (orderByKey === key) {
       return dispatch('places/orderBy', { key: null });
     }
 
@@ -105,14 +106,17 @@ function Order() {
 
   return (
     <OrderSt>
-      <Value isActive={orderBy === 'rating'} onPress={() => toggle('rating')}>
-        <ValueText isActive={orderBy === 'rating'}>По рейтингу</ValueText>
+      <Value
+        isActive={orderByKey === 'rating'}
+        onPress={() => toggle('rating')}
+      >
+        <ValueText isActive={orderByKey === 'rating'}>По рейтингу</ValueText>
       </Value>
       <Value
-        isActive={orderBy === 'address.distance'}
+        isActive={orderByKey === 'address.distance'}
         onPress={() => toggle('address.distance')}
       >
-        <ValueText isActive={orderBy === 'rating'}>По удалённости</ValueText>
+        <ValueText isActive={orderByKey === 'rating'}>По удалённости</ValueText>
       </Value>
     </OrderSt>
   );
@@ -135,7 +139,7 @@ export default function Places({ ...props }) {
   // const [selectedKind, updateKind] = React.useState([null, []]);
   // const [selectedValues, updateValues] = React.useState([]);
   // const [debug, setDebug] = React.useState({});
-  const { places } = useStoreon('places');
+  const { places, orderBy: orderByKey } = useStoreon('places', 'orderBy');
 
   // React.useEffect(() => {
   //   Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => {});
@@ -174,7 +178,17 @@ export default function Places({ ...props }) {
   // }
 
   // const data = filter(places, selectedValues, selectedKind[0]) || places;
-  const data = places;
+
+  function getOrder() {
+    if (orderByKey) {
+      const direction = orderByKey === 'rating' ? 'desc' : 'asc';
+      return orderBy(places, orderByKey, direction);
+    }
+
+    return orderBy(places, ['rating', 'address.distance'], ['desc', 'asc']);
+  }
+
+  const data = getOrder();
 
   const refreshControl = (
     <RefreshControl

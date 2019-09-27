@@ -1,12 +1,16 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
 import styled from 'styled-components';
+import StoreContext from 'storeon/react/context';
 
 import Sidebar from './Sidebar';
 // import Login from './Login';
 import Dashboard from './Dashboard';
+import Partners from './Partners';
+import PartnersCreate from './Partners/Create';
 import PlaceDetails from './Places/Details';
 
+import store from './store';
 import fb from './firebase';
 import { mapPlaces } from './Places/mappers';
 import { mapUser } from './Users/mappers';
@@ -43,20 +47,23 @@ function App() {
   const [user, setUser] = React.useState({});
   // const [, updateLoading] = React.useState(true);
 
-  // listen to user updates
   React.useEffect(() => {
-    fb.getDocOnSnapshot('users', '79991112233', async doc =>
-      setUser(await mapUser(doc)));
+    fb.firestore()
+      .collection('users')
+      .doc('79991112233')
+      .onSnapshot(async doc => setUser(await mapUser(doc)));
   }, []);
 
-  // listen to places updates
   React.useEffect(() => {
-    fb.getCollectionOnSnapshot('places', docs => setPlaces(mapPlaces(docs)));
+    fb.firestore()
+      .collection('places')
+      .onSnapshot(docs => setPlaces(mapPlaces(docs)));
   }, []);
 
-  // listen to places updates
   React.useEffect(() => {
-    fb.getCollectionOnSnapshot('news', docs => setNews(mapNews(docs)));
+    fb.firestore()
+      .collection('news')
+      .onSnapshot(docs => setNews(mapNews(docs)));
   }, []);
 
   return (
@@ -84,6 +91,8 @@ function App() {
                 />
               )}
             />
+            <Route exact path="/partners" component={Partners} />
+            <Route exact path="/partners/create" component={PartnersCreate} />
             {/* <Route path="/login" component={Login} /> */}
           </View>
         </Main>
@@ -92,4 +101,10 @@ function App() {
   );
 }
 
-export default App;
+export default function() {
+  return (
+    <StoreContext.Provider value={store}>
+      <App />
+    </StoreContext.Provider>
+  );
+}

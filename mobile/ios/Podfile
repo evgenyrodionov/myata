@@ -7,6 +7,7 @@ target 'myata' do
   pod 'Firebase/Core', '~> 5.20.1'
   pod 'Firebase/Auth', '~> 5.20.1'
   pod 'Firebase/Firestore', '~> 5.20.1'
+  pod 'Firebase/Messaging', '~> 5.20.1'
   pod 'Fabric', '~> 1.9.0'
   pod 'Crashlytics', '~> 3.12.0'
 

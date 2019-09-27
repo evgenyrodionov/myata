@@ -5,12 +5,12 @@ import {
   Alert,
   Switch,
   Linking,
+  Clipboard,
 } from 'react-native';
 import firebase from 'react-native-firebase';
 import codePush from 'react-native-code-push';
 import styled, { css } from 'styled-components';
 import { parsePhoneNumberFromString } from 'libphonenumber-js';
-import Safari from 'react-native-safari-view';
 import qs from 'qs';
 import {
   Title as OrigTitle,
@@ -55,8 +55,8 @@ const Heading = styled.Text`
   color: #fff;
 
   ${p =>
-    p.center
-    && css`
+    p.center &&
+    css`
       text-align: center;
     `}
 `;
@@ -118,12 +118,20 @@ const ReferralInput = styled.TouchableOpacity`
 
 const ReferralInputText = styled.Text`
   color: #fff;
-  text-align: center;
+  text-align: left;
   font-size: 18;
   font-weight: bold;
 `;
 
 function Friends({ user: { referralId, friends = [] } }) {
+  const link = `invites.myataofficial.com/${referralId}`;
+
+  async function onCopy() {
+    await Clipboard.setString(`https://${link}`);
+
+    Alert.alert('Ссылка скопирована');
+  }
+
   return (
     <FriendsSt>
       <Title>Мои друзья</Title>
@@ -145,16 +153,8 @@ function Friends({ user: { referralId, friends = [] } }) {
       )}
 
       {referralId && (
-        <ReferralInput
-          onPress={() =>
-            Safari.show({
-              url: `https://invites.myataofficial.com/${referralId}`,
-            })
-          }
-        >
-          <ReferralInputText>
-            invites.myataofficial.com/{referralId}
-          </ReferralInputText>
+        <ReferralInput onPress={onCopy}>
+          <ReferralInputText>{link}</ReferralInputText>
         </ReferralInput>
       )}
 
@@ -219,7 +219,7 @@ function Notifications({ user }) {
   );
 }
 
-const onLogout = (onConfirm) => {
+const onLogout = onConfirm => {
   Alert.alert('Выйти из аккаунта?', null, [
     {
       text: 'Нет',
@@ -241,9 +241,7 @@ const Logout = styled.View`
   margin-top: 24;
 `;
 
-const SupportSt = styled.View`
-  margin-top: 24;
-`;
+const SupportSt = styled.View``;
 
 const Version = styled.Text`
   font-size: 12;
@@ -292,15 +290,6 @@ function Support() {
       <Version>
         Версия приложения {appInfo.appVersion} ({appInfo.label})
       </Version>
-
-      <Button
-        icon={<IconEmail color="#eee" size={18} />}
-        bgColor="#111"
-        textColor="#ccc"
-        onPress={() => sendEmail('company-156969-2@inbound.usedesk.ru')}
-      >
-        Написать в поддержку
-      </Button>
     </SupportSt>
   );
 }
@@ -310,7 +299,7 @@ export default function Profile({ user, navigation, ...props }) {
 
   const onLogoutConfirm = () => {
     firebase.auth().signOut();
-    props.navigation.navigate('Auth');
+    navigation.navigate('Auth');
   };
 
   const refreshControl = (
@@ -339,17 +328,25 @@ export default function Profile({ user, navigation, ...props }) {
 
         <Logout>
           <Button
-            icon={<IconEdit color="#eee" size={16} />}
-            bgColor="#fff"
-            textColor="#111"
+            icon={<IconEdit color="#fff" size={16} />}
+            bgColor="#2CB4AA"
+            textColor="#fff"
             onPress={() => navigation.navigate('ProfileEdit', { user })}
           >
             Редактировать профиль
           </Button>
           <Button
+            icon={<IconEmail color="#eee" size={18} />}
+            bgColor="#111"
+            textColor="#ccc"
+            onPress={() => sendEmail('company-156969-2@inbound.usedesk.ru')}
+          >
+            Написать в поддержку
+          </Button>
+          <Button
             icon={<IconLogout color="#eee" size={18} />}
             bgColor="#111"
-            textColor="#fff"
+            textColor="#ccc"
             onPress={() => onLogout(onLogoutConfirm)}
           >
             Выйти из аккаунта

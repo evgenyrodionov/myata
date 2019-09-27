@@ -42,7 +42,7 @@ const HighlightsSt = styled.FlatList`
 
 const Highlight = styled.TouchableOpacity.attrs({ activeOpacity: 0.8 })`
   margin-right: 12;
-  width: 120;
+  width: 96;
   display: flex;
   align-items: center;
 `;

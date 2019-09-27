@@ -92,7 +92,7 @@ const Divider = styled.hr`
   margin-bottom: 18px;
 `;
 
-export default function ({ user = {} }) {
+export default function({ user = {} }) {
   return (
     <Nav>
       <Logo to="/">СФ</Logo>
@@ -107,6 +107,9 @@ export default function ({ user = {} }) {
           <NavLink exact to="/">
             Главная
           </NavLink>
+        </NavItem>
+        <NavItem>
+          <NavLink to="/partners">Партнёры</NavLink>
         </NavItem>
         <NavItem>
           <NavLink to="/guests">Гости</NavLink>

@@ -1,13 +1,11 @@
 import React, { PureComponent } from 'react';
-import {
-  Text, View, LayoutAnimation, Platform, UIManager,
-} from 'react-native';
+import { Text, View, LayoutAnimation, Platform, UIManager } from 'react-native';
 
 class TextCollapse extends PureComponent {
   static defaultProps = {
     initialTextLength: 70,
     collapseDuration: 600,
-    collapseType: 'spring',
+    collapseType: 'easeOut',
     springDamping: 0.7,
     showMoreTextStyle: {
       color: '#858585',
@@ -21,8 +19,8 @@ class TextCollapse extends PureComponent {
       showMore: false,
     };
     if (
-      Platform.OS === 'android'
-      && UIManager.setLayoutAnimationEnabledExperimental
+      Platform.OS === 'android' &&
+      UIManager.setLayoutAnimationEnabledExperimental
     ) {
       UIManager.setLayoutAnimationEnabledExperimental(true);
     }

@@ -3,6 +3,7 @@ import { Dimensions } from 'react-native';
 import styled from 'styled-components';
 import { Permissions } from 'react-native-unimodules';
 import * as Haptics from 'expo-haptics';
+import firebase from 'react-native-firebase';
 import useStoreon from 'storeon/react';
 import orderBy from 'lodash/orderBy';
 
@@ -83,7 +84,7 @@ function Main(props) {
   const [news, setNews] = React.useState([]);
   const [isLoading, updateLoading] = React.useState(true);
   const [screenOffset, updateStateOffset] = React.useState(1);
-  const { orderBy: orderByKey, dispatch } = useStoreon('places', 'orderBy');
+  const { dispatch } = useStoreon('places');
 
   const ref = React.useRef(null);
   const currentUser = getCurrentUser();
@@ -110,12 +111,24 @@ function Main(props) {
 
   // update settings
   React.useEffect(() => {
-    Permissions.askAsync(Permissions.NOTIFICATIONS).then(({ status }) =>
+    Permissions.askAsync(Permissions.NOTIFICATIONS).then(({ status }) => {
       updateUserByKey(
         userId,
         'settings.notifications',
         mapPermissionsToBoolean[status] || false,
-      ));
+      );
+    });
+
+    firebase
+      .messaging()
+      .getToken()
+      .then(token => {
+        updateUserByKey(
+          userId,
+          'tokens',
+          firebase.firestore.FieldValue.arrayUnion(token),
+        );
+      });
   }, []);
 
   React.useEffect(() => {
@@ -128,7 +141,7 @@ function Main(props) {
   React.useEffect(() => {
     const userRef = getUserRef(userId);
 
-    userRef.onSnapshot(async (doc) => {
+    userRef.onSnapshot(async doc => {
       const mappedUser = await mapUser(doc, userRef);
 
       setUser(mappedUser);
@@ -145,20 +158,11 @@ function Main(props) {
 
   // listen to places updates
   React.useEffect(() => {
-    getPlacesRef().onSnapshot(async (docs) => {
+    getPlacesRef().onSnapshot(async docs => {
       const mapped = await mapPlaces(docs);
-      function getOrder() {
-        if (orderByKey) {
-          return orderBy(mapped, orderByKey);
-        }
+      const placesById = keyPlacesById(mapped);
 
-        return orderBy(mapped, ['rating', 'address.distance'], ['desc', 'asc']);
-      }
-
-      const places = getOrder();
-      const placesById = keyPlacesById(places);
-
-      dispatch('places/update', { places, placesById });
+      dispatch('places/update', { places: mapped, placesById });
     });
   }, []);
 

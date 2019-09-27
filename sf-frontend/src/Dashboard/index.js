@@ -132,18 +132,18 @@ function News({ news = [], ...props }) {
   return (
     <Card title={props.title}>
       <NewsSt>
-        {news.map(({
-          title, description, coverId, eventAt,
-        }) => (
+        {news.map(({ title, description, coverId, eventAt }) => (
           <NewsItem key={title}>
             <NewsCard>
               <NewsDate>{defaultDateFormat(eventAt.seconds * 1000)}</NewsDate>
               <NewsTitle to="/">{title}</NewsTitle>
-              <NewsDescription
-                dangerouslySetInnerHTML={generateHTML(description)}
-              />
+              {description && (
+                <NewsDescription
+                  dangerouslySetInnerHTML={generateHTML(description)}
+                />
+              )}
               {coverId && (
-              <NewsImage src={`${getPhotoUrl(coverId)}/-/resize/x512/`} />
+                <NewsImage src={`${getPhotoUrl(coverId)}/-/resize/x512/`} />
               )}
             </NewsCard>
           </NewsItem>
@@ -211,7 +211,7 @@ function formatNumberAndCurrency(value, name) {
   return formatNumber(value);
 }
 
-export default function ({ places = [], news = [] }) {
+export default function({ places = [], news = [] }) {
   return (
     <div className="container-fluid">
       <div className="row">

@@ -61,7 +61,7 @@ export async function map(doc) {
     (data.reviews || []).map(async ({ userRef, ...review }) => ({
       ...review,
       createdAt: review.createdAt.seconds * 1000,
-      user: mapUserForPublic(await userRef.get()),
+      user: userRef && mapUserForPublic(await userRef.get()),
     })),
   );
 
@@ -81,7 +81,7 @@ export async function map(doc) {
 export async function mapDocs(docs) {
   const mappedDocs = [];
 
-  docs.forEach((doc) => {
+  docs.forEach(doc => {
     mappedDocs.push(map(doc));
   });
 
