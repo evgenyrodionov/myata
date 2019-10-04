@@ -124,7 +124,12 @@ const ReviewDeleteButtonText = styled.Text`
 `;
 
 function renderReview({
-  item, user, reviews, placeId,
+  item,
+  user,
+  reviews,
+  placeId,
+  isOpened,
+  toggleOpened,
 }) {
   const { displayName, photoId } = item.user || {};
   const reviewDate = distanceInWordsStrict(new Date(), item.createdAt, {
@@ -179,6 +184,8 @@ function renderReview({
 
       <ReviewText canDelete={canDelete}>
         <CollapsibleText
+          isOpened={isOpened}
+          toggleOpened={toggleOpened}
           initialTextLength={initialTextLength}
           textStyle={{ fontSize: 14, color: '#fff' }}
           text={item.text.trim()}
@@ -220,6 +227,7 @@ export default function Reviews({
   item: place,
   user,
 }) {
+  const [isOpened, toggleOpened] = React.useState(false);
   const filteredReviews = reviews.filter((review) => {
     const diffInHours = differenceInHours(new Date(), review.createdAt);
     const remainingHours = 72 - diffInHours;
@@ -228,6 +236,10 @@ export default function Reviews({
 
     return isVisible && !review.personal;
   });
+
+  function onMomentumScrollEnd() {
+    toggleOpened(false);
+  }
 
   return (
     <>
@@ -248,9 +260,12 @@ export default function Reviews({
               user,
               reviews,
               placeId: place.id,
+              isOpened,
+              toggleOpened,
             })
           }
           ItemSeparatorComponent={ItemSeparatorComponent}
+          onMomentumScrollEnd={onMomentumScrollEnd}
         />
       )}
 

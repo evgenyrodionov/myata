@@ -1,5 +1,7 @@
 import React, { PureComponent } from 'react';
-import { Text, View, LayoutAnimation, Platform, UIManager } from 'react-native';
+import {
+  Text, View, LayoutAnimation, Platform, UIManager,
+} from 'react-native';
 
 class TextCollapse extends PureComponent {
   static defaultProps = {
@@ -15,12 +17,10 @@ class TextCollapse extends PureComponent {
 
   constructor(props) {
     super(props);
-    this.state = {
-      showMore: false,
-    };
+
     if (
-      Platform.OS === 'android' &&
-      UIManager.setLayoutAnimationEnabledExperimental
+      Platform.OS === 'android'
+      && UIManager.setLayoutAnimationEnabledExperimental
     ) {
       UIManager.setLayoutAnimationEnabledExperimental(true);
     }
@@ -40,20 +40,21 @@ class TextCollapse extends PureComponent {
     };
   }
 
-  toggleShowMore = () => {
-    const { showMore } = this.state;
-    LayoutAnimation.configureNext(this.LayoutAnimation);
-    this.setState({ showMore: !showMore });
-  };
+  componentDidUpdate(prevProps) {
+    if (this.props.isOpened !== prevProps.isOpened) {
+      LayoutAnimation.configureNext(this.LayoutAnimation);
+    }
+  }
 
   render() {
-    const { showMore } = this.state;
     const {
       text,
       textStyle,
       initialTextLength,
       showMoreTextStyle,
       containerStyle,
+      isOpened,
+      toggleOpened,
     } = this.props;
     const shouldTrimmed = text.length > initialTextLength;
     const trimmedText = shouldTrimmed
@@ -63,11 +64,11 @@ class TextCollapse extends PureComponent {
     return (
       <View style={{ width: '100%', overflow: 'hidden' }}>
         <View style={containerStyle}>
-          <Text style={textStyle} onPress={this.toggleShowMore}>
-            {showMore ? text : trimmedText}
+          <Text style={textStyle} onPress={() => toggleOpened(!isOpened)}>
+            {isOpened ? text : trimmedText}
             {shouldTrimmed && (
               <Text style={showMoreTextStyle}>
-                {showMore ? 'скрыть' : 'ещё'}
+                {isOpened ? 'скрыть' : 'ещё'}
               </Text>
             )}
           </Text>

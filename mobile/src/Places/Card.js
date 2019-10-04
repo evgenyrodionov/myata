@@ -1,22 +1,30 @@
 import React from 'react';
-import { StyleSheet, Animated, TouchableOpacity } from 'react-native';
+import {
+  StyleSheet,
+  Animated,
+  TouchableOpacity,
+  Dimensions,
+  View,
+} from 'react-native';
 import styled from 'styled-components';
 import distanceInWordsStrict from 'date-fns/distance_in_words_strict';
 import ruLocale from 'date-fns/locale/ru';
 import getDay from 'date-fns/get_day';
 import isFuture from 'date-fns/is_future';
 import format from 'date-fns/format';
-import capitalize from 'capitalize';
 import * as Haptics from 'expo-haptics';
+import { Image } from 'react-native-expo-image-cache';
 import { elevationShadowStyle } from '../utils/shadow';
 import * as animateScale from '../utils/animateScale';
-import { getPhotoUrl } from '../utils/photos';
+import { getPhotoUrl, onImageLoad } from '../utils/photos';
 
 import {
-  IconHeart,
-  IconFutureClock as OrigIconFutureClock,
+  // IconHeart,
+  // IconFutureClock as OrigIconFutureClock,
   IconStar,
 } from '../ui';
+
+const { width: deviceWidth } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   card: {
@@ -32,121 +40,45 @@ const styles = StyleSheet.create({
 });
 
 const StCard = styled.View`
-  padding-horizontal: 16;
   padding-top: 8;
   padding-bottom: 16;
-  height: 172;
-
-  border-radius: 10;
-  background: rgba(
-    17,
-    17,
-    17,
-    ${({ isDisabled }) => (isDisabled ? 0.75 : 0.3)}
-  );
 `;
 
 const Title = styled.Text`
   font-size: 32;
   line-height: 34;
   font-weight: 600;
-  padding-top: 4;
+  margin-bottom: 2;
   color: #fff;
 `;
 
-const LikeButton = styled.TouchableOpacity`
-  margin-left: 8;
-  margin-right: -16;
-  margin-top: -16;
+// const LikeButton = styled.TouchableOpacity`
+//   margin-left: 8;
+//   margin-right: -16;
+//   margin-top: -16;
 
-  padding-horizontal: 16;
-  padding-vertical: 16;
-`;
-
-const Footer = styled.View`
-  flex: 1;
-  /* justify-content: space-between;
-  flex-direction: row; */
-  position: absolute;
-  bottom: 8;
-  left: 16;
-`;
+//   padding-horizontal: 16;
+//   padding-vertical: 16;
+// `;
 
 const Address = styled.Text`
-  font-size: 12;
+  font-size: 16;
   font-weight: 400;
   color: #fff;
+  margin-bottom: 4;
 `;
 
-const DateHelper = styled.Text`
+const DateHelper = styled.View`
+  background-color: #243829;
+  padding-horizontal: 8;
+  padding-vertical: 8;
+  border-radius: 6;
+`;
+
+const TimesText = styled.Text`
   font-size: 14;
-  color: ${p => p.color};
-  margin-top: 8;
+  color: #4b9c73;
 `;
-
-const IconFutureClock = styled(OrigIconFutureClock)`
-  margin-right: 6;
-`;
-
-const ImageBackground = styled.ImageBackground`
-  border-radius: 10;
-  background: rgba(17, 17, 17, 0.6);
-`;
-
-const SpecialOffer = styled.View`
-  padding-vertical: 16;
-  padding-horizontal: 16;
-  background: #111;
-  border-bottom-left-radius: 10;
-  border-bottom-right-radius: 10;
-`;
-
-const SpecialOfferText = styled.Text`
-  color: #7dce56;
-  font-size: 12;
-`;
-
-function renderSpecialOffer({ item }) {
-  const today = new Date();
-  const { events = [] } = item;
-
-  if (item.specialOffer || events.length > 0) {
-    if (item.specialOffer) {
-      return (
-        <SpecialOffer>
-          <SpecialOfferText>🏷 {item.specialOffer}</SpecialOfferText>
-        </SpecialOffer>
-      );
-    }
-
-    if (events.length > 0) {
-      const { title, eventAt } = events[0];
-
-      if (isFuture(eventAt)) {
-        return (
-          <SpecialOffer>
-            <SpecialOfferText>
-              🏷{' '}
-              {capitalize(
-                distanceInWordsStrict(today, eventAt, {
-                  locale: ruLocale,
-                  addSuffix: true,
-                }),
-              )}{' '}
-              состоится {title}
-            </SpecialOfferText>
-          </SpecialOffer>
-        );
-      }
-
-      return null;
-    }
-
-    return null;
-  }
-
-  return null;
-}
 
 function renderTimes({ item }) {
   if (!item.disabled) {
@@ -162,35 +94,41 @@ function renderTimes({ item }) {
 
     if (isOpeningInFuture) {
       return (
-        <DateHelper color="#bd8851">
-          {/* <IconFutureClock color="#bd8851" size={12} strokeWidth={4} /> */}
-          Откроется{' '}
-          {distanceInWordsStrict(today, openingAt, {
-            locale: ruLocale,
-            addSuffix: true,
-          })}{' '}
-          в {from}:00
+        <DateHelper>
+          <TimesText>
+            {/* <IconFutureClock color="#bd8851" size={12} strokeWidth={4} /> */}
+            Откроется{' '}
+            {distanceInWordsStrict(today, openingAt, {
+              locale: ruLocale,
+              addSuffix: true,
+            })}{' '}
+            в {from}:00
+          </TimesText>
         </DateHelper>
       );
     }
 
-    return <DateHelper color="#7dce56">Открыто до {to}:00</DateHelper>;
+    return (
+      <DateHelper>
+        <TimesText>Открыто до {to}:00</TimesText>
+      </DateHelper>
+    );
   }
 
   return null;
 }
 
 const DistanceText = styled.Text`
-  color: #fff;
-  font-size: 12;
-  margin-bottom: 4;
+  color: #c3c3c3;
+  font-size: 14;
+  margin-bottom: 8;
 `;
 
 function renderDistance({ item }) {
   const { address = {} } = item;
 
   if (address.distance) {
-    return <DistanceText>{address.distance} км</DistanceText>;
+    return <DistanceText>{address.distance} км от вас</DistanceText>;
   }
 
   return null;
@@ -201,6 +139,8 @@ const Header = styled.View`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+  margin-top: 12;
+  /* margin-bottom: 12; */
 `;
 
 const Rating = styled.View`
@@ -220,8 +160,6 @@ const RatingIcon = styled(IconStar)`
 `;
 
 export default function Card({ item, onPress: parentOnPress = () => {} }) {
-  const [isLiked, toggle] = React.useState(false);
-
   const { address = {} } = item;
   const title = item.disabled ? `${item.title} — скоро` : item.title;
   const scaleInAnimated = new Animated.Value(0);
@@ -243,44 +181,36 @@ export default function Card({ item, onPress: parentOnPress = () => {} }) {
         animateScale.getScaleTransformationStyle(scaleInAnimated),
       ]}
     >
-      <ImageBackground
-        source={{ uri: `${getPhotoUrl(item.coverId)}-/resize/x512/` }}
-        imageStyle={{ borderRadius: 10 }}
-      >
-        <StCard isDisabled={item.disabled}>
-          <Header>
-            <Title>{title}</Title>
-            {!item.disabled && (
-              <Rating>
-                <RatingIcon color="#FECB2E" size={16} />
-                <RatingNumber>
-                  {parseFloat(item.rating).toFixed(2)}
-                </RatingNumber>
-              </Rating>
-            )}
-          </Header>
-          {/* <Header>
-            <Title>{title}</Title>
+      <StCard isDisabled={item.disabled}>
+        <Title>{title}</Title>
 
-            {!item.disabled && (
-              <LikeButton onPress={() => toggle(!isLiked)}>
-                <IconHeart color={isLiked ? '#E74C3C' : '#fff'} />
-              </LikeButton>
-            )}
-          </Header> */}
-          <Footer>
-            {renderDistance({ item })}
+        <Address>
+          {address.city}, {address.title}
+        </Address>
+        {renderDistance({ item })}
 
-            <Address>
-              {address.city}, {address.title}
-            </Address>
+        <Image
+          resizeMode="cover"
+          onLoad={onImageLoad}
+          preview={{ uri: `${getPhotoUrl(item.coverId)}-/resize/x48/` }}
+          uri={`${getPhotoUrl(item.coverId)}-/resize/x640/`}
+          style={{
+            borderRadius: 10,
+            height: 192,
+            width: deviceWidth - 32,
+          }}
+        />
 
-            {renderTimes({ item })}
-          </Footer>
-        </StCard>
-
-        {/* {renderSpecialOffer({ item })} */}
-      </ImageBackground>
+        <Header>
+          <View>{renderTimes({ item })}</View>
+          {!item.disabled && (
+            <Rating>
+              <RatingIcon color="#FECB2E" size={16} />
+              <RatingNumber>{parseFloat(item.rating).toFixed(2)}</RatingNumber>
+            </Rating>
+          )}
+        </Header>
+      </StCard>
     </TouchableOpacity>
   );
 }

@@ -1,11 +1,18 @@
 import React from 'react';
-import { RefreshControl, ActivityIndicator, Dimensions } from 'react-native';
+import {
+  RefreshControl,
+  ActivityIndicator,
+  Dimensions,
+  TouchableOpacity,
+} from 'react-native';
 import styled, { css } from 'styled-components';
 import useStoreon from 'storeon/react';
 import orderBy from 'lodash/orderBy';
 import * as Haptics from 'expo-haptics';
 import * as Location from 'expo-location';
 import { Permissions } from 'react-native-unimodules';
+
+import OrigMapView, { Marker } from 'react-native-maps';
 
 import Card from './Card';
 import Filter from './Filter';
@@ -26,15 +33,13 @@ const Heading = styled.Text`
   color: #fff;
 
   ${p =>
-    p.center &&
-    css`
+    p.center
+    && css`
       text-align: center;
     `}
 `;
 
-const List = styled.FlatList`
-  margin-top: 10;
-`;
+const List = styled.FlatList``;
 
 const Item = styled.View`
   margin-bottom: 26;
@@ -71,7 +76,7 @@ function ListEmptyComponent() {
 const OrderSt = styled.View`
   display: flex;
   flex-direction: row;
-  margin-bottom: 24;
+  margin-bottom: 12;
 `;
 
 const Value = styled.TouchableOpacity.attrs({ activeOpacity: 0.7 })`
@@ -134,8 +139,14 @@ function Order() {
 //   return data.filter(({ address }) => address[selectedKind] === filtered.title);
 // }
 
+const MapView = styled(OrigMapView)`
+  height: 128px;
+  border-radius: 10;
+  margin-bottom: 24;
+`;
+
 export default function Places({ ...props }) {
-  const { dispatch = () => ({}), isFetching = false } = props;
+  const { dispatch = () => ({}), isFetching = false, navigation } = props;
   // const [selectedKind, updateKind] = React.useState([null, []]);
   // const [selectedValues, updateValues] = React.useState([]);
   // const [debug, setDebug] = React.useState({});
@@ -203,7 +214,30 @@ export default function Places({ ...props }) {
     <View refreshControl={refreshControl}>
       <Heading>Заведения</Heading>
 
-      {/* <Alert white>debug: {JSON.stringify(debug, null, 2)}</Alert> */}
+      <MapView
+        initialRegion={{
+          latitude: Number(55.7702233),
+          longitude: Number(37.6327319),
+          latitudeDelta: 0.0922,
+          longitudeDelta: 0.0421,
+        }}
+        onPress={() => navigation.navigate('PlacesMap')}
+      >
+        {places.map(
+          ({ id: placeId, title: placeTitle, address: placeAddress = {} }) => (
+            <Marker
+              key={placeId}
+              coordinate={{
+                latitude: Number(placeAddress.lat),
+                longitude: Number(placeAddress.lon),
+              }}
+              title={`Мята ${placeTitle}`}
+              image={require('./pin.png')}
+              centerOffset={{ x: 0.5, y: 1 }}
+            />
+          ),
+        )}
+      </MapView>
 
       {/* <Filter
         update={onFilterUpdate}

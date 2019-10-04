@@ -20,7 +20,7 @@ const getOffset = (stackLevel) => {
 const View = styled.ScrollView`
   margin-top: ${p => getOffset(p.stackLevel)};
   padding-top: 48;
-  padding-horizontal: 16;
+  padding-horizontal: ${({ withoutPadding }) => (withoutPadding ? 0 : 16)};
   background-color: #111;
   border-top-left-radius: 20;
   border-top-right-radius: 20;
@@ -43,14 +43,19 @@ const Close = styled.TouchableOpacity.attrs({ activeOpacity: 0.9 })`
   border-top-right-radius: 20;
 `;
 
-export default function Card({ onGoBack, stackLevel = 1, children }) {
+export default function Card({
+  onGoBack,
+  stackLevel = 1,
+  withoutPadding,
+  children,
+}) {
   return (
     <>
       <Close blurType="extraDark" stackLevel={stackLevel} onPress={onGoBack}>
         <IconArrow color="#eee" />
       </Close>
 
-      <View stackLevel={stackLevel}>
+      <View stackLevel={stackLevel} withoutPadding={withoutPadding}>
         {children}
 
         <FooterPusher size={96} />

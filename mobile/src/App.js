@@ -11,9 +11,17 @@ import store from './store';
 
 function AuthChecker(props) {
   React.useEffect(() => {
-    const { currentUser } = firebase.auth();
+    const unsubscribe = firebase.auth().onAuthStateChanged((user) => {
+      props.navigation.navigate(user && user.uid ? 'Main' : 'Auth');
+    });
 
-    props.navigation.navigate(currentUser && currentUser.uid ? 'Main' : 'Auth');
+    return unsubscribe;
+  }, []);
+
+  React.useEffect(() => {
+    const { currentUser: user } = firebase.auth();
+
+    props.navigation.navigate(user && user.uid ? 'Main' : 'Auth');
   }, []);
 
   return null;

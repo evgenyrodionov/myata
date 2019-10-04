@@ -50,6 +50,8 @@ target 'myata' do
 
   pod 'RNDateTimePicker', :path => '../node_modules/@react-native-community/datetimepicker'
 
+  pod 'react-native-maps', :path => '../node_modules/react-native-maps'
+
   target 'myataTests' do
     inherit! :search_paths
   end

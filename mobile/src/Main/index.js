@@ -5,7 +5,6 @@ import { Permissions } from 'react-native-unimodules';
 import * as Haptics from 'expo-haptics';
 import firebase from 'react-native-firebase';
 import useStoreon from 'storeon/react';
-import orderBy from 'lodash/orderBy';
 
 import { createStackNavigator } from 'react-navigation';
 import { isIphoneX } from 'react-native-iphone-x-helper';
@@ -19,6 +18,7 @@ import PlaceDetails from '../Places/Details';
 import PlaceReservation from '../Places/Details/Reservation';
 import PlaceNewReview from '../Places/Details/Reviews/Details';
 import PlaceMenu from '../Places/Details/Menu';
+import PlacesMap from '../Places/Map';
 import CardDetails from '../Card/Details';
 
 import {
@@ -122,7 +122,7 @@ function Main(props) {
     firebase
       .messaging()
       .getToken()
-      .then(token => {
+      .then((token) => {
         updateUserByKey(
           userId,
           'tokens',
@@ -141,7 +141,7 @@ function Main(props) {
   React.useEffect(() => {
     const userRef = getUserRef(userId);
 
-    userRef.onSnapshot(async doc => {
+    userRef.onSnapshot(async (doc) => {
       const mappedUser = await mapUser(doc, userRef);
 
       setUser(mappedUser);
@@ -158,7 +158,7 @@ function Main(props) {
 
   // listen to places updates
   React.useEffect(() => {
-    getPlacesRef().onSnapshot(async docs => {
+    getPlacesRef().onSnapshot(async (docs) => {
       const mapped = await mapPlaces(docs);
       const placesById = keyPlacesById(mapped);
 
@@ -227,6 +227,9 @@ export default createStackNavigator(
     },
     PlaceMenu: {
       screen: PlaceMenu,
+    },
+    PlacesMap: {
+      screen: PlacesMap,
     },
     CardDetails: {
       screen: CardDetails,
