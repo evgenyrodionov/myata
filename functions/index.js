@@ -4,6 +4,8 @@ const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 const Twilio = require('twilio');
 const nanoid = require('nanoid/generate');
+const request = require('request');
+const qs = require('qs');
 
 const toDate = require('date-fns/toDate');
 const { ru: ruLocale } = require('date-fns/locale');
@@ -54,6 +56,34 @@ exports.onPosterWebhook = functions.https.onRequest((req, res) => {
   console.log(util.inspect(req.body));
 
   return res.sendStatus(200);
+});
+
+exports.onPosterLogin = functions.https.onRequest((req, res) => {
+  const { code, account } = req.query;
+  console.log({ code, account });
+
+  if (code && account) {
+    request.post(
+      {
+        url: `https://${account}.joinposter.com/api/v2/auth/access_token`,
+        body: {
+          code,
+          application_id: 1,
+          application_secret: '30b438535a4b8fede763a9e48af57477',
+          redirect_uri:
+            'https://us-central1-myata24com.cloudfunctions.net/onPosterLogin',
+          grant_type: 'authorization_code',
+        },
+        json: true,
+      },
+      (err, response) => {
+        console.err(err);
+        console.log(response);
+
+        return res.redirect(`https://${account}.joinposter.com`);
+      },
+    );
+  }
 });
 
 const {
