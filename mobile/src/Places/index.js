@@ -147,11 +147,27 @@ const MapView = styled(OrigMapView)`
 
 export default function Places({ ...props }) {
   const { dispatch = () => ({}), isFetching = false, navigation } = props;
+  const [coords, setCoords] = React.useState({
+    latitude: 55.77,
+    longitude: 37.63,
+  });
+
+  const { user = {}, places: origPlaces, orderBy: orderByKey } = useStoreon(
+    'places',
+    'orderBy',
+    'user',
+  );
+
+  const { favorites = [] } = user;
+
+  const places = origPlaces.map(place => ({
+    ...place,
+    favorite: favorites.includes(place.id),
+  }));
+
   // const [selectedKind, updateKind] = React.useState([null, []]);
   // const [selectedValues, updateValues] = React.useState([]);
   // const [debug, setDebug] = React.useState({});
-  const { places, orderBy: orderByKey } = useStoreon('places', 'orderBy');
-
   // React.useEffect(() => {
   //   Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => {});
   // }, [selectedKind]);
@@ -196,10 +212,28 @@ export default function Places({ ...props }) {
       return orderBy(places, orderByKey, direction);
     }
 
-    return orderBy(places, ['rating', 'address.distance'], ['desc', 'asc']);
+    return orderBy(
+      places,
+      ['favorite', 'rating', 'address.distance'],
+      ['desc', 'desc', 'asc'],
+    );
   }
 
   const data = getOrder();
+
+  React.useEffect(() => {
+    async function effect() {
+      try {
+        const { coords: newCoords } = await Location.getCurrentPositionAsync();
+
+        setCoords(newCoords);
+      } catch (e) {
+        console.warn({ e });
+      }
+    }
+
+    effect();
+  }, []);
 
   const refreshControl = (
     <RefreshControl
@@ -215,13 +249,15 @@ export default function Places({ ...props }) {
       <Heading>Заведения</Heading>
 
       <MapView
-        initialRegion={{
-          latitude: Number(55.7702233),
-          longitude: Number(37.6327319),
-          latitudeDelta: 0.0922,
-          longitudeDelta: 0.0421,
+        region={{
+          latitude: Number(coords.latitude),
+          longitude: Number(coords.longitude),
+          latitudeDelta: 0.2,
+          longitudeDelta: 0.2,
         }}
-        onPress={() => navigation.navigate('PlacesMap')}
+        onPress={() =>
+          (places.length > 0 ? navigation.navigate('PlacesMap') : () => ({}))
+        }
       >
         {places.map(
           ({ id: placeId, title: placeTitle, address: placeAddress = {} }) => (
@@ -254,10 +290,10 @@ export default function Places({ ...props }) {
         refreshing={isFetching}
         data={data}
         keyExtractor={item => String(item.id)}
-        ListEmptyComponent={ListEmptyComponent}
+        // ListEmptyComponent={ListEmptyComponent}
       />
 
-      <Alert center>…И ещё свыше 250 заведений до&nbsp;конца&nbsp;года</Alert>
+      <Alert center>…и ещё 250+ заведений до&nbsp;конца&nbsp;года</Alert>
 
       <FooterPusher />
     </View>

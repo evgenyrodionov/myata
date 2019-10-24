@@ -84,7 +84,9 @@ const TaxiEstimates = styled.Text`
 `;
 
 export default function Address({ item }) {
-  const { subways = [], title, city, lat, lon } = item.address || {};
+  const {
+    subways = [], title, city, lat, lon,
+  } = item.address || {};
   const [taxi, setTaxi] = React.useState({});
 
   React.useEffect(() => {
@@ -116,8 +118,6 @@ export default function Address({ item }) {
         }
       }
     }
-
-    setInterval(effect, 60 * 1000);
     effect();
   }, []);
 

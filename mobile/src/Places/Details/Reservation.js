@@ -179,7 +179,7 @@ export default function ({ navigation }) {
         </Alert>
       )}
       {!isLoading && !error && !success && (
-        <Button bgColor="#fff" textColor="#111" center onPress={onSave}>
+        <Button bgColor="#20B4AB" textColor="#fff" center onPress={onSave}>
           Запросить бронирование
         </Button>
       )}

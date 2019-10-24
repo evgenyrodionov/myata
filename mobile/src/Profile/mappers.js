@@ -82,6 +82,7 @@ export async function mapUser(doc, ref) {
   );
 
   return {
+    id: doc.id,
     ...data,
     ref,
     visits,

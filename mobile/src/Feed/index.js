@@ -4,6 +4,7 @@ import { Dimensions, RefreshControl } from 'react-native';
 import styled, { css } from 'styled-components';
 import ruLocale from 'date-fns/locale/ru';
 import distanceInWordsStrict from 'date-fns/distance_in_words_strict';
+import useStoreon from 'storeon/react';
 import EventCard from '../Places/EventCard';
 import NewsCard from './Card';
 import Card from '../Card/Card';
@@ -55,83 +56,81 @@ function loadList() {
   return [];
 }
 
-export default class Feed extends React.Component {
-  renderItem = ({ item }, { navigation }) => {
-    if (item.kind === 'place_event') {
-      return (
-        <EventItem>
-          <EventCard
-            item={item}
-            dateFormat={eventAt =>
-              distanceInWordsStrict(new Date(), eventAt, {
-                locale: ruLocale,
-                addSuffix: true,
-              })
-            }
-            onPress={() => {
-              navigation.navigate('PlaceDetails', { id: item.placeId });
-            }}
-          />
-        </EventItem>
-      );
-    }
-
-    if (item.kind === 'news') {
-      return (
-        <EventItem>
-          <NewsCard item={item} />
-        </EventItem>
-      );
-    }
-
-    return null;
-  };
-
-  render() {
-    const {
-      dispatch = () => ({}),
-      isFetching = false,
-      user,
-      news,
-    } = this.props;
-
-    const refreshControl = (
-      <RefreshControl
-        onRefresh={() => dispatch(loadList())}
-        enabled={!isFetching}
-        // refreshing={isFetching && orders.length !== 0}
-        refreshing={isFetching}
-      />
-    );
-
+const renderItem = ({ item }, { navigation }) => {
+  if (item.kind === 'place_event') {
     return (
-      <View refreshControl={refreshControl}>
-        <CardView>
-          <Heading>Моя карта</Heading>
-
-          <Card user={user} />
-        </CardView>
-
-        <FeedSt>
-          <Heading>Лента</Heading>
-
-          <Alert white center>
-            Добавьте любимые Мяты в избранное, следите за их новостями в ленте и
-            получайте пуш-уведомления
-          </Alert>
-
-          <EventsList
-            renderItem={args => this.renderItem(args, this.props)}
-            onRefresh={() => dispatch(loadList())}
-            ItemSeparatorComponent={Separator}
-            refreshing={isFetching}
-            data={news}
-            keyExtractor={item => String(item.id)}
-          />
-        </FeedSt>
-
-        <FooterPusher />
-      </View>
+      <EventItem>
+        <EventCard
+          item={item}
+          dateFormat={eventAt =>
+            distanceInWordsStrict(new Date(), eventAt, {
+              locale: ruLocale,
+              addSuffix: true,
+            })
+          }
+          onPress={() => {
+            navigation.navigate('PlaceDetails', { id: item.placeId });
+          }}
+        />
+      </EventItem>
     );
   }
+
+  if (item.kind === 'news') {
+    return (
+      <EventItem>
+        <NewsCard item={item} />
+      </EventItem>
+    );
+  }
+
+  return null;
+};
+
+export default function (props) {
+  const { dispatch = () => ({}), isFetching = false, news } = props;
+  const { user = {} } = useStoreon('user');
+  const { favorites = [] } = user;
+
+  const refreshControl = (
+    <RefreshControl
+      onRefresh={() => dispatch(loadList())}
+      enabled={!isFetching}
+      // refreshing={isFetching && orders.length !== 0}
+      refreshing={isFetching}
+    />
+  );
+
+  return (
+    <View refreshControl={refreshControl}>
+      <CardView>
+        <Heading>Моя карта</Heading>
+
+        <Card user={user} />
+      </CardView>
+
+      <FeedSt>
+        <Heading>Лента</Heading>
+
+        {favorites.length === 0 && (
+          <Alert center>
+            Добавьте любимые Мяты в&nbsp;избранное, следите
+            за&nbsp;их&nbsp;новостями в&nbsp;ленте и&nbsp;получайте
+            пуш-уведомления
+          </Alert>
+        )}
+
+        <EventsList
+          renderItem={args => renderItem(args, props)}
+          onRefresh={() => dispatch(loadList())}
+          ItemSeparatorComponent={Separator}
+          refreshing={isFetching}
+          data={news}
+          keyExtractor={item => String(item.id)}
+        />
+      </FeedSt>
+
+      <FooterPusher />
+    </View>
+  );
 }

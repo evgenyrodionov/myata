@@ -23,11 +23,18 @@ const featuresToIcons = {
   round_the_clock: FeaturesIcons.RoundTheClock,
 };
 
-function renderIcon({ value, ...props }) {
+const kindToColor = {
+  edition: '#E79F6D',
+  default: '#20B4AB',
+  platinum: '#FFFFFF',
+};
+
+function renderIcon({ value, kind, ...props }) {
   if (featuresToIcons[value]) {
     return React.createElement(featuresToIcons[value], {
       size: 36,
-      color: '#20B4AB',
+      color: kindToColor[kind] || kindToColor.default,
+      withGradient: true,
       ...props,
     });
   }
@@ -48,7 +55,7 @@ const Highlight = styled.TouchableOpacity.attrs({ activeOpacity: 0.8 })`
 `;
 
 const IconWrapper = styled.View`
-  border-color: #20b4ab;
+  border-color: ${p => kindToColor[p.kind] || '#20B4AB'};
   border-width: 1;
   border-radius: 200;
   display: flex;
@@ -65,23 +72,25 @@ const Title = styled.Text`
   margin-top: 8;
 `;
 
-function renderItem({ item: feature }) {
+function renderItem({ item: feature, kind }) {
   return (
     <Highlight>
-      <IconWrapper>{renderIcon({ value: feature })}</IconWrapper>
+      <IconWrapper kind={kind}>
+        {renderIcon({ value: feature, kind })}
+      </IconWrapper>
       <Title>{featuresTitles[feature]}</Title>
     </Highlight>
   );
 }
 
-export default function Highlights({ item }) {
+export default function Highlights({ item: place }) {
   return (
     <HighlightsSt
       horizontal
       showsHorizontalScrollIndicator={false}
-      data={item.highlights}
+      data={place.highlights}
       keyExtractor={(_, index) => String(index)}
-      renderItem={renderItem}
+      renderItem={({ item }) => renderItem({ item, kind: place.kind })}
     />
   );
 }

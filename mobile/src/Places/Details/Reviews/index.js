@@ -6,6 +6,8 @@ import differenceInHours from 'date-fns/difference_in_hours';
 import ruLocale from 'date-fns/locale/ru';
 import pluralize from 'pluralize-ru';
 import times from 'lodash/times';
+import useStoreon from 'storeon/react';
+
 import {
   Title as OrigTitle,
   Alert as UIAlert,
@@ -225,8 +227,9 @@ export default function Reviews({
   navigation,
   item: { reviews = [] },
   item: place,
-  user,
 }) {
+  const { user } = useStoreon('user');
+
   const [isOpened, toggleOpened] = React.useState(false);
   const filteredReviews = reviews.filter((review) => {
     const diffInHours = differenceInHours(new Date(), review.createdAt);

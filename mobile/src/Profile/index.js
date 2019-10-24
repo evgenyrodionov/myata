@@ -12,6 +12,7 @@ import codePush from 'react-native-code-push';
 import styled, { css } from 'styled-components';
 import { parsePhoneNumberFromString } from 'libphonenumber-js';
 import qs from 'qs';
+import useStoreon from 'storeon/react';
 import {
   Title as OrigTitle,
   ButtonWithIcon,
@@ -55,8 +56,8 @@ const Heading = styled.Text`
   color: #fff;
 
   ${p =>
-    p.center &&
-    css`
+    p.center
+    && css`
       text-align: center;
     `}
 `;
@@ -219,7 +220,7 @@ function Notifications({ user }) {
   );
 }
 
-const onLogout = onConfirm => {
+const onLogout = (onConfirm) => {
   Alert.alert('Выйти из аккаунта?', null, [
     {
       text: 'Нет',
@@ -294,8 +295,9 @@ function Support() {
   );
 }
 
-export default function Profile({ user, navigation, ...props }) {
+export default function Profile({ navigation, ...props }) {
   const { dispatch = () => ({}), isFetching = false } = props;
+  const { user = {} } = useStoreon('user');
 
   const onLogoutConfirm = () => {
     firebase.auth().signOut();
@@ -328,9 +330,9 @@ export default function Profile({ user, navigation, ...props }) {
 
         <Logout>
           <Button
-            icon={<IconEdit color="#fff" size={16} />}
-            bgColor="#2CB4AA"
-            textColor="#fff"
+            icon={<IconEdit color="#111" size={16} />}
+            bgColor="#fff"
+            textColor="#111"
             onPress={() => navigation.navigate('ProfileEdit', { user })}
           >
             Редактировать профиль

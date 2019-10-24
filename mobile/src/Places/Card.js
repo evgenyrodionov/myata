@@ -19,7 +19,7 @@ import * as animateScale from '../utils/animateScale';
 import { getPhotoUrl, onImageLoad } from '../utils/photos';
 
 import {
-  // IconHeart,
+  IconHeartFilled,
   // IconFutureClock as OrigIconFutureClock,
   IconStar,
 } from '../ui';
@@ -44,28 +44,26 @@ const StCard = styled.View`
   padding-bottom: 16;
 `;
 
+const Header = styled.View`
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+`;
+
 const Title = styled.Text`
   font-size: 32;
   line-height: 34;
   font-weight: 600;
   margin-bottom: 2;
   color: #fff;
+  margin-right: 6;
 `;
-
-// const LikeButton = styled.TouchableOpacity`
-//   margin-left: 8;
-//   margin-right: -16;
-//   margin-top: -16;
-
-//   padding-horizontal: 16;
-//   padding-vertical: 16;
-// `;
 
 const Address = styled.Text`
   font-size: 16;
   font-weight: 400;
   color: #fff;
-  margin-bottom: 4;
+  margin-bottom: 8;
 `;
 
 const DateHelper = styled.View`
@@ -97,12 +95,7 @@ function renderTimes({ item }) {
         <DateHelper>
           <TimesText>
             {/* <IconFutureClock color="#bd8851" size={12} strokeWidth={4} /> */}
-            Откроется{' '}
-            {distanceInWordsStrict(today, openingAt, {
-              locale: ruLocale,
-              addSuffix: true,
-            })}{' '}
-            в {from}:00
+            Откроется в {from}:00
           </TimesText>
         </DateHelper>
       );
@@ -134,7 +127,7 @@ function renderDistance({ item }) {
   return null;
 }
 
-const Header = styled.View`
+const Footer = styled.View`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -159,6 +152,11 @@ const RatingIcon = styled(IconStar)`
   margin-right: 4;
 `;
 
+const kindToColor = {
+  default: '#20B4AB',
+  edition: '#E79F6D',
+};
+
 export default function Card({ item, onPress: parentOnPress = () => {} }) {
   const { address = {} } = item;
   const title = item.disabled ? `${item.title} — скоро` : item.title;
@@ -182,7 +180,15 @@ export default function Card({ item, onPress: parentOnPress = () => {} }) {
       ]}
     >
       <StCard isDisabled={item.disabled}>
-        <Title>{title}</Title>
+        <Header>
+          <Title>{title}</Title>
+          {item.favorite && (
+            <IconHeartFilled
+              color={kindToColor[item.kind] || kindToColor.default}
+              size={26}
+            />
+          )}
+        </Header>
 
         <Address>
           {address.city}, {address.title}
@@ -197,19 +203,19 @@ export default function Card({ item, onPress: parentOnPress = () => {} }) {
           style={{
             borderRadius: 10,
             height: 192,
-            width: deviceWidth - 32,
+            width: '100%',
           }}
         />
 
-        <Header>
+        <Footer>
           <View>{renderTimes({ item })}</View>
-          {!item.disabled && (
+          {!item.disabled && item.rating && (
             <Rating>
               <RatingIcon color="#FECB2E" size={16} />
               <RatingNumber>{parseFloat(item.rating).toFixed(2)}</RatingNumber>
             </Rating>
           )}
-        </Header>
+        </Footer>
       </StCard>
     </TouchableOpacity>
   );

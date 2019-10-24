@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import orderBy from 'lodash/orderBy';
 import format from 'date-fns/format';
 import locale from 'date-fns/locale/ru';
+import useStoreon from 'storeon/react';
 import { QRCode } from 'react-native-custom-qr-codes';
 import {
   Card as UICard,
@@ -260,7 +261,7 @@ const CodeWrapper = styled.View`
 `;
 
 export default function ({ navigation }) {
-  const user = navigation.getParam('user');
+  const { user = {} } = useStoreon('user');
 
   return (
     <UICard onGoBack={() => navigation.goBack()}>

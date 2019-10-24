@@ -4,15 +4,10 @@ import {
 } from 'react-native';
 import styled from 'styled-components';
 import Accordion from 'react-native-collapsible/Accordion';
-
+import fb from 'react-native-firebase';
 import useStoreon from 'storeon/react';
 
 import getDay from 'date-fns/get_day';
-import isFuture from 'date-fns/is_future';
-import distanceInWordsStrict from 'date-fns/distance_in_words_strict';
-import ruLocale from 'date-fns/locale/ru';
-
-import capitalize from 'capitalize';
 
 import EventCard from '../EventCard';
 import Photos from './Photos';
@@ -22,16 +17,18 @@ import {
   Card,
   ButtonWithIcon,
   IconPhone,
-  IconGPS,
   IconReservation,
   IconSale,
   IconStar,
   IconMenu,
+  IconHeart,
+  IconMapWithMarker,
 } from '../../ui';
 import Address from './Address';
 import Highlights from './Highlights';
 import Reviews from './Reviews';
 
+const db = fb.firestore();
 const { width: deviceWidth } = Dimensions.get('window');
 
 const Text = styled.Text`
@@ -47,6 +44,12 @@ const daysOfWeek = [
   'Пятница',
   'Суббота',
 ];
+
+const kindToColor = {
+  default: '#20B4AB',
+  edition: '#E79F6D',
+  // platinum: '#ffffff',
+};
 
 const TimeTableSt = styled.View`
   margin-top: 42;
@@ -120,6 +123,7 @@ function renderTimeTableItem({ workingHours, sales = [] }, index, isActive) {
   const { from, to } = workingHours;
   const todayDay = getDay(new Date());
   const todayColor = (isActive || index === todayDay) && '#fff';
+  const isDisabled = !workingHours;
 
   return (
     <TimeTableItem>
@@ -128,9 +132,11 @@ function renderTimeTableItem({ workingHours, sales = [] }, index, isActive) {
         {sales.length > 0 && !isActive && (
           <IconSale color="#7dce56" size={16} />
         )}
-        <TimeTableDate color={todayColor}>
-          {from}:00—{to}:00
-        </TimeTableDate>
+        {!isDisabled && (
+          <TimeTableDate color={todayColor}>
+            {from}:00—{to}:00
+          </TimeTableDate>
+        )}
       </TimeTableRight>
     </TimeTableItem>
   );
@@ -237,12 +243,19 @@ const ActionsSt = styled.View`
   margin-top: 24;
 `;
 
-function Actions({ navigation, item: place }) {
-  const [canUseNavi, setCanUseNavi] = React.useState(false);
+const ActionsBlock = styled.View`
+  margin-bottom: 14;
+`;
 
-  const yandexNaviURL = `yandexnavi://map_search?text=Мята ${
-    place.addressTitle
-  }`;
+function Actions({ navigation, item: place = {} }) {
+  const { user } = useStoreon('user');
+  const [canUseNavi, setCanUseNavi] = React.useState(false);
+  const { address = {} } = place;
+
+  const { favorites = [] } = user;
+  const isFavorite = favorites.includes(place.id);
+
+  const yandexNaviURL = `yandexnavi://map_search?text=Мята ${address.title}`;
 
   React.useEffect(() => {
     Linking.canOpenURL(yandexNaviURL)
@@ -270,22 +283,90 @@ function Actions({ navigation, item: place }) {
     );
   }
 
+  function onNavigation() {
+    const options = canUseNavi
+      ? ['Проложить маршрут', 'Посмотреть на карте', 'Отмена']
+      : ['Посмотреть на карте', 'Отмена'];
+
+    ActionSheetIOS.showActionSheetWithOptions(
+      {
+        options,
+        cancelButtonIndex: options.length - 1,
+      },
+      (buttonIndex) => {
+        if (canUseNavi) {
+          if (buttonIndex === 0) {
+            return Linking.openURL(yandexNaviURL);
+          }
+
+          if (buttonIndex === 1) {
+            return navigation.navigate('PlacesMap', { initial: { latitude: address.latitude, longitude: address.longitude } });
+          }
+
+          return null;
+        }
+
+        if (buttonIndex === 0) {
+            return navigation.navigate('PlacesMap');
+          }
+
+        return null;
+      },
+    );
+  }
+
+  function onFavoritePress() {
+    if (isFavorite) {
+      return db
+        .collection('users')
+        .doc(user.id)
+        .update({ favorites: fb.firestore.FieldValue.arrayRemove(place.id) });
+    }
+
+    return db
+      .collection('users')
+      .doc(user.id)
+      .update({ favorites: fb.firestore.FieldValue.arrayUnion(place.id) });
+  }
+
   return (
     <ActionsSt>
-      {canUseNavi && (
+      <ActionsBlock>
         <ButtonWithIcon
-          icon={<IconGPS color="#eee" size={20} />}
-          bgColor="#339274"
+          icon={<IconHeart color="#eee" size={20} />}
+          bgColor={kindToColor[place.kind] || kindToColor.default}
           textColor="#eee"
-          onPress={() =>
-            Linking.openURL(
-              `yandexnavi://map_search?text=${place.addressTitle}`,
-            )
-          }
+          onPress={onFavoritePress}
         >
-          Проложить маршрут
+          {!isFavorite ? <>Добавить в избранное</> : <>Удалить из избранного</>}
         </ButtonWithIcon>
-      )}
+      </ActionsBlock>
+      <ActionsBlock>
+        <ButtonWithIcon
+          icon={<IconMapWithMarker color="#eee" size={20} />}
+          bgColor="#191919"
+          textColor="#eee"
+          onPress={onNavigation}
+        >
+          Навигация
+        </ButtonWithIcon>
+        <ButtonWithIcon
+          icon={<IconReservation color="#eee" size={20} />}
+          bgColor="#191919"
+          textColor="#eee"
+          onPress={() => navigation.navigate('PlaceReservation', { place })}
+        >
+          Забронировать стол
+        </ButtonWithIcon>
+        <ButtonWithIcon
+          icon={<IconPhone color="#eee" size={20} />}
+          bgColor="#191919"
+          textColor="#eee"
+          onPress={onContact}
+        >
+          Связаться
+        </ButtonWithIcon>
+      </ActionsBlock>
       {place.products.length > 0 && (
         <ButtonWithIcon
           icon={<IconMenu color="#eee" size={20} />}
@@ -298,22 +379,6 @@ function Actions({ navigation, item: place }) {
           Посмотреть меню
         </ButtonWithIcon>
       )}
-      <ButtonWithIcon
-        icon={<IconReservation color="#eee" size={20} />}
-        bgColor="#191919"
-        textColor="#eee"
-        onPress={() => navigation.navigate('PlaceReservation', { place })}
-      >
-        Забронировать стол
-      </ButtonWithIcon>
-      <ButtonWithIcon
-        icon={<IconPhone color="#eee" size={20} />}
-        bgColor="#191919"
-        textColor="#eee"
-        onPress={onContact}
-      >
-        Связаться
-      </ButtonWithIcon>
     </ActionsSt>
   );
 }
@@ -346,48 +411,6 @@ function SocialNetworks({ item: { socialNetworks = {} } }) {
   );
 }
 
-function renderSpecialOffer({ item }) {
-  const today = new Date();
-  const { events = [] } = item;
-
-  if (item.specialOffer || events.length > 0) {
-    if (item.specialOffer) {
-      return (
-        <SpecialOffer>
-          <SpecialOfferText>🏷 {item.specialOffer}</SpecialOfferText>
-        </SpecialOffer>
-      );
-    }
-
-    if (events.length > 0) {
-      const { title, eventAt } = events[0];
-
-      if (isFuture(eventAt)) {
-        return (
-          <SpecialOffer>
-            <SpecialOfferText>
-              🏷{' '}
-              {capitalize(
-                distanceInWordsStrict(today, eventAt, {
-                  locale: ruLocale,
-                  addSuffix: true,
-                }),
-              )}{' '}
-              состоится {title}
-            </SpecialOfferText>
-          </SpecialOffer>
-        );
-      }
-
-      return null;
-    }
-
-    return null;
-  }
-
-  return null;
-}
-
 const ReviewsWrapper = styled.View`
   margin-top: 42;
   margin-bottom: 24;
@@ -415,11 +438,14 @@ const RatingIcon = styled(IconStar)`
   margin-right: 4;
 `;
 
-export default function OrderDetails({ navigation }) {
+export default function PlaceDetals({ navigation }) {
   const { placesById = {} } = useStoreon('placesById');
   const id = navigation.getParam('id');
-  const user = navigation.getParam('user');
   const item = placesById[id] || {};
+  const { user = {} } = useStoreon('places', 'orderBy', 'user');
+
+  const { favorites = [] } = user;
+  const isFavorite = favorites.includes(id);
 
   const {
     workingHours = [],
@@ -430,13 +456,18 @@ export default function OrderDetails({ navigation }) {
   } = item;
 
   return (
-    <Card onGoBack={() => navigation.goBack()}>
+    <Card onGoBack={navigation.goBack}>
       <Header>
-        <Title>{item.title}</Title>
-        <Rating>
-          <RatingIcon color="#FECB2E" size={16} />
-          <RatingNumber>{item.rating}</RatingNumber>
-        </Rating>
+        <Title>
+          {item.title}
+          {/* <IconHeart color="#eee" size={36} /> */}
+        </Title>
+        {item.rating && (
+          <Rating>
+            <RatingIcon color="#FECB2E" size={16} />
+            <RatingNumber>{item.rating}</RatingNumber>
+          </Rating>
+        )}
       </Header>
 
       {/* {renderSpecialOffer({ item })} */}

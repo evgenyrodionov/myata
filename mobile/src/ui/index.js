@@ -36,6 +36,7 @@ export { default as IconUser } from './icons/User';
 export { default as IconFeed } from './icons/Feed';
 export { default as IconMap } from './icons/Map';
 export { default as IconHeart } from './icons/Heart';
+export { default as IconHeartFilled } from './icons/HeartFilled';
 export { default as IconHeaderPoint } from './icons/HeaderPoint';
 export { default as IconArrow } from './icons/Arrow';
 export { default as IconPhone } from './icons/Phone';

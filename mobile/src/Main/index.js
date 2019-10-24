@@ -84,7 +84,7 @@ function Main(props) {
   const [news, setNews] = React.useState([]);
   const [isLoading, updateLoading] = React.useState(true);
   const [screenOffset, updateStateOffset] = React.useState(1);
-  const { dispatch } = useStoreon('places');
+  const { dispatch } = useStoreon();
 
   const ref = React.useRef(null);
   const currentUser = getCurrentUser();
@@ -131,12 +131,6 @@ function Main(props) {
       });
   }, []);
 
-  React.useEffect(() => {
-    Permissions.askAsync(Permissions.LOCATION).then(({ status }) => {
-      dispatch('user/update', { permission: Permissions.LOCATION, status });
-    });
-  });
-
   // listen to user updates
   React.useEffect(() => {
     const userRef = getUserRef(userId);
@@ -146,6 +140,8 @@ function Main(props) {
 
       setUser(mappedUser);
       dispatch('user/update', mappedUser);
+
+      updateLoading(false);
     });
   }, []);
 
@@ -165,11 +161,6 @@ function Main(props) {
       dispatch('places/update', { places: mapped, placesById });
     });
   }, []);
-
-  // callback after initial user loading
-  React.useEffect(() => {
-    updateLoading(false);
-  }, [user]);
 
   function scrollTo(offset) {
     ref.current.scrollTo({ x: deviceWidth * offset, animated: true });
@@ -203,7 +194,7 @@ function Main(props) {
           ref={ref}
         >
           <Profile user={user} {...props} />
-          <Feed user={user} news={news} {...props} />
+          <Feed news={news} {...props} />
           <Places user={user} {...props} />
         </ScrollView>
       </View>
