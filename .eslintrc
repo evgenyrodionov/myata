@@ -16,7 +16,8 @@
       }
     ],
     "implicit-arrow-linebreak": 0,
-    "jsx-a11y/accessible-emoji": 0
+    "jsx-a11y/accessible-emoji": 0,
+    "no-unused-vars": 1
   },
   "env": {
     "browser": true,

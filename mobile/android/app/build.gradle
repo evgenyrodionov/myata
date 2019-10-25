@@ -140,6 +140,10 @@ android {
 }
 
 dependencies {
+    implementation project(':react-native-maps')
+    implementation project(':@react-native-community_datetimepicker')
+    implementation project(':react-native-image-picker')
+    implementation project(':react-native-svg')
     implementation project(':react-native-passkit-wallet')
     implementation project(':react-native-code-push')
     implementation project(':appcenter-crashes')

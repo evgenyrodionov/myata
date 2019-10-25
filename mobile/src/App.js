@@ -1,41 +1,51 @@
 import React from 'react';
 import firebase from 'react-native-firebase';
 import { createSwitchNavigator, createAppContainer } from 'react-navigation';
-// import codePush from 'react-native-code-push';
+import codePush from 'react-native-code-push';
+import StoreContext from 'storeon/react/context';
 
 import Main from './Main';
 import Auth from './Auth';
 
-class AuthLoading extends React.Component {
-  async componentDidMount() {
-    const { currentUser } = firebase.auth();
+import store from './store';
 
-    this.props.navigation.navigate(
-      currentUser && currentUser.uid ? 'Main' : 'Auth',
-    );
-  }
+function AuthChecker(props) {
+  React.useEffect(() => {
+    const unsubscribe = firebase.auth().onAuthStateChanged((user) => {
+      props.navigation.navigate(user && user.uid ? 'Main' : 'Auth');
+    });
 
-  render() {
-    return null;
-  }
+    return unsubscribe;
+  }, []);
+
+  React.useEffect(() => {
+    const { currentUser: user } = firebase.auth();
+
+    props.navigation.navigate(user && user.uid ? 'Main' : 'Auth');
+  }, []);
+
+  return null;
 }
 
 const rootNavigator = createSwitchNavigator(
   {
     Main,
     Auth,
-    AuthLoading,
+    AuthChecker,
   },
   {
-    initialRouteName: 'AuthLoading',
+    initialRouteName: 'AuthChecker',
   },
 );
 
 function App() {
   const Layout = createAppContainer(rootNavigator);
 
-  return <Layout />;
+  return (
+    <StoreContext.Provider value={store}>
+      <Layout />
+    </StoreContext.Provider>
+  );
 }
 
-export default App;
-// export default codePush(App);
+export default codePush(App);

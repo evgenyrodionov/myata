@@ -3,6 +3,10 @@ package com.myata;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.airbnb.android.react.maps.MapsPackage;
+import com.reactcommunity.rndatetimepicker.RNDateTimePickerPackage;
+import com.imagepicker.ImagePickerPackage;
+import com.horcrux.svg.SvgPackage;
 import com.mybdesign.RNPassKit.RNPassKitPackage;
 import com.microsoft.codepush.react.CodePush;
 import com.microsoft.appcenter.reactnative.crashes.AppCenterReactNativeCrashesPackage;
@@ -52,6 +56,10 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new MapsPackage(),
+            new RNDateTimePickerPackage(),
+            new ImagePickerPackage(),
+            new SvgPackage(),
             new RNPassKitPackage(),
             new CodePush(getResources().getString(R.string.reactNativeCodePush_androidDeploymentKey), getApplicationContext(), BuildConfig.DEBUG),
             new AppCenterReactNativeCrashesPackage(MainApplication.this, getResources().getString(R.string.appCenterCrashes_whenToSendCrashes)),

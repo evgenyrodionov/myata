@@ -1,20 +1,22 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const HeaderButtonSt = styled.TouchableOpacity`
+const HeaderTextButtonSt = styled.TouchableOpacity`
   margin-horizontal: 16;
 `;
-const HeaderButtonText = styled.Text`
+
+const HeaderTextButtonText = styled.Text`
   font-size: 17;
   line-height: 17;
   font-weight: 600;
   color: #fff;
 `;
 
-export default function HeaderButton({ children, ...props }) {
+// eslint-disable-next-line import/prefer-default-export
+export function HeaderTextButton({ children, ...props }) {
   return (
-    <HeaderButtonSt {...props}>
-      <HeaderButtonText>{children}</HeaderButtonText>
-    </HeaderButtonSt>
+    <HeaderTextButtonSt {...props}>
+      <HeaderTextButtonText>{children}</HeaderTextButtonText>
+    </HeaderTextButtonSt>
   );
 }
