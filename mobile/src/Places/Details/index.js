@@ -22,6 +22,7 @@ import {
   IconStar,
   IconMenu,
   IconHeart,
+  IconHeartFilled,
   IconMapWithMarker,
 } from '../../ui';
 import Address from './Address';
@@ -338,7 +339,7 @@ function Actions({ navigation, item: place = {} }) {
     <ActionsSt>
       <ActionsBlock>
         <ButtonWithIcon
-          icon={<IconHeart color="#eee" size={20} />}
+          icon={isFavorite ? <IconHeartFilled color="#eee"  size={20} /> : <IconHeart color="#eee"  size={20} />}
           bgColor={kindToColor[place.kind] || kindToColor.default}
           textColor="#eee"
           onPress={onFavoritePress}
