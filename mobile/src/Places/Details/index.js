@@ -16,6 +16,7 @@ import {
   Title,
   Card,
   ButtonWithIcon,
+  GradientButtonWithIcon,
   IconPhone,
   IconReservation,
   IconSale,
@@ -24,6 +25,7 @@ import {
   IconHeart,
   IconHeartFilled,
   IconMapWithMarker,
+  colorsToGradient
 } from '../../ui';
 import Address from './Address';
 import Highlights from './Highlights';
@@ -47,8 +49,8 @@ const daysOfWeek = [
 ];
 
 const kindToColor = {
-  default: '#20B4AB',
-  edition: '#E79F6D',
+  default: '#20b4ab',
+  edition: '#e79f6d',
   platinum: '#ffffff',
 };
 
@@ -258,6 +260,8 @@ function Actions({ navigation, item: place = {} }) {
 
   const yandexNaviURL = `yandexnavi://map_search?text=Мята ${address.title}`;
 
+  const primaryColor = kindToColor[place.kind]
+
   React.useEffect(() => {
     Linking.canOpenURL(yandexNaviURL)
       .then(res => setCanUseNavi(res))
@@ -338,14 +342,14 @@ function Actions({ navigation, item: place = {} }) {
   return (
     <ActionsSt>
       <ActionsBlock>
-        <ButtonWithIcon
+        <GradientButtonWithIcon
           icon={isFavorite ? <IconHeartFilled color="#eee"  size={20} /> : <IconHeart color="#eee"  size={20} />}
-          bgColor={kindToColor[place.kind] || kindToColor.default}
+          colors={colorsToGradient[primaryColor] || colorsToGradient[kindToColor.default]}
           textColor="#eee"
           onPress={onFavoritePress}
         >
           {!isFavorite ? <>Добавить в избранное</> : <>Удалить из избранного</>}
-        </ButtonWithIcon>
+        </GradientButtonWithIcon>
       </ActionsBlock>
       <ActionsBlock>
         <ButtonWithIcon

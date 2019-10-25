@@ -1,11 +1,12 @@
 import styled from 'styled-components';
 
 export { HeaderTextButton } from './HeaderButton';
-export { default as Button, ButtonWithIcon } from './Button';
+export { default as Button, ButtonWithIcon, GradientButtonWithIcon } from './Button';
 export { default as Alert } from './Alert';
 export { default as Card } from './Card';
 export { default as FooterPusher } from './FooterPusher';
 export { default as CollapsibleText } from './CollapsibleText';
+export { colorsToGradient } from './colorsToGradient'
 
 export const Title = styled.Text`
   font-size: 36;
