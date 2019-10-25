@@ -52,35 +52,80 @@ exports.onUserCreate = functions.auth.user().onCreate((user) => {
     .catch(err => console.error(`document ${phoneNumber} errored with ${err}`));
 });
 
-exports.onPosterWebhook = functions.https.onRequest((req, res) => {
-  console.log(util.inspect(req.body));
+exports.onPosterWebhook = functions.https.onRequest(async (req, res) => {
+  console.log(JSON.stringify(req.body));
+  const {
+    account, action, object_id: id, object: kind,
+  } = req.body;
+
+  if (kind === 'transaction' && action === 'closed') {
+    const posterRef = await firestore
+      .collection('accounts_poster')
+      .doc(account);
+
+    const { token } = posterRef.data();
+    const now = new Date();
+    const year = now.getUTCFullYear();
+    const month = now.getUTCMonth() + 1;
+    const day = now.getUTCDate();
+
+    const date = `${year}-${month}-${day}`;
+    const params = qs.stringify(
+      {
+        date_from: date,
+        date_to: date,
+        token,
+      },
+      { addQueryPrefix: true },
+    );
+
+    // request(
+    //   `https://joinposter.com/api/transactions.getTransactions${params}`,
+    //   async (request, response, body) => {
+
+    //   }
+    // );
+
+    return res.sendStatus(200);
+  }
 
   return res.sendStatus(200);
 });
 
 exports.onPosterLogin = functions.https.onRequest((req, res) => {
   const { code, account } = req.query;
-  console.log({ code, account });
+  console.log(JSON.stringify({ code, account }));
 
   if (code && account) {
     request.post(
       {
         url: `https://${account}.joinposter.com/api/v2/auth/access_token`,
-        body: {
+        formData: {
           code,
-          application_id: 1,
+          application_id: '658',
           application_secret: '30b438535a4b8fede763a9e48af57477',
           redirect_uri:
             'https://us-central1-myata24com.cloudfunctions.net/onPosterLogin',
           grant_type: 'authorization_code',
         },
-        json: true,
       },
-      (err, response) => {
-        console.err(err);
-        console.log(response);
+      async (err, response, body) => {
+        if (err) console.error(err);
+        console.log(body);
 
-        return res.redirect(`https://${account}.joinposter.com`);
+        const { account_number: id, access_token: token } = JSON.parse(body);
+
+        await firestore
+          .collection('accounts_poster')
+          .doc(account)
+          .set({
+            id,
+            token,
+          });
+
+        return res.redirect(
+          `https://${account}.joinposter.com/manage/access/integration`,
+        );
       },
     );
   }

@@ -40,7 +40,7 @@ class PanController extends React.Component {
     onReleaseY: PropTypes.func,
     onRelease: PropTypes.func,
 
-    //...PanResponderPropTypes,
+    // ...PanResponderPropTypes,
   };
 
   // getInitialState() {
@@ -57,7 +57,9 @@ class PanController extends React.Component {
   // },
 
   _responder = null;
+
   _listener = null;
+
   _direction = null;
 
   constructor(props) {
@@ -65,8 +67,8 @@ class PanController extends React.Component {
 
     this.deceleration = 0.997;
     if (
-      props.momentumDecayConfig &&
-      this.props.momentumDecayConfig.deceleration
+      props.momentumDecayConfig
+      && this.props.momentumDecayConfig.deceleration
     ) {
       this.deceleration = this.props.momentumDecayConfig.deceleration;
     }
@@ -80,17 +82,20 @@ class PanController extends React.Component {
         if (this.props.onPanResponderGrant) {
           this.props.onPanResponderGrant(...args);
         }
-        let { panX, panY, horizontal, vertical, xMode, yMode } = this.props;
+        const {
+          panX, panY, horizontal, vertical, xMode, yMode,
+        } = this.props;
 
         this.handleResponderGrant(panX, xMode);
         this.handleResponderGrant(panY, yMode);
 
-        this._direction =
-          horizontal && !vertical ? 'x' : vertical && !horizontal ? 'y' : null;
+        this._direction = horizontal && !vertical ? 'x' : vertical && !horizontal ? 'y' : null;
       },
 
-      onPanResponderMove: (_, { dx, dy, x0, y0 }) => {
-        let {
+      onPanResponderMove: (_, {
+        dx, dy, x0, y0,
+      }) => {
+        const {
           panX,
           panY,
           xBounds,
@@ -109,7 +114,12 @@ class PanController extends React.Component {
           if (dx2 + dy2 > directionLockDistance) {
             this._direction = dx2 > dy2 ? 'x' : 'y';
             if (this.props.onDirectionChange) {
-              this.props.onDirectionChange(this._direction, { dx, dy, x0, y0 });
+              this.props.onDirectionChange(this._direction, {
+                dx,
+                dy,
+                x0,
+                y0,
+              });
             }
           }
         }
@@ -117,24 +127,31 @@ class PanController extends React.Component {
         const dir = this._direction;
 
         if (this.props.onPanResponderMove) {
-          this.props.onPanResponderMove(_, { dx, dy, x0, y0 });
+          this.props.onPanResponderMove(_, {
+            dx,
+            dy,
+            x0,
+            y0,
+          });
         }
 
         if (horizontal && (!lockDirection || dir === 'x')) {
-          let [xMin, xMax] = xBounds;
+          const [xMin, xMax] = xBounds;
 
           this.handleResponderMove(panX, dx, xMin, xMax, overshootX);
         }
 
         if (vertical && (!lockDirection || dir === 'y')) {
-          let [yMin, yMax] = yBounds;
+          const [yMin, yMax] = yBounds;
 
           this.handleResponderMove(panY, dy, yMin, yMax, overshootY);
         }
       },
 
-      onPanResponderRelease: (_, { vx, vy, dx, dy }) => {
-        let {
+      onPanResponderRelease: (_, {
+        vx, vy, dx, dy,
+      }) => {
+        const {
           panX,
           panY,
           xBounds,
@@ -155,45 +172,59 @@ class PanController extends React.Component {
         const dir = this._direction;
 
         if (this.props.onRelease) {
-          cancel = this.props.onRelease({ vx, vy, dx, dy }) === false;
+          cancel = this.props.onRelease({
+            vx,
+            vy,
+            dx,
+            dy,
+          }) === false;
         }
 
         if (!cancel && horizontal && (!lockDirection || dir === 'x')) {
-          let [xMin, xMax] = xBounds;
+          const [xMin, xMax] = xBounds;
           if (this.props.onReleaseX) {
-            cancel = this.props.onReleaseX({ vx, vy, dx, dy }) === false;
+            cancel = this.props.onReleaseX({
+              vx,
+              vy,
+              dx,
+              dy,
+            }) === false;
           }
-          !cancel &&
-            this.handleResponderRelease(
+          !cancel
+            && this.handleResponderRelease(
               panX,
               xMin,
               xMax,
               vx,
               overshootX,
               xMode,
-              snapSpacingX
+              snapSpacingX,
             );
         }
 
         if (!cancel && vertical && (!lockDirection || dir === 'y')) {
-          let [yMin, yMax] = yBounds;
+          const [yMin, yMax] = yBounds;
           if (this.props.onReleaseY) {
-            cancel = this.props.onReleaseY({ vx, vy, dx, dy }) === false;
+            cancel = this.props.onReleaseY({
+              vx,
+              vy,
+              dx,
+              dy,
+            }) === false;
           }
-          !cancel &&
-            this.handleResponderRelease(
+          !cancel
+            && this.handleResponderRelease(
               panY,
               yMin,
               yMax,
               vy,
               overshootY,
               yMode,
-              snapSpacingY
+              snapSpacingY,
             );
         }
 
-        this._direction =
-          horizontal && !vertical ? 'x' : vertical && !horizontal ? 'y' : null;
+        this._direction = horizontal && !vertical ? 'x' : vertical && !horizontal ? 'y' : null;
       },
     });
   }
@@ -221,7 +252,7 @@ class PanController extends React.Component {
           break;
       }
     }
-    val = val - anim._offset;
+    val -= anim._offset;
     anim.setValue(val);
   }
 
@@ -232,7 +263,7 @@ class PanController extends React.Component {
     velocity,
     overshoot,
     mode,
-    snapSpacing
+    snapSpacing,
   ) {
     anim.flattenOffset();
 
@@ -277,7 +308,7 @@ class PanController extends React.Component {
             max,
             velocity,
             snapSpacing,
-            overshoot
+            overshoot,
           );
           break;
 
@@ -392,10 +423,9 @@ class PanController extends React.Component {
 
     while (true) {
       t += 16;
-      x =
-        x0 +
-        (vx / (1 - this.deceleration)) *
-          (1 - Math.exp(-(1 - this.deceleration) * t));
+      x = x0
+        + (vx / (1 - this.deceleration))
+          * (1 - Math.exp(-(1 - this.deceleration) * t));
       if (Math.abs(x - x1) < 0.1) {
         x1 = x;
         break;
@@ -412,10 +442,9 @@ class PanController extends React.Component {
     let vf;
     while (true) {
       t += 16;
-      x =
-        x0 +
-        (vx / (1 - this.deceleration)) *
-          (1 - Math.exp(-(1 - this.deceleration) * t));
+      x = x0
+        + (vx / (1 - this.deceleration))
+          * (1 - Math.exp(-(1 - this.deceleration) * t));
       vf = (x - x1) / 16;
       if (x > bounds[0] && x < bounds[1]) {
         break;

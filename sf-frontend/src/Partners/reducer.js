@@ -1,4 +1,4 @@
-export default function(store) {
+export default function (store) {
   store.on(
     'partners/update',
     (prevState, { partners, byId: partnersById }) => ({

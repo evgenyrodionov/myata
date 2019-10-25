@@ -7,37 +7,17 @@ import keyBy from 'lodash/keyBy';
 import { mapDocs as mapPartners } from './api';
 import fb from '../firebase';
 
-import { Card } from '../ui';
+import {
+  Card, Table, Thead, Tbody, Th, Tr, Td,
+} from '../ui';
 
-const Table = styled.table`
-  width: 100%;
-`;
-const Thead = styled.thead``;
-const Tbody = styled.tbody``;
-const Th = styled.th``;
-const Tr = styled.tr``;
-const Td = styled.td``;
-
-// - владелец
-// - его контактный телефон
-// - номер договора
-// - адрес мяты
-// - какая форма организации (ООО, ИП или то, и то)
-// - какая дата оплаты франшизы
-// - документы (сканы) - акты, договор франшизы, договоры по федеральным контрактам (яндекс, санинбев и др.)
-//  - дата окончания договора
-// - лояльность партнера (3 параметра - не лоялен, нейтрально, лояльный)
-
-export default function() {
-  const { dispatch, partnersById = {}, partners = [] } = useStoreon(
-    'partners',
-    'partnersById',
-  );
+export default function () {
+  const { dispatch, partners = [] } = useStoreon('partners', 'partnersById');
 
   React.useEffect(() => {
     fb.firestore()
       .collection('partners')
-      .onSnapshot(async docs => {
+      .onSnapshot(async (docs) => {
         const mapped = await mapPartners(docs);
         const byId = keyBy(mapped, 'id');
 
@@ -65,7 +45,7 @@ export default function() {
           </Tr>
         </Thead>
         <Tbody>
-          {partners.map(id => {
+          {partners.map((id) => {
             const {
               owner = {},
               places = [],

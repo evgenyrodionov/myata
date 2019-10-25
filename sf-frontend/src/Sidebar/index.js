@@ -92,7 +92,7 @@ const Divider = styled.hr`
   margin-bottom: 18px;
 `;
 
-export default function({ user = {} }) {
+export default function ({ user = {} }) {
   return (
     <Nav>
       <Logo to="/">СФ</Logo>
@@ -109,10 +109,10 @@ export default function({ user = {} }) {
           </NavLink>
         </NavItem>
         <NavItem>
-          <NavLink to="/partners">Партнёры</NavLink>
+          <NavLink to="/users">Люди</NavLink>
         </NavItem>
         <NavItem>
-          <NavLink to="/guests">Гости</NavLink>
+          <NavLink to="/partners">Партнёры</NavLink>
         </NavItem>
         <NavItem>
           <NavLink to="/contracts">Контракты</NavLink>

@@ -104,8 +104,7 @@ const NewsDate = styled.p`
 `;
 
 const NewsImage = styled.img`
-  height: 256px;
-  width: auto;
+  width: 100%;
   object-fit: contain;
   border-radius: 10px;
   margin-top: 16px;
@@ -132,18 +131,20 @@ function News({ news = [], ...props }) {
   return (
     <Card title={props.title}>
       <NewsSt>
-        {news.map(({ title, description, coverId, eventAt }) => (
+        {news.map(({
+          title, description, coverId, eventAt,
+        }) => (
           <NewsItem key={title}>
             <NewsCard>
               <NewsDate>{defaultDateFormat(eventAt.seconds * 1000)}</NewsDate>
               <NewsTitle to="/">{title}</NewsTitle>
               {description && (
-                <NewsDescription
-                  dangerouslySetInnerHTML={generateHTML(description)}
-                />
+              <NewsDescription
+                dangerouslySetInnerHTML={generateHTML(description)}
+              />
               )}
               {coverId && (
-                <NewsImage src={`${getPhotoUrl(coverId)}/-/resize/x512/`} />
+              <NewsImage src={`${getPhotoUrl(coverId)}/-/resize/x512/`} />
               )}
             </NewsCard>
           </NewsItem>
@@ -211,7 +212,7 @@ function formatNumberAndCurrency(value, name) {
   return formatNumber(value);
 }
 
-export default function({ places = [], news = [] }) {
+export default function ({ places = [], news = [] }) {
   return (
     <div className="container-fluid">
       <div className="row">
@@ -246,21 +247,17 @@ export default function({ places = [], news = [] }) {
                     yAxisId="invoices_amount"
                     dataKey="Кол-во чеков"
                     barSize={20}
-                    fill="#5784BD"
+                    fill="#5087FA"
                   />
                   <Line
                     yAxisId="revenue"
                     type="monotone"
                     dataKey="Выручка"
-                    stroke="#A30D2F"
+                    stroke="#40C2CD"
+                    strokeWidth={2}
                   />
-                  {/* <Line
-                  type="monotone"
-                   dataKey="edition" stroke="#111" /> */}
-                  {/* <Bar dataKey="uv" barSize={20} fill="#413ea0" /> */}
                   <Legend formatter={renderColorfulLegendText} />
                   <Tooltip formatter={formatNumberAndCurrency} />
-                  {/* <Tooltip content={<CustomTooltip />} /> */}
                 </ComposedChart>
               </ResponsiveContainer>
             </div>
@@ -270,14 +267,15 @@ export default function({ places = [], news = [] }) {
 
       <div className="row">
         <div className="col-lg-6">
-          <Card title="Новости УК">Новостей пока нет 😔</Card>
+          {/* <Card title="Новости УК">Новостей пока нет 😔</Card> */}
           <News news={news} title="Федеральные новости" />
         </div>
         <div className="col-lg-6">
           <Places places={places} />
-          <Card title="Последние события">
+
+          {/* <Card title="Последние события">
             <i>Запланировано на будущие релизы</i>
-          </Card>
+          </Card> */}
         </div>
       </div>
     </div>

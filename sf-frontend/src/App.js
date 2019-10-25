@@ -2,11 +2,13 @@ import React from 'react';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import styled from 'styled-components';
 import StoreContext from 'storeon/react/context';
+import orderBy from 'lodash/orderBy';
 
 import Sidebar from './Sidebar';
 // import Login from './Login';
 import Dashboard from './Dashboard';
 import Partners from './Partners';
+import Users from './Users';
 import PartnersCreate from './Partners/Create';
 import PlaceDetails from './Places/Details';
 
@@ -63,7 +65,8 @@ function App() {
   React.useEffect(() => {
     fb.firestore()
       .collection('news')
-      .onSnapshot(docs => setNews(mapNews(docs)));
+      .onSnapshot(docs =>
+        setNews(orderBy(mapNews(docs), 'eventAt.seconds', 'desc')));
   }, []);
 
   return (
@@ -93,6 +96,7 @@ function App() {
             />
             <Route exact path="/partners" component={Partners} />
             <Route exact path="/partners/create" component={PartnersCreate} />
+            <Route exact path="/users" component={Users} />
             {/* <Route path="/login" component={Login} /> */}
           </View>
         </Main>
@@ -101,7 +105,7 @@ function App() {
   );
 }
 
-export default function() {
+export default function () {
   return (
     <StoreContext.Provider value={store}>
       <App />

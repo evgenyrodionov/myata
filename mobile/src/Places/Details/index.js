@@ -48,7 +48,7 @@ const daysOfWeek = [
 const kindToColor = {
   default: '#20B4AB',
   edition: '#E79F6D',
-  // platinum: '#ffffff',
+  platinum: '#ffffff',
 };
 
 const TimeTableSt = styled.View`
@@ -300,15 +300,20 @@ function Actions({ navigation, item: place = {} }) {
           }
 
           if (buttonIndex === 1) {
-            return navigation.navigate('PlacesMap', { initial: { latitude: address.latitude, longitude: address.longitude } });
+            return navigation.navigate('PlacesMap', {
+              initial: {
+                latitude: address.latitude,
+                longitude: address.longitude,
+              },
+            });
           }
 
           return null;
         }
 
         if (buttonIndex === 0) {
-            return navigation.navigate('PlacesMap');
-          }
+          return navigation.navigate('PlacesMap');
+        }
 
         return null;
       },
