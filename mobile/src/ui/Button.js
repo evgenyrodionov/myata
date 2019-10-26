@@ -80,7 +80,7 @@ export const GradientButtonWithIcon = ({
   ...props
 }) =>  (
   <GradientWrapper {...props}>
-    <LinearGradient style={styles.gradientButton} start={{x: 0, y: 0}} end={{x: 1, y: 1}} colors={colors}  useAngle={true} angle={179} angleCenter={{ x: 0.5, y: 0.5}}>
+    <LinearGradient colors={colors} style={styles.gradientButton} start={{x: 0.5, y: 0}} end={{x: 0.5, y: 1}} >
       <Icon>{icon}</Icon>
         <Text center={center} color={textColor}>
           {children}

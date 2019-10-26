@@ -262,6 +262,8 @@ function Actions({ navigation, item: place = {} }) {
 
   const primaryColor = kindToColor[place.kind]
 
+  const favoriteButtonTextColor = primaryColor === kindToColor.platinum ? '#191919' : '#eee'
+
   React.useEffect(() => {
     Linking.canOpenURL(yandexNaviURL)
       .then(res => setCanUseNavi(res))
@@ -343,9 +345,9 @@ function Actions({ navigation, item: place = {} }) {
     <ActionsSt>
       <ActionsBlock>
         <GradientButtonWithIcon
-          icon={isFavorite ? <IconHeartFilled color="#eee"  size={20} /> : <IconHeart color="#eee"  size={20} />}
+          icon={isFavorite ? <IconHeartFilled color={favoriteButtonTextColor}  size={20} /> : <IconHeart color={favoriteButtonTextColor}  size={20} />}
           colors={colorsToGradient[primaryColor] || colorsToGradient[kindToColor.default]}
-          textColor="#eee"
+          textColor={favoriteButtonTextColor}
           onPress={onFavoritePress}
         >
           {!isFavorite ? <>Добавить в избранное</> : <>Удалить из избранного</>}
