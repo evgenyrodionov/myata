@@ -1,7 +1,7 @@
 import React from 'react';
 import Svg, { Path, LinearGradient, Stop } from 'react-native-svg';
 
-import { colorsToGradient } from '../../colorsToGradient'
+import colorsToGradient from '../../colorsToGradient';
 
 const SvgComponent = ({
   size,

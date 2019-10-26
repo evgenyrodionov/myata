@@ -11,9 +11,8 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-  }
-})
-
+  },
+});
 
 const ButtonSt = styled.TouchableOpacity`
   padding-vertical: 12;
@@ -23,14 +22,13 @@ const ButtonSt = styled.TouchableOpacity`
   display: flex;
   flex-direction: row;
   align-items: center;
-  
+
   background-color: ${p => p.color};
 `;
 
 const GradientWrapper = styled.TouchableOpacity`
   width: 100%;
-`
-
+`;
 
 const Text = styled.Text`
   font-size: 14;
@@ -45,9 +43,7 @@ const Icon = styled.View`
   margin-right: 8;
 `;
 
-const Button = ({
-  children, bgColor, textColor, center, ...props
-}) => (
+const Button = ({ children, bgColor, textColor, center, ...props }) => (
   <ButtonSt color={bgColor} {...props}>
     <Text center={center} color={textColor}>
       {children}
@@ -78,17 +74,20 @@ export const GradientButtonWithIcon = ({
   textColor,
   center,
   ...props
-}) =>  (
+}) => (
   <GradientWrapper {...props}>
-    <LinearGradient colors={colors} style={styles.gradientButton} start={{x: 0.5, y: 0}} end={{x: 0.5, y: 1}} >
+    <LinearGradient
+      colors={colors}
+      style={styles.gradientButton}
+      start={{ x: 0.5, y: 0 }}
+      end={{ x: 0.5, y: 1 }}
+    >
       <Icon>{icon}</Icon>
-        <Text center={center} color={textColor}>
-          {children}
-        </Text>
+      <Text center={center} color={textColor}>
+        {children}
+      </Text>
     </LinearGradient>
   </GradientWrapper>
 );
-
-
 
 export default Button;
