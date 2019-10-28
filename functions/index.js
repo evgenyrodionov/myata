@@ -182,6 +182,28 @@ exports.onNewReservation = functions.firestore
       .catch(err => console.log(err));
   });
 
+exports.calculateRating = functions.pubsub
+  .schedule('0 0 * * *')
+  .timeZone('Europe/Moscow')
+  .onRun(async () => {
+    const places = await firestore.collection('places').get();
+
+    return places.forEach((doc) => {
+      const data = doc.data();
+
+      if ((data.reviews || []).length > 0) {
+        const allRatings = data.reviews.reduce(
+          (acc, review) => acc + review.rating,
+          0,
+        );
+
+        doc.ref.update({
+          rating: (allRatings / data.reviews.length).toFixed(2),
+        });
+      }
+    });
+  });
+
 // function listAllUsers(req, res) {
 //   admin
 //     .auth()
