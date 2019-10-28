@@ -1,7 +1,5 @@
 import React from 'react';
-import {
-  Dimensions, FlatList, Linking, ActionSheetIOS,
-} from 'react-native';
+import { Dimensions, FlatList, Linking, ActionSheetIOS } from 'react-native';
 import styled from 'styled-components';
 import Accordion from 'react-native-collapsible/Accordion';
 import fb from 'react-native-firebase';
@@ -16,6 +14,7 @@ import {
   Title,
   Card,
   ButtonWithIcon,
+  GradientButtonWithIcon,
   IconPhone,
   IconReservation,
   IconSale,
@@ -24,6 +23,7 @@ import {
   IconHeart,
   IconHeartFilled,
   IconMapWithMarker,
+  colorsToGradient,
 } from '../../ui';
 import Address from './Address';
 import Highlights from './Highlights';
@@ -47,8 +47,8 @@ const daysOfWeek = [
 ];
 
 const kindToColor = {
-  default: '#20B4AB',
-  edition: '#E79F6D',
+  default: '#20b4ab',
+  edition: '#e79f6d',
   platinum: '#ffffff',
 };
 
@@ -258,6 +258,11 @@ function Actions({ navigation, item: place = {} }) {
 
   const yandexNaviURL = `yandexnavi://map_search?text=Мята ${address.title}`;
 
+  const primaryColor = kindToColor[place.kind];
+
+  const favoriteButtonTextColor =
+    primaryColor === kindToColor.platinum ? '#191919' : '#eee';
+
   React.useEffect(() => {
     Linking.canOpenURL(yandexNaviURL)
       .then(res => setCanUseNavi(res))
@@ -270,7 +275,7 @@ function Actions({ navigation, item: place = {} }) {
         options: ['Позвонить в заведение', 'Написать администратору', 'Отмена'],
         cancelButtonIndex: 2,
       },
-      (buttonIndex) => {
+      buttonIndex => {
         if (buttonIndex === 0) {
           return Linking.openURL(`tel:${place.phoneNumber}`);
         }
@@ -294,7 +299,7 @@ function Actions({ navigation, item: place = {} }) {
         options,
         cancelButtonIndex: options.length - 1,
       },
-      (buttonIndex) => {
+      buttonIndex => {
         if (canUseNavi) {
           if (buttonIndex === 0) {
             return Linking.openURL(yandexNaviURL);
@@ -338,14 +343,23 @@ function Actions({ navigation, item: place = {} }) {
   return (
     <ActionsSt>
       <ActionsBlock>
-        <ButtonWithIcon
-          icon={isFavorite ? <IconHeartFilled color="#eee"  size={20} /> : <IconHeart color="#eee"  size={20} />}
-          bgColor={kindToColor[place.kind] || kindToColor.default}
-          textColor="#eee"
+        <GradientButtonWithIcon
+          icon={
+            isFavorite ? (
+              <IconHeartFilled color={favoriteButtonTextColor} size={20} />
+            ) : (
+              <IconHeart color={favoriteButtonTextColor} size={20} />
+            )
+          }
+          colors={
+            colorsToGradient[primaryColor] ||
+            colorsToGradient[kindToColor.default]
+          }
+          textColor={favoriteButtonTextColor}
           onPress={onFavoritePress}
         >
           {!isFavorite ? <>Добавить в избранное</> : <>Удалить из избранного</>}
-        </ButtonWithIcon>
+        </GradientButtonWithIcon>
       </ActionsBlock>
       <ActionsBlock>
         <ButtonWithIcon

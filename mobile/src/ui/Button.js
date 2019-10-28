@@ -1,16 +1,33 @@
 import React from 'react';
 import styled from 'styled-components';
+import { StyleSheet } from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
+
+const styles = StyleSheet.create({
+  gradientButton: {
+    padding: 12,
+    marginBottom: 8,
+    borderRadius: 8,
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+});
 
 const ButtonSt = styled.TouchableOpacity`
   padding-vertical: 12;
   padding-horizontal: 12;
   margin-bottom: 8;
-  background-color: ${p => p.color};
   border-radius: 8;
-  width: 100%;
   display: flex;
   flex-direction: row;
   align-items: center;
+
+  background-color: ${p => p.color};
+`;
+
+const GradientWrapper = styled.TouchableOpacity`
+  width: 100%;
 `;
 
 const Text = styled.Text`
@@ -26,9 +43,7 @@ const Icon = styled.View`
   margin-right: 8;
 `;
 
-const Button = ({
-  children, bgColor, textColor, center, ...props
-}) => (
+const Button = ({ children, bgColor, textColor, center, ...props }) => (
   <ButtonSt color={bgColor} {...props}>
     <Text center={center} color={textColor}>
       {children}
@@ -50,6 +65,29 @@ export const ButtonWithIcon = ({
       {children}
     </Text>
   </ButtonSt>
+);
+
+export const GradientButtonWithIcon = ({
+  children,
+  icon,
+  colors,
+  textColor,
+  center,
+  ...props
+}) => (
+  <GradientWrapper {...props}>
+    <LinearGradient
+      colors={colors}
+      style={styles.gradientButton}
+      start={{ x: 0.5, y: 0 }}
+      end={{ x: 0.5, y: 1 }}
+    >
+      <Icon>{icon}</Icon>
+      <Text center={center} color={textColor}>
+        {children}
+      </Text>
+    </LinearGradient>
+  </GradientWrapper>
 );
 
 export default Button;
