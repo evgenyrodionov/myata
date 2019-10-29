@@ -189,16 +189,16 @@ exports.calculateRating = functions.pubsub
     const places = await firestore.collection('places').get();
 
     return places.forEach((doc) => {
-      const data = doc.data();
+      const { reviews = [] } = doc.data();
 
-      if ((data.reviews || []).length > 0) {
-        const allRatings = data.reviews.reduce(
+      if (reviews.length > 0) {
+        const allRatings = reviews.reduce(
           (acc, review) => acc + review.rating,
           0,
         );
 
         doc.ref.update({
-          rating: (allRatings / data.reviews.length).toFixed(2),
+          rating: (allRatings / reviews.length).toFixed(2),
         });
       }
     });
