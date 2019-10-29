@@ -42,6 +42,8 @@ steps:
     environment:
       PUBLIC_URL:
         from_secret: PUBLIC_URL
+      GENERATE_SOURCEMAP:
+        from_secret: GENERATE_SOURCEMAP
       REACT_APP_FIREBASE_API_KEY:
         from_secret: REACT_APP_FIREBASE_API_KEY
       REACT_APP_FIREBASE_AUTH_DOMAIN:
@@ -54,6 +56,12 @@ steps:
         from_secret: REACT_APP_FIREBASE_STORAGE_BUCKET
       REACT_APP_FIREBASE_MESSAGING_SENDER_ID:
         from_secret: REACT_APP_FIREBASE_MESSAGING_SENDER_ID
+      REACT_APP_FIREBASE_APP_ID:
+        from_secret: REACT_APP_FIREBASE_APP_ID
+      REACT_APP_UPLOADCARE_KEY:
+        from_secret: REACT_APP_UPLOADCARE_KEY
+      REACT_APP_SENTRY_DSN:
+        from_secret: REACT_APP_SENTRY_DSN
     when:
       branch:
         - master
