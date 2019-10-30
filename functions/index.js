@@ -6,6 +6,7 @@ const Twilio = require('twilio');
 const nanoid = require('nanoid/generate');
 const request = require('request');
 const qs = require('qs');
+const differenceInHours = require('date-fns/differenceInHours');
 
 const toDate = require('date-fns/toDate');
 const { ru: ruLocale } = require('date-fns/locale');
@@ -190,15 +191,18 @@ exports.calculateRating = functions.pubsub
 
     return places.forEach((doc) => {
       const { reviews = [] } = doc.data();
+      const actualReviews = reviews.filter(
+        review => differenceInHours(new Date(), review.createdAt.toDate()) > 72,
+      );
 
-      if (reviews.length > 0) {
-        const allRatings = reviews.reduce(
+      if (actualReviews.length > 0) {
+        const allRatings = actualReviews.reduce(
           (acc, review) => acc + review.rating,
           0,
         );
 
         doc.ref.update({
-          rating: (allRatings / reviews.length).toFixed(2),
+          rating: (allRatings / actualReviews.length).toFixed(2),
         });
       }
     });
