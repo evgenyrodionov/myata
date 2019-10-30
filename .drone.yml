@@ -1,0 +1,135 @@
+---
+kind: pipeline
+name: build
+
+clone:
+  depth: 1
+
+steps:
+  - name: build-firebase-functions
+    pull: default
+    image: node:lts-alpine
+    commands:
+      - cd functions
+      - yarn --ignore-engines
+    when:
+      branch:
+        - develop
+        - master
+      event:
+        - push
+
+  # - name: build-frontend-prod
+  #   pull: default
+  #   image: node:lts-alpine
+  #   commands:
+  #     - cd frontend
+  #     - yarn
+  #     - yarn build
+  #   when:
+  #     branch:
+  #       - master
+  #     event:
+  #       - push
+
+  - name: build-system-frontend-prod
+    pull: default
+    image: node:lts-alpine
+    commands:
+      - cd sf-frontend
+      - yarn
+      - yarn build
+    environment:
+      PUBLIC_URL:
+        from_secret: PUBLIC_URL
+      GENERATE_SOURCEMAP:
+        from_secret: GENERATE_SOURCEMAP
+      REACT_APP_FIREBASE_API_KEY:
+        from_secret: REACT_APP_FIREBASE_API_KEY
+      REACT_APP_FIREBASE_AUTH_DOMAIN:
+        from_secret: REACT_APP_FIREBASE_AUTH_DOMAIN
+      REACT_APP_FIREBASE_DATABASEURL:
+        from_secret: REACT_APP_FIREBASE_DATABASEURL
+      REACT_APP_FIREBASE_PROJECT_ID:
+        from_secret: REACT_APP_FIREBASE_PROJECT_ID
+      REACT_APP_FIREBASE_STORAGE_BUCKET:
+        from_secret: REACT_APP_FIREBASE_STORAGE_BUCKET
+      REACT_APP_FIREBASE_MESSAGING_SENDER_ID:
+        from_secret: REACT_APP_FIREBASE_MESSAGING_SENDER_ID
+      REACT_APP_FIREBASE_APP_ID:
+        from_secret: REACT_APP_FIREBASE_APP_ID
+      REACT_APP_UPLOADCARE_KEY:
+        from_secret: REACT_APP_UPLOADCARE_KEY
+      REACT_APP_SENTRY_DSN:
+        from_secret: REACT_APP_SENTRY_DSN
+    when:
+      branch:
+        - master
+      event:
+        - push
+
+  - name: deploy-firebase-prod
+    pull: default
+    image: node:lts-alpine
+    commands:
+      - yarn add firebase-tools
+      - yarn firebase deploy --token $FIREBASE_TOKEN
+    environment:
+      FIREBASE_TOKEN:
+        from_secret: FIREBASE_TOKEN
+    when:
+      branch:
+        - master
+      event:
+        - push
+
+trigger:
+  branch:
+    - master
+    - develop
+# ---
+# kind: pipeline
+# name: after
+
+# clone:
+#   disable: true
+
+# steps:
+#   # - name: telegram-notification
+#   #   pull: default
+#   #   image: appleboy/drone-telegram
+#   #   settings:
+#   #     format: markdown
+#   #     message: >
+#   #       {{#success build.status}}
+#   #       ✅ Build [#{{build.number}}]({{build.link}}) of `{{repo.name}}` succeeded.
+#   #       - {{commit.message}} ([{{truncate commit.sha 8}}]({{commit.link}})@{{commit.branch}} by {{commit.author}})
+#   #       {{else}}
+#   #       ❌ Build [#{{build.number}}]({{build.link}}) of `{{repo.name}}` failed.
+#   #       - {{commit.message}} ([{{truncate commit.sha 8}}]({{commit.link}})@{{commit.branch}} by {{commit.author}})
+#   #       {{/success}}
+#   #   environment:
+#   #     TELEGRAM_TO:
+#   #       from_secret: telegram_chat_id
+#   #     TELEGRAM_TOKEN:
+#   #       from_secret: telegram_access_token
+#   #   when:
+#   #     branch:
+#   #       - master
+#   #       - develop
+#   #     event:
+#   #       - push
+#   #     status:
+#   #       - success
+#   #       - failure
+
+# depends_on:
+#   - build
+
+# trigger:
+#   branch:
+#     - master
+#     - develop
+#   status:
+#     - success
+#     - failure
