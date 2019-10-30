@@ -24,8 +24,6 @@ export default withNavigation(({ navigation }) => {
     },
   );
 
-  console.warn({ initial });
-
   React.useEffect(() => {
     async function effect() {
       try {
