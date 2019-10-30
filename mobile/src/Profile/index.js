@@ -275,7 +275,7 @@ export async function sendEmail(to) {
 }
 
 function Support() {
-  const [appInfo, updateAppInfo] = React.useState({
+  const [appInfo = {}, updateAppInfo] = React.useState({
     label: '...',
     appVersion: '...',
   });
