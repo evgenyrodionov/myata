@@ -56,6 +56,8 @@ target 'myata' do
 
   pod 'BVLinearGradient', :path => '../node_modules/react-native-linear-gradient'
 
+  pod 'RNSentry', :path => '../node_modules/@sentry/react-native'
+
   target 'myataTests' do
     inherit! :search_paths
   end

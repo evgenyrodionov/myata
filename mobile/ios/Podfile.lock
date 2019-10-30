@@ -257,8 +257,14 @@ PODS:
     - React
   - RNReanimated (1.1.0):
     - React
+  - RNSentry (1.0.9):
+    - React
+    - Sentry (~> 4.4.0)
   - RNSVG (9.5.1):
     - React
+  - Sentry (4.4.1):
+    - Sentry/Core (= 4.4.1)
+  - Sentry/Core (4.4.1)
   - SSZipArchive (2.2.2)
   - UMBarCodeScannerInterface (1.0.0)
   - UMCameraInterface (1.0.0)
@@ -322,6 +328,7 @@ DEPENDENCIES:
   - "RNDateTimePicker (from `../node_modules/@react-native-community/datetimepicker`)"
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
+  - "RNSentry (from `../node_modules/@sentry/react-native`)"
   - RNSVG (from `../node_modules/react-native-svg`)
   - UMBarCodeScannerInterface (from `../node_modules/unimodules-barcode-scanner-interface/ios`)
   - UMCameraInterface (from `../node_modules/unimodules-camera-interface/ios`)
@@ -366,6 +373,7 @@ SPEC REPOS:
     - leveldb-library
     - nanopb
     - Protobuf
+    - Sentry
     - SSZipArchive
 
 EXTERNAL SOURCES:
@@ -452,6 +460,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-gesture-handler"
   RNReanimated:
     :path: "../node_modules/react-native-reanimated"
+  RNSentry:
+    :path: "../node_modules/@sentry/react-native"
   RNSVG:
     :path: "../node_modules/react-native-svg"
   UMBarCodeScannerInterface:
@@ -559,7 +569,9 @@ SPEC CHECKSUMS:
   RNDateTimePicker: 0443103a1deefc342039432d615a0c2a53c9d81c
   RNGestureHandler: 5329a942fce3d41c68b84c2c2276ce06a696d8b0
   RNReanimated: 7a52c90473b5e81c13408d40d797b98387eaddde
+  RNSentry: 2803ba8c8129dcf26b79e9b4d8c80168be6e4390
   RNSVG: 0eb087cfb5d7937be93c45b163b26352a647e681
+  Sentry: 5d312a04e369154aeac616214f4dfc3cbcc8b296
   SSZipArchive: fa16b8cc4cdeceb698e5e5d9f67e9558532fbf23
   UMBarCodeScannerInterface: 53fd3cbf24fe5c58f3ba82ac8c27f0373fbf52fa
   UMCameraInterface: d5a2727e76d6b47e3201f863102c055ddbcc6206
@@ -575,6 +587,6 @@ SPEC CHECKSUMS:
   UMTaskManagerInterface: f88793bd35248182e15591e0aa5b045132312be0
   yoga: 616fde658be980aa60a2158835170f3f9c2d04b4
 
-PODFILE CHECKSUM: 3e54ba83ac4d81e7163ffde7e4456f368487432e
+PODFILE CHECKSUM: f8681ef0791ef81d2ebd8b00b135a7a50a4ecae8
 
 COCOAPODS: 1.8.4

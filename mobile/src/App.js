@@ -1,4 +1,5 @@
 import React from 'react';
+import * as Sentry from '@sentry/react-native';
 import firebase from 'react-native-firebase';
 import { createSwitchNavigator, createAppContainer } from 'react-navigation';
 import codePush from 'react-native-code-push';
@@ -8,6 +9,10 @@ import Main from './Main';
 import Auth from './Auth';
 
 import store from './store';
+
+Sentry.init({
+  dsn: 'https://6d1070e8344447adb36e6d7d5dd09376@sentry.io/1802365',
+});
 
 function AuthChecker(props) {
   React.useEffect(() => {
