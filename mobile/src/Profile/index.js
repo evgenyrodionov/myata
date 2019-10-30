@@ -275,7 +275,7 @@ export async function sendEmail(to) {
 }
 
 function Support() {
-  const [appInfo = {}, updateAppInfo] = React.useState({
+  const [appInfo, updateAppInfo] = React.useState({
     label: '...',
     appVersion: '...',
   });
@@ -286,13 +286,17 @@ function Support() {
       .then(information => updateAppInfo(information));
   }, []);
 
-  return (
-    <SupportSt>
-      <Version>
-        Версия приложения {appInfo.appVersion} ({appInfo.label})
-      </Version>
-    </SupportSt>
-  );
+  if (appInfo) {
+    return (
+      <SupportSt>
+        <Version>
+          Версия приложения {appInfo.appVersion} ({appInfo.label})
+        </Version>
+      </SupportSt>
+    );
+  }
+
+  return null;
 }
 
 export default function Profile({ navigation, ...props }) {
