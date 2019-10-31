@@ -16,7 +16,9 @@ const MapView = styled(OrigMapView)`
 
 export default withNavigation(({ navigation }) => {
   const initial = navigation.getParam('initial');
+  const id = navigation.getParam('id');
   const { places = [] } = useStoreon('placesById', 'places');
+  const markerRef = React.useRef();
   const [coords, setCoords] = React.useState(
     initial || {
       latitude: 55.77,
@@ -37,7 +39,17 @@ export default withNavigation(({ navigation }) => {
     }
 
     if (!initial) effect();
+
+    if (markerRef.current !== undefined) {
+      return markerRef.current.hideCallout();
+    }
   }, []);
+
+  React.useEffect(() => {
+    if (markerRef.current !== undefined) {
+      markerRef.current.showCallout();
+    }
+  }, [markerRef]);
 
   return (
     <Card withoutPadding>
@@ -52,6 +64,7 @@ export default withNavigation(({ navigation }) => {
         {places.map(
           ({ id: placeId, title: placeTitle, address: placeAddress = {} }) => (
             <Marker
+              ref={placeId === id ? markerRef : null}
               key={placeId}
               coordinate={{
                 latitude: Number(placeAddress.lat),

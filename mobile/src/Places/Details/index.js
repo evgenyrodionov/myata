@@ -320,6 +320,7 @@ function Actions({ navigation, item: place = {} }) {
 
         if (buttonIndex === 0) {
           return navigation.navigate('PlacesMap', {
+            id: place.id,
             initial: {
               latitude: address.lat,
               longitude: address.lon,
