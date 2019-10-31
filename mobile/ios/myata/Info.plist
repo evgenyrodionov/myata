@@ -63,9 +63,9 @@
 	<key>NSContactsUsageDescription</key>
 	<string>Allow Мята experiences to access your contacts</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>Allow Мята to use your location</string>
+	<string>Геолокация нужна чтобы показывать заведения рядом</string>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>Allow Мята to use your location</string>
+	<string>Геолокация нужна чтобы показывать заведения рядом</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Allow Мята to use your location</string>
 	<key>NSMicrophoneUsageDescription</key>
