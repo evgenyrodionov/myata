@@ -67,7 +67,7 @@
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>Геолокация нужна чтобы показывать заведения рядом</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Allow Мята to use your location</string>
+	<string>Геолокация нужна чтобы показывать заведения рядом</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Allow Мята to access your microphone</string>
 	<key>NSMotionUsageDescription</key>
