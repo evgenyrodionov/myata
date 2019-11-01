@@ -231,14 +231,16 @@ export default function Reviews({
   const { user } = useStoreon('user');
 
   const [isOpened, toggleOpened] = React.useState(false);
-  const filteredReviews = reviews.filter((review) => {
-    const diffInHours = differenceInHours(new Date(), review.createdAt);
-    const remainingHours = 72 - diffInHours;
-    const isVisible = user.id === review.user.id
-      || (user.id !== review.user.id && remainingHours < 0);
+  const filteredReviews = reviews.filter(
+    ({ user: reviewUser = {}, createdAt, personal }) => {
+      const diffInHours = differenceInHours(new Date(), createdAt);
+      const remainingHours = 72 - diffInHours;
+      const isVisible = user.id === reviewUser.id
+        || (user.id !== reviewUser.id && remainingHours < 0);
 
-    return isVisible && !review.personal;
-  });
+      return isVisible && !personal;
+    },
+  );
 
   function onMomentumScrollEnd() {
     toggleOpened(false);

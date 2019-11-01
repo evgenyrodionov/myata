@@ -1,5 +1,7 @@
 import React from 'react';
-import { Dimensions, FlatList, Linking, ActionSheetIOS } from 'react-native';
+import {
+  Dimensions, FlatList, Linking, ActionSheetIOS,
+} from 'react-native';
 import styled from 'styled-components';
 import Accordion from 'react-native-collapsible/Accordion';
 import fb from 'react-native-firebase';
@@ -258,10 +260,8 @@ function Actions({ navigation, item: place = {} }) {
 
   const yandexNaviURL = `yandexnavi://map_search?text=Мята ${address.title}`;
 
-  const primaryColor = kindToColor[place.kind];
-
-  const favoriteButtonTextColor =
-    primaryColor === kindToColor.platinum ? '#191919' : '#eee';
+  const color = kindToColor[place.kind];
+  const favoriteButtonTextColor = place.kind === 'platinum' ? '#191919' : '#eee';
 
   React.useEffect(() => {
     Linking.canOpenURL(yandexNaviURL)
@@ -275,7 +275,7 @@ function Actions({ navigation, item: place = {} }) {
         options: ['Позвонить в заведение', 'Написать администратору', 'Отмена'],
         cancelButtonIndex: 2,
       },
-      buttonIndex => {
+      (buttonIndex) => {
         if (buttonIndex === 0) {
           return Linking.openURL(`tel:${place.phoneNumber}`);
         }
@@ -299,7 +299,7 @@ function Actions({ navigation, item: place = {} }) {
         options,
         cancelButtonIndex: options.length - 1,
       },
-      buttonIndex => {
+      (buttonIndex) => {
         if (canUseNavi) {
           if (buttonIndex === 0) {
             return Linking.openURL(yandexNaviURL);
@@ -340,25 +340,24 @@ function Actions({ navigation, item: place = {} }) {
       .update({ favorites: fb.firestore.FieldValue.arrayUnion(place.id) });
   }
 
+  const favoriteButtonIcon = isFavorite ? (
+    <IconHeartFilled color={favoriteButtonTextColor} size={20} />
+  ) : (
+    <IconHeart color={favoriteButtonTextColor} size={20} />
+  );
+
   return (
     <ActionsSt>
       <ActionsBlock>
         <GradientButtonWithIcon
-          icon={
-            isFavorite ? (
-              <IconHeartFilled color={favoriteButtonTextColor} size={20} />
-            ) : (
-              <IconHeart color={favoriteButtonTextColor} size={20} />
-            )
-          }
+          icon={favoriteButtonIcon}
           colors={
-            colorsToGradient[primaryColor] ||
-            colorsToGradient[kindToColor.default]
+            colorsToGradient[color] || colorsToGradient[kindToColor.default]
           }
           textColor={favoriteButtonTextColor}
           onPress={onFavoritePress}
         >
-          {!isFavorite ? <>Добавить в избранное</> : <>Удалить из избранного</>}
+          {!isFavorite ? 'Добавить в избранное' : 'Удалить из избранного'}
         </GradientButtonWithIcon>
       </ActionsBlock>
       <ActionsBlock>

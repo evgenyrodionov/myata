@@ -182,9 +182,11 @@ export default function Card({ item, onPress: parentOnPress = () => {} }) {
       <StCard isDisabled={item.disabled}>
         <Header>
           <Title>{title}</Title>
+
           {item.favorite && (
             <IconHeartFilled
               color={kindToColor[item.kind] || kindToColor.default}
+              withGradient
               size={26}
             />
           )}
