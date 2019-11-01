@@ -18,7 +18,8 @@ export default withNavigation(({ navigation }) => {
   const initial = navigation.getParam('initial');
   const id = navigation.getParam('id');
   const { places = [] } = useStoreon('placesById', 'places');
-  const markerRef = React.useRef();
+  const [calloutsShown, updateCalloutsStatus] = React.useState(false);
+  const [markersRefs, updateRefs] = React.useState({});
   const [coords, setCoords] = React.useState(
     initial || {
       latitude: 55.77,
@@ -40,16 +41,19 @@ export default withNavigation(({ navigation }) => {
 
     if (!initial) effect();
 
-    if (markerRef.current !== undefined) {
-      return markerRef.current.hideCallout();
-    }
+    updateRefs(
+      places.reduce(
+        (acc, current) => ({ ...acc, [current.id]: React.createRef() }),
+        {},
+      ),
+    );
   }, []);
 
   React.useEffect(() => {
-    if (markerRef.current !== undefined) {
-      markerRef.current.showCallout();
+    if (id !== undefined && (markersRefs[id] || {}).current !== undefined) {
+      markersRefs[id].current.showCallout();
     }
-  }, [markerRef]);
+  }, [markersRefs]);
 
   return (
     <Card withoutPadding>
@@ -57,14 +61,29 @@ export default withNavigation(({ navigation }) => {
         region={{
           latitude: Number(coords.latitude || 55),
           longitude: Number(coords.longitude || 37),
-          latitudeDelta: 0.2,
-          longitudeDelta: 0.2,
+          latitudeDelta: id !== undefined ? 0.05 : 0.2,
+          longitudeDelta: id !== undefined ? 0.05 : 0.2,
         }}
+        // onRegionChange={(region) => {
+        //   if (id === undefined) {
+        //     if (Math.min(region.latitudeDelta, region.longitudeDelta) < 0.15 && !calloutsShown) {
+        //       Object.values(markersRefs).map(marker => marker.current.showCallout());
+
+        //       updateCalloutsStatus(true);
+        //     }
+
+        //     if (Math.min(region.longitudeDelta, region.latitudeDelta) > 0.2 && calloutsShown) {
+        //       Object.values(markersRefs).map(marker => marker.current.hideCallout());
+
+        //       updateCalloutsStatus(false);
+        //     }
+        //   }
+        // }}
       >
         {places.map(
           ({ id: placeId, title: placeTitle, address: placeAddress = {} }) => (
             <Marker
-              ref={placeId === id ? markerRef : null}
+              ref={markersRefs[placeId]}
               key={placeId}
               coordinate={{
                 latitude: Number(placeAddress.lat),
