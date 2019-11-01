@@ -260,8 +260,8 @@ function Actions({ navigation, item: place = {} }) {
 
   const yandexNaviURL = `yandexnavi://map_search?text=Мята ${address.title}`;
 
-  const color = kindToColor[place.kind];
-  const favoriteButtonTextColor = place.kind === 'platinum' ? '#191919' : '#eee';
+  const primaryColor = kindToColor[place.kind];
+  const favoriteButtonTextColor = primaryColor === kindToColor.platinum ? '#191919' : '#eee';
 
   React.useEffect(() => {
     Linking.canOpenURL(yandexNaviURL)
@@ -308,8 +308,8 @@ function Actions({ navigation, item: place = {} }) {
           if (buttonIndex === 1) {
             return navigation.navigate('PlacesMap', {
               initial: {
-                latitude: address.latitude,
-                longitude: address.longitude,
+                latitude: address.lat,
+                longitude: address.lon,
               },
             });
           }
@@ -318,7 +318,13 @@ function Actions({ navigation, item: place = {} }) {
         }
 
         if (buttonIndex === 0) {
-          return navigation.navigate('PlacesMap');
+          return navigation.navigate('PlacesMap', {
+            id: place.id,
+            initial: {
+              latitude: address.lat,
+              longitude: address.lon,
+            },
+          });
         }
 
         return null;
@@ -352,7 +358,8 @@ function Actions({ navigation, item: place = {} }) {
         <GradientButtonWithIcon
           icon={favoriteButtonIcon}
           colors={
-            colorsToGradient[color] || colorsToGradient[kindToColor.default]
+            colorsToGradient[primaryColor]
+            || colorsToGradient[kindToColor.default]
           }
           textColor={favoriteButtonTextColor}
           onPress={onFavoritePress}

@@ -15,6 +15,7 @@
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		1512BDE6C29D1C0F4A3E5C36 /* libPods-myata.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D5BCC6A692EFDA924CF4DFED /* libPods-myata.a */; };
 		6880354B54C740729ADA1A96 /* libRNFirebase.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 96CC9AA13CE54B8AB965CFF3 /* libRNFirebase.a */; };
+		F6BA2DEFBEE348D3825E9EEA /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 9FFE4D4DC48D41A3948E6537 /* libz.tbd */; };
 		FC6863B1EE18B08771FC426D /* libPods-myataTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 92F207E9586794CFE1826852 /* libPods-myataTests.a */; };
 /* End PBXBuildFile section */
 
@@ -57,6 +58,7 @@
 		845DA91D201243B29C738511 /* libAppCenterReactNativeCrashes.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libAppCenterReactNativeCrashes.a; sourceTree = "<group>"; };
 		92F207E9586794CFE1826852 /* libPods-myataTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-myataTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		96CC9AA13CE54B8AB965CFF3 /* libRNFirebase.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNFirebase.a; sourceTree = "<group>"; };
+		9FFE4D4DC48D41A3948E6537 /* libz.tbd */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		AAF2F6E0F468440A8CF13BED /* libAppCenterReactNativeAnalytics.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libAppCenterReactNativeAnalytics.a; sourceTree = "<group>"; };
 		D5BCC6A692EFDA924CF4DFED /* libPods-myata.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-myata.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E54A410AC3BD49F8A9BE5063 /* libAppCenterReactNative.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libAppCenterReactNative.a; sourceTree = "<group>"; };
@@ -80,6 +82,7 @@
 			files = (
 				1512BDE6C29D1C0F4A3E5C36 /* libPods-myata.a in Frameworks */,
 				6880354B54C740729ADA1A96 /* libRNFirebase.a in Frameworks */,
+				F6BA2DEFBEE348D3825E9EEA /* libz.tbd in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -146,6 +149,7 @@
 				2D16E6891FA4F8E400B85C8A /* libReact.a */,
 				D5BCC6A692EFDA924CF4DFED /* libPods-myata.a */,
 				92F207E9586794CFE1826852 /* libPods-myataTests.a */,
+				9FFE4D4DC48D41A3948E6537 /* libz.tbd */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -228,6 +232,7 @@
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
 				040B4A0022A69F8100607B1C /* Fabric */,
 				412C52D83759C39DD69BC1B6 /* [CP] Copy Pods Resources */,
+				03580F49D4EB450085C255CD /* Upload Debug Symbols to Sentry */,
 			);
 			buildRules = (
 			);
@@ -332,7 +337,21 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh\n";
+			shellScript = "export SENTRY_PROPERTIES=sentry.properties\nexport NODE_BINARY=node\n../node_modules/@sentry/cli/bin/sentry-cli react-native xcode ../node_modules/react-native/scripts/react-native-xcode.sh\n";
+		};
+		03580F49D4EB450085C255CD /* Upload Debug Symbols to Sentry */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Upload Debug Symbols to Sentry";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "export SENTRY_PROPERTIES=sentry.properties\n../node_modules/@sentry/cli/bin/sentry-cli upload-dsym";
 		};
 		040B4A0022A69F8100607B1C /* Fabric */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -403,11 +422,11 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-myata/Pods-myata-resources.sh",
-				"${PODS_CONFIGURATION_BUILD_DIR}/gRPC-C++/gRPCCertificates.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/gRPC-C++/gRPCCertificates-Cpp.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/gRPCCertificates.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/gRPCCertificates-Cpp.bundle",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -563,7 +582,7 @@
 				CODE_SIGN_ENTITLEMENTS = myata/myata.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 17;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = RB5YYA963B;
 				HEADER_SEARCH_PATHS = (
@@ -593,7 +612,7 @@
 				CODE_SIGN_ENTITLEMENTS = myata/myata.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 17;
 				DEVELOPMENT_TEAM = RB5YYA963B;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",

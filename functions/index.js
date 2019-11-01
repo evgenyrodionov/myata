@@ -6,6 +6,7 @@ const Twilio = require('twilio');
 const nanoid = require('nanoid/generate');
 const request = require('request');
 const qs = require('qs');
+const differenceInHours = require('date-fns/differenceInHours');
 
 const toDate = require('date-fns/toDate');
 const { ru: ruLocale } = require('date-fns/locale');
@@ -180,6 +181,31 @@ exports.onNewReservation = functions.firestore
       .create(textMessage)
       .then(message => console.log(message.sid, 'success'))
       .catch(err => console.log(err));
+  });
+
+exports.calculateRating = functions.pubsub
+  .schedule('0 0 * * *')
+  .timeZone('Europe/Moscow')
+  .onRun(async () => {
+    const places = await firestore.collection('places').get();
+
+    return places.forEach((doc) => {
+      const { reviews = [] } = doc.data();
+      const actualReviews = reviews.filter(
+        review => differenceInHours(new Date(), review.createdAt.toDate()) > 72,
+      );
+
+      if (actualReviews.length > 0) {
+        const allRatings = actualReviews.reduce(
+          (acc, review) => acc + review.rating,
+          0,
+        );
+
+        doc.ref.update({
+          rating: (allRatings / actualReviews.length).toFixed(2),
+        });
+      }
+    });
   });
 
 // function listAllUsers(req, res) {

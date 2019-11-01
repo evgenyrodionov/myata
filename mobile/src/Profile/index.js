@@ -286,13 +286,17 @@ function Support() {
       .then(information => updateAppInfo(information));
   }, []);
 
-  return (
-    <SupportSt>
-      <Version>
-        Версия приложения {appInfo.appVersion} ({appInfo.label})
-      </Version>
-    </SupportSt>
-  );
+  if (appInfo) {
+    return (
+      <SupportSt>
+        <Version>
+          Версия приложения {appInfo.appVersion} ({appInfo.label})
+        </Version>
+      </SupportSt>
+    );
+  }
+
+  return null;
 }
 
 export default function Profile({ navigation, ...props }) {
