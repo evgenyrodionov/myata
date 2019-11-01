@@ -32,7 +32,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>11</string>
+	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>CodePushDeploymentKey</key>
 	<string>iVw0kJXUUK3m_4tXPvVdIV-Nr1G8BJT6dOq-r</string>
 	<key>LSApplicationQueriesSchemes</key>
@@ -63,9 +63,9 @@
 	<key>NSContactsUsageDescription</key>
 	<string>Allow Мята experiences to access your contacts</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>Allow Мята to use your location</string>
+	<string>Геолокация нужна чтобы показывать заведения рядом</string>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>Allow Мята to use your location</string>
+	<string>Геолокация нужна чтобы показывать заведения рядом</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Allow Мята to use your location</string>
 	<key>NSMicrophoneUsageDescription</key>
