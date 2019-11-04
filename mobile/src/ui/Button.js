@@ -43,7 +43,9 @@ const Icon = styled.View`
   margin-right: 8;
 `;
 
-const Button = ({ children, bgColor, textColor, center, ...props }) => (
+const Button = ({
+  children, bgColor, textColor, center, ...props
+}) => (
   <ButtonSt color={bgColor} {...props}>
     <Text center={center} color={textColor}>
       {children}
@@ -79,10 +81,10 @@ export const GradientButtonWithIcon = ({
     <LinearGradient
       colors={colors}
       style={styles.gradientButton}
-      start={{ x: 0.5, y: 0 }}
-      end={{ x: 0.5, y: 1 }}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 0 }}
     >
-      <Icon>{icon}</Icon>
+      {icon && <Icon>{icon}</Icon>}
       <Text center={center} color={textColor}>
         {children}
       </Text>
