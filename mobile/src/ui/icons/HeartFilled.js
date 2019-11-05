@@ -1,6 +1,6 @@
 import React from 'react';
 import Svg, { Path, LinearGradient, Stop } from 'react-native-svg';
-import { icons as colorsToGradient } from '../colorsToGradient';
+import colorsToGradient from '../colorsToGradient';
 
 const getColors = color => colorsToGradient[color.toLowerCase()];
 

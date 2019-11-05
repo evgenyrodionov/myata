@@ -3,12 +3,12 @@ import {
   StyleSheet,
   Animated,
   TouchableOpacity,
-  Dimensions,
+  // Dimensions,
   View,
 } from 'react-native';
 import styled from 'styled-components';
-import distanceInWordsStrict from 'date-fns/distance_in_words_strict';
-import ruLocale from 'date-fns/locale/ru';
+// import distanceInWordsStrict from 'date-fns/distance_in_words_strict';
+// import ruLocale from 'date-fns/locale/ru';
 import getDay from 'date-fns/get_day';
 import isFuture from 'date-fns/is_future';
 import format from 'date-fns/format';
@@ -22,9 +22,10 @@ import {
   IconHeartFilled,
   // IconFutureClock as OrigIconFutureClock,
   IconStar,
+  kindToColor,
 } from '../ui';
 
-const { width: deviceWidth } = Dimensions.get('window');
+// const { width: deviceWidth } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   card: {
@@ -151,11 +152,6 @@ const RatingNumber = styled.Text`
 const RatingIcon = styled(IconStar)`
   margin-right: 4;
 `;
-
-const kindToColor = {
-  default: '#20B4AB',
-  edition: '#E79F6D',
-};
 
 export default function Card({ item, onPress: parentOnPress = () => {} }) {
   const { address = {} } = item;
