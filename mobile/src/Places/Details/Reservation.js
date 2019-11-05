@@ -11,7 +11,12 @@ import { SimpleStepper } from 'react-native-simple-stepper';
 
 import { getCurrentUser } from '../../Profile/api';
 import {
-  Card as OrigCard, Title as OrigTitle, Button, Alert,
+  Card as OrigCard,
+  Title as OrigTitle,
+  GradientButtonWithIcon,
+  Alert,
+  colorsToGradient,
+  kindToColor,
 } from '../../ui';
 
 import increaseIcon from './increase.png';
@@ -179,9 +184,17 @@ export default function ({ navigation }) {
         </Alert>
       )}
       {!isLoading && !error && !success && (
-        <Button bgColor="#20B4AB" textColor="#fff" center onPress={onSave}>
+        <GradientButtonWithIcon
+          colors={
+            colorsToGradient[kindToColor[place.kind]]
+            || colorsToGradient[kindToColor.default]
+          }
+          textColor="#fff"
+          center
+          onPress={onSave}
+        >
           Запросить бронирование
-        </Button>
+        </GradientButtonWithIcon>
       )}
     </Card>
   );

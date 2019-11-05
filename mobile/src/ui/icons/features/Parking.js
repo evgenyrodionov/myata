@@ -1,7 +1,7 @@
 import React from 'react';
 import Svg, { Path, LinearGradient, Stop } from 'react-native-svg';
 
-import colorsToGradient from "../../colorsToGradient";
+import colorsToGradient from '../../colorsToGradient';
 
 const SvgComponent = ({
   size,
@@ -15,8 +15,8 @@ const SvgComponent = ({
     <Svg width={size} height={size} viewBox="0 0 50 50" {...props}>
       {withGradient && (
         <LinearGradient id="grad" y1="0" y2={size}>
-          <Stop offset="0" stopColor={start} stopOpacity="1" />
-          <Stop offset="1" stopColor={end} stopOpacity="1" />
+          <Stop offset="0" stopColor={end} stopOpacity="1" />
+          <Stop offset="1" stopColor={start} stopOpacity="1" />
         </LinearGradient>
       )}
 

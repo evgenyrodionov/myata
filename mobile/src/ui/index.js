@@ -10,6 +10,7 @@ export { default as Alert } from './Alert';
 export { default as Card } from './Card';
 export { default as FooterPusher } from './FooterPusher';
 export { default as CollapsibleText } from './CollapsibleText';
+export { default as kindToColor } from './kindToColor';
 export { default as colorsToGradient } from './colorsToGradient';
 
 export const Title = styled.Text`

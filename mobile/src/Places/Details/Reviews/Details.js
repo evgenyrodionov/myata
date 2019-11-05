@@ -7,7 +7,9 @@ import nanoid from 'nanoid/non-secure';
 import {
   Card,
   Title as OrigTitle,
-  Button,
+  GradientButtonWithIcon,
+  colorsToGradient,
+  kindToColor,
   IconChecked,
   IconUnchecked,
 } from '../../../ui';
@@ -137,15 +139,18 @@ export default function ({ navigation }) {
         {isLoading ? (
           <ActivityIndicator />
         ) : (
-          <Button
-            bgColor="#20B4AB"
+          <GradientButtonWithIcon
+            colors={
+              colorsToGradient[kindToColor[place.kind]]
+              || colorsToGradient[kindToColor.default]
+            }
             textColor="#fff"
             center
             onPress={onSave}
             disabled={disabled}
           >
             Оставить отзыв
-          </Button>
+          </GradientButtonWithIcon>
         )}
 
         <Disclaimer>Администрация не удаляет отзывы</Disclaimer>
