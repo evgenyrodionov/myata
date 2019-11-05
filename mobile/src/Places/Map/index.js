@@ -57,8 +57,8 @@ export default withNavigation(({ navigation }) => {
         region={{
           latitude: Number(coords.latitude || 55),
           longitude: Number(coords.longitude || 37),
-          latitudeDelta: 0.2,
-          longitudeDelta: 0.2,
+          latitudeDelta: initial.delta || 0.2,
+          longitudeDelta: initial.delta || 0.2,
         }}
       >
         {places.map(

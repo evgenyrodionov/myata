@@ -304,6 +304,7 @@ function Actions({ navigation, item: place = {} }) {
               initial: {
                 latitude: address.lat,
                 longitude: address.lon,
+                delta: 0.01,
               },
             });
           }
@@ -317,6 +318,7 @@ function Actions({ navigation, item: place = {} }) {
             initial: {
               latitude: address.lat,
               longitude: address.lon,
+              delta: 0.01,
             },
           });
         }
