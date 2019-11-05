@@ -26,6 +26,7 @@ import {
   IconHeartFilled,
   IconMapWithMarker,
   colorsToGradient,
+  kindToColor,
 } from '../../ui';
 import Address from './Address';
 import Highlights from './Highlights';
@@ -47,12 +48,6 @@ const daysOfWeek = [
   'Пятница',
   'Суббота',
 ];
-
-const kindToColor = {
-  default: '#20b4ab',
-  edition: '#e79f6d',
-  platinum: '#ffffff',
-};
 
 const TimeTableSt = styled.View`
   margin-top: 42;
@@ -261,7 +256,6 @@ function Actions({ navigation, item: place = {} }) {
   const yandexNaviURL = `yandexnavi://map_search?text=Мята ${address.title}`;
 
   const primaryColor = kindToColor[place.kind];
-  const favoriteButtonTextColor = primaryColor === kindToColor.platinum ? '#191919' : '#eee';
 
   React.useEffect(() => {
     Linking.canOpenURL(yandexNaviURL)
@@ -346,22 +340,22 @@ function Actions({ navigation, item: place = {} }) {
       .update({ favorites: fb.firestore.FieldValue.arrayUnion(place.id) });
   }
 
-  const favoriteButtonIcon = isFavorite ? (
-    <IconHeartFilled color={favoriteButtonTextColor} size={20} />
-  ) : (
-    <IconHeart color={favoriteButtonTextColor} size={20} />
-  );
-
   return (
     <ActionsSt>
       <ActionsBlock>
         <GradientButtonWithIcon
-          icon={favoriteButtonIcon}
+          icon={
+            isFavorite ? (
+              <IconHeartFilled color="#fff" size={20} />
+            ) : (
+              <IconHeart color="#fff" size={20} />
+            )
+          }
           colors={
             colorsToGradient[primaryColor]
             || colorsToGradient[kindToColor.default]
           }
-          textColor={favoriteButtonTextColor}
+          textColor="#fff"
           onPress={onFavoritePress}
         >
           {!isFavorite ? 'Добавить в избранное' : 'Удалить из избранного'}

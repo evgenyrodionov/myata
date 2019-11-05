@@ -5,7 +5,12 @@ export const icons = {
 };
 
 export default {
-  '#20b4ab': ['#20B4AB', '#17827B'], // lounge
-  '#e79f6d': ['#E79F6D', '#DF7D3A'], // edition
-  '#ffffff': ['#ffffff', '#CCCCCC'], // platinum
+  // platinum
+  '#535353': ['#535353', '#8f8f8f', '#535353'],
+  // edition
+  '#6c492d': ['#6c492d', '#db9e62', '#6c492d'],
+  // signature
+  '#025235': ['#025235', '#00875d', '#025235'],
+  // default
+  '#117b74': ['#117b74', '#21b4aa', '#117b74'],
 };

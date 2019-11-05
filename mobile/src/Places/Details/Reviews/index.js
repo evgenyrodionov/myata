@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dimensions, Alert } from 'react-native';
+import { Dimensions, Alert, StyleSheet } from 'react-native';
 import styled from 'styled-components';
 import distanceInWordsStrict from 'date-fns/distance_in_words_strict';
 import differenceInHours from 'date-fns/difference_in_hours';
@@ -7,11 +7,14 @@ import ruLocale from 'date-fns/locale/ru';
 import pluralize from 'pluralize-ru';
 import times from 'lodash/times';
 import useStoreon from 'storeon/react';
+import LinearGradient from 'react-native-linear-gradient';
 
 import {
   Title as OrigTitle,
   Alert as UIAlert,
-  Button,
+  GradientButtonWithIcon,
+  colorsToGradient,
+  kindToColor,
   IconStar,
   CollapsibleText,
 } from '../../../ui';
@@ -19,6 +22,14 @@ import { getPhotoUrl } from '../../../utils/photos';
 import { saveReviews } from '../../api';
 
 const { width: deviceWidth } = Dimensions.get('window');
+
+const styles = StyleSheet.create({
+  gradientButton: {
+    paddingVertical: 10,
+    borderBottomLeftRadius: 10,
+    borderBottomRightRadius: 10,
+  },
+});
 
 const Title = styled(OrigTitle)`
   margin-bottom: 12;
@@ -110,8 +121,6 @@ const ReviewDeleteButton = styled.TouchableOpacity.attrs({
 })`
   border-bottom-left-radius: 10;
   border-bottom-right-radius: 10;
-  padding-vertical: 10;
-  background-color: #af282d;
   position: absolute;
   bottom: 0;
   left: 0;
@@ -207,7 +216,16 @@ function renderReview({
             )}
           </ReviewDisclaimer>
           <ReviewDeleteButton onPress={onDelete}>
-            <ReviewDeleteButtonText>Удалить</ReviewDeleteButtonText>
+            <LinearGradient
+              colors={['#7e171b', '#b0272e', '#7e171b']}
+              style={styles.gradientButton}
+              start={{ x: 0.5, y: 0 }}
+              end={{ x: 0.5, y: 1 }}
+              useAngle
+              angle={90}
+            >
+              <ReviewDeleteButtonText>Удалить</ReviewDeleteButtonText>
+            </LinearGradient>
           </ReviewDeleteButton>
         </>
       )}
@@ -276,14 +294,17 @@ export default function Reviews({
 
       {filteredReviews.length === 0 && <ListEmptyComponent />}
 
-      <Button
-        bgColor="#20B4AB"
+      <GradientButtonWithIcon
+        colors={
+          colorsToGradient[kindToColor[place.kind]]
+          || colorsToGradient[kindToColor.default]
+        }
         textColor="#fff"
         center
         onPress={() => navigation.navigate('PlaceNewReview', { place, user })}
       >
         Оставить отзыв
-      </Button>
+      </GradientButtonWithIcon>
 
       <Disclaimer>Администрация не удаляет отзывы</Disclaimer>
     </>

@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { featuresTitles } from '../../data';
+import { kindToColor } from '../../ui';
 import * as FeaturesIcons from '../../ui/icons/features';
 
 const featuresToIcons = {
@@ -21,12 +22,6 @@ const featuresToIcons = {
   parties: FeaturesIcons.Parties,
   free_wifi: FeaturesIcons.Wifi,
   round_the_clock: FeaturesIcons.RoundTheClock,
-};
-
-const kindToColor = {
-  edition: '#E79F6D',
-  default: '#20B4AB',
-  platinum: '#FFFFFF',
 };
 
 function renderIcon({ value, kind, ...props }) {
