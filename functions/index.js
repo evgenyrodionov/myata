@@ -196,3 +196,67 @@ exports.onNewReservation = functions.firestore
 //     });
 // }
 // exports.listAllUsers = functions.https.onRequest(listAllUsers);
+
+// Iiko API
+
+exports.getUserInfo = functions.https.onRequest(async (req, res) => {
+  const { token: accountToken, phone } = req.body;
+
+  if (accountToken && phone) {
+    const accounts = await firestore
+      .collection('accounts_iiko')
+      .where('token', '=', accountToken)
+      .get();
+
+    if (accounts.size === 0) {
+      return res.send('Token is invalid');
+    }
+
+    const userData = await firestore
+      .collection('users')
+      .doc(phone)
+      .get();
+
+    if (userData.exists) {
+      return res.send(userData.data());
+    }
+
+    return res.send('User not found');
+  }
+
+  return res.send('Please, provide some info');
+
+  // if (code && account) {
+  //   request.post(
+  //     {
+  //       url: `https://${account}.joinposter.com/api/v2/auth/access_token`,
+  //       formData: {
+  //         code,
+  //         application_id: '658',
+  //         application_secret: '30b438535a4b8fede763a9e48af57477',
+  //         redirect_uri:
+  //           'https://us-central1-myata24com.cloudfunctions.net/onPosterLogin',
+  //         grant_type: 'authorization_code',
+  //       },
+  //     },
+  //     async (err, response, body) => {
+  //       if (err) console.error(err);
+  //       console.log(body);
+
+  //       const { account_number: id, access_token: token } = JSON.parse(body);
+
+  //       await firestore
+  //         .collection('accounts_poster')
+  //         .doc(account)
+  //         .set({
+  //           id,
+  //           token,
+  //         });
+
+  //       return res.redirect(
+  //         `https://${account}.joinposter.com/manage/access/integration`,
+  //       );
+  //     },
+  //   );
+  // }
+});
