@@ -83,6 +83,7 @@ function Main(props) {
   const [user, setUser] = React.useState({});
   const [news, setNews] = React.useState([]);
   const [isLoading, updateLoading] = React.useState(true);
+  const [isPlacesLoading, setPlacesLoading] = React.useState(true);
   const [screenOffset, updateStateOffset] = React.useState(1);
   const { dispatch } = useStoreon();
 
@@ -154,12 +155,15 @@ function Main(props) {
 
   // listen to places updates
   React.useEffect(() => {
-    getPlacesRef().onSnapshot(async (docs) => {
-      const mapped = await mapPlaces(docs);
-      const placesById = keyPlacesById(mapped);
+    getPlacesRef()
+      .where('visible', '==', true)
+      .onSnapshot(async (docs) => {
+        const mapped = await mapPlaces(docs);
+        const placesById = keyPlacesById(mapped);
 
-      dispatch('places/update', { places: mapped, placesById });
-    });
+        dispatch('places/update', { places: mapped, placesById });
+        setPlacesLoading(false);
+      });
   }, []);
 
   function scrollTo(offset) {
@@ -195,7 +199,7 @@ function Main(props) {
         >
           <Profile user={user} {...props} />
           <Feed news={news} {...props} />
-          <Places user={user} {...props} />
+          <Places isLoading={isPlacesLoading} user={user} {...props} />
         </ScrollView>
       </View>
     );

@@ -11,6 +11,7 @@ import orderBy from 'lodash/orderBy';
 import * as Haptics from 'expo-haptics';
 import * as Location from 'expo-location';
 import { Permissions } from 'react-native-unimodules';
+import ContentLoader, { Rect } from 'react-content-loader/native';
 
 import OrigMapView, { Marker } from 'react-native-maps';
 
@@ -145,8 +146,39 @@ const MapView = styled(OrigMapView)`
   margin-bottom: 24;
 `;
 
+const Loader = () => (
+  <Item>
+    <ContentLoader
+      height={250}
+      width={deviceWidth - 16 * 2}
+      speed={2}
+      primaryColor="#262626"
+      secondaryColor="#191919"
+    >
+      <Rect x="0" y="3" rx="4" ry="4" width="0" height="28" />
+      <Rect x="0" y="39" rx="0" ry="0" width="206" height="14" />
+      <Rect
+        x="0"
+        y="60"
+        rx="0"
+        ry="0"
+        width={deviceWidth - 16 * 2}
+        height="146"
+      />
+      <Rect x="0" y="216" rx="0" ry="0" width="109" height="23" />
+      <Rect x="288" y="217" rx="0" ry="0" width="53" height="20" />
+      <Rect x="0" y="8" rx="0" ry="0" width="132" height="24" />
+    </ContentLoader>
+  </Item>
+);
+
 export default function Places({ ...props }) {
-  const { dispatch = () => ({}), isFetching = false, navigation } = props;
+  const {
+    dispatch = () => ({}),
+    isFetching = false,
+    navigation,
+    isLoading,
+  } = props;
   const [coords, setCoords] = React.useState({
     latitude: 55.77,
     longitude: 37.63,
@@ -275,25 +307,31 @@ export default function Places({ ...props }) {
         )}
       </MapView>
 
-      {/* <Filter
+      {isLoading ? (
+        [null, null, null, null].map(() => <Loader />)
+      ) : (
+        <>
+          {/* <Filter
         update={onFilterUpdate}
         remove={onFilterRemove}
         selectedKind={selectedKind}
         selectedValues={selectedValues}
       /> */}
 
-      <Order />
+          <Order />
 
-      <List
-        renderItem={args => renderItem(args, props)}
-        onRefresh={() => dispatch(loadList())}
-        refreshing={isFetching}
-        data={data}
-        keyExtractor={item => String(item.id)}
-        // ListEmptyComponent={ListEmptyComponent}
-      />
+          <List
+            renderItem={args => renderItem(args, props)}
+            onRefresh={() => dispatch(loadList())}
+            refreshing={isFetching}
+            data={data}
+            keyExtractor={item => String(item.id)}
+            // ListEmptyComponent={ListEmptyComponent}
+          />
 
-      <Alert center>…и ещё 250+ заведений до&nbsp;конца&nbsp;года</Alert>
+          <Alert center>…и ещё 250+ заведений до&nbsp;конца&nbsp;года</Alert>
+        </>
+      )}
 
       <FooterPusher />
     </View>

@@ -5,7 +5,7 @@ import {
   Alert,
   Switch,
   Linking,
-  Clipboard,
+  Share,
 } from 'react-native';
 import firebase from 'react-native-firebase';
 import codePush from 'react-native-code-push';
@@ -128,9 +128,9 @@ function Friends({ user: { referralId, friends = [] } }) {
   const link = `invites.myataofficial.com/${referralId}`;
 
   async function onCopy() {
-    await Clipboard.setString(`https://${link}`);
-
-    Alert.alert('Ссылка скопирована');
+    await Share.share({
+      message: `Зарегистрируйся в Мята Lounge и получи 100 баллов на счёт https://${link}`,
+    });
   }
 
   return (
