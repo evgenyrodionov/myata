@@ -20,6 +20,7 @@ import PlaceNewReview from '../Places/Details/Reviews/Details';
 import PlaceMenu from '../Places/Details/Menu';
 import PlacesMap from '../Places/Map';
 import CardDetails from '../Card/Details';
+import SplashScreen from '../SplashScreen';
 
 import {
   mapUser,
@@ -201,7 +202,7 @@ function Main(props) {
     );
   }
 
-  return <View />;
+  return <SplashScreen />;
 }
 
 export default createStackNavigator(

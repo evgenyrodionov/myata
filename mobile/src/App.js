@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, SafeAreaView } from 'react-native';
+import styled from 'styled-components';
 import * as Sentry from '@sentry/react-native';
 import firebase from 'react-native-firebase';
 import { createSwitchNavigator, createAppContainer } from 'react-navigation';
@@ -8,12 +9,15 @@ import StoreContext from 'storeon/react/context';
 
 import Main from './Main';
 import Auth from './Auth';
+import SplashScreen from './SplashScreen';
 
 import store from './store';
 
 Sentry.init({
   dsn: 'https://6d1070e8344447adb36e6d7d5dd09376@sentry.io/1802365',
 });
+
+
 
 function AuthChecker(props) {
   React.useEffect(() => {
@@ -30,7 +34,7 @@ function AuthChecker(props) {
     props.navigation.navigate(user && user.uid ? 'Main' : 'Auth');
   }, []);
 
-  return null;
+  return SplashScreen;
 }
 
 const rootNavigator = createSwitchNavigator(
