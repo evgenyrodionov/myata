@@ -121,33 +121,32 @@ export default function Address({ item }) {
     effect();
   }, []);
 
+  function onTaxiPress() {
+    if (taxi.price) {
+      Linking.openURL(
+        `https://3.redirect.appmetrica.yandex.com/route?end-lat=${lat}&end-lon=${lon}&ref=${taxiAffClid}&appmetrica_tracking_id=1178268795219780156&utm_source=widget`,
+      );
+    }
+  }
+
   return (
     <AddressSt>
       <Street>
         {city}, {title}
       </Street>
+      <Taxi onPress={onTaxiPress}>
+        <TaxiLogo source={require('./yandex_taxi.png')} />
 
-      {taxi.price && (
-        <Taxi
-          onPress={() =>
-            Linking.openURL(
-              `https://3.redirect.appmetrica.yandex.com/route?end-lat=${lat}&end-lon=${lon}&ref=${taxiAffClid}&appmetrica_tracking_id=1178268795219780156&utm_source=widget`,
-            )
-          }
-        >
-          <TaxiLogo source={require('./yandex_taxi.png')} />
-
-          <TaxiDescription>
-            <TaxiCTA>Вызвать такси</TaxiCTA>
-            <TaxiEstimates>
-              ≈{parseFloat(taxi.price).toFixed()} ₽, ≈
-              {parseFloat(taxi.time).toFixed()} мин, ≈
-              {parseFloat(taxi.waiting).toFixed()} мин ожидания
-            </TaxiEstimates>
-          </TaxiDescription>
-        </Taxi>
-      )}
-
+        <TaxiDescription>
+          <TaxiCTA>Вызвать такси</TaxiCTA>
+          <TaxiEstimates>
+            {taxi.price ? <>≈{parseFloat(taxi.price).toFixed()}</> : '...'} ₽,{' '}
+            {taxi.price ? <>≈{parseFloat(taxi.time).toFixed()}</> : '...'} мин,{' '}
+            {taxi.price ? <>≈{parseFloat(taxi.waiting).toFixed()}</> : '...'}{' '}
+            мин ожидания
+          </TaxiEstimates>
+        </TaxiDescription>
+      </Taxi>
       <Subways>
         {subways.map(({ title: swTitle, color, walkMeters }) => (
           <SubwayStation key={swTitle}>

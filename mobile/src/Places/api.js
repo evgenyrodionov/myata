@@ -70,7 +70,7 @@ export async function map(doc) {
     ...data,
     address: {
       ...data.address,
-      distance: await getDistance(data),
+      // distance: await getDistance(data),
     },
     sales: salesByPlaceId[doc.id] ? salesByPlaceId[doc.id] : [],
     products: productsByPlacesId[doc.id] ? productsByPlacesId[doc.id] : [],
@@ -81,7 +81,7 @@ export async function map(doc) {
 export async function mapDocs(docs) {
   const mappedDocs = [];
 
-  docs.forEach(doc => {
+  docs.forEach((doc) => {
     mappedDocs.push(map(doc));
   });
 

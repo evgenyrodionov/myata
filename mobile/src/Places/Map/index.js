@@ -15,7 +15,7 @@ const MapView = styled(OrigMapView)`
 `;
 
 export default withNavigation(({ navigation }) => {
-  const initial = navigation.getParam('initial');
+  const initial = navigation.getParam('initial') || {};
   const id = navigation.getParam('id');
   const { places = [] } = useStoreon('placesById', 'places');
   const markerRef = React.useRef();
@@ -38,7 +38,7 @@ export default withNavigation(({ navigation }) => {
       }
     }
 
-    if (!initial) effect();
+    if (!initial.latitude && !initial.longitude) effect();
 
     if (markerRef.current !== undefined) {
       return markerRef.current.hideCallout();

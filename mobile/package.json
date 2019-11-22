@@ -23,6 +23,7 @@
     "pluralize-ru": "^1.0.1",
     "qs": "^6.8.0",
     "react": "16.8.6",
+    "react-content-loader": "^4.3.2",
     "react-native": "0.60.0",
     "react-native-animate-number": "^0.1.2",
     "react-native-code-push": "5.7.0",
