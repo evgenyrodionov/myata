@@ -12,6 +12,8 @@ import { mapUserForPublic } from '../Profile/mappers';
 import { getRef as getUserRef } from '../Profile/api';
 import { salesByPlaceId, productsByPlacesId } from '../data';
 
+import store from '../store';
+
 const firestore = firebase.firestore();
 
 export function getCollectionRef() {
@@ -24,28 +26,19 @@ export function getRef(id) {
 
 async function getDistance(place) {
   if (place.address.lat && place.address.lon) {
-    const { status } = await Permissions.askAsync(Permissions.LOCATION);
+    const { location: userLocation } = store.get();
 
-    if (status === 'granted') {
-      try {
-        const { coords } = await Location.getCurrentPositionAsync({});
+    if (typeof userLocation !== 'undefined') {
+      const distance = geodist(
+        userLocation,
+        {
+          lat: place.address.lat,
+          lon: place.address.lon,
+        },
+        { unit: 'km', exact: true },
+      );
 
-        const distance = geodist(
-          {
-            lat: coords.latitude,
-            lon: coords.longitude,
-          },
-          {
-            lat: place.address.lat,
-            lon: place.address.lon,
-          },
-          { unit: 'km', exact: true },
-        );
-
-        return parseFloat(parseFloat(distance).toFixed(2));
-      } catch (e) {
-        //
-      }
+      return parseFloat(parseFloat(distance).toFixed(2));
     }
 
     return undefined;
@@ -70,7 +63,7 @@ export async function map(doc) {
     ...data,
     address: {
       ...data.address,
-      // distance: await getDistance(data),
+      distance: await getDistance(data),
     },
     sales: salesByPlaceId[doc.id] ? salesByPlaceId[doc.id] : [],
     products: productsByPlacesId[doc.id] ? productsByPlacesId[doc.id] : [],
